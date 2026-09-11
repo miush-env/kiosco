@@ -980,6 +980,24 @@ export default function CustomerCatalogPage() {
                 className={`b1-product-row-card ${isOut ? "is-out-of-stock" : ""}`}
                 onClick={() => openProductModal(p)}
               >
+                {/* 1. Imagen a la izquierda */}
+                <div className="b1-row-media-container">
+                  <img
+                    src={p.image || "/assets/images/logo.png"}
+                    alt={`${p.name} - Alakary`}
+                    loading="lazy"
+                    className="b1-row-thumb"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300";
+                    }}
+                  />
+                  {isOut && (
+                    <span className="b1-img-out-badge">Agotado</span>
+                  )}
+                </div>
+
+                {/* 2. Información y precio a la derecha */}
                 <div className="b1-row-info">
                   <div className="b1-row-badge-row">
                     {isOut ? (
@@ -1002,32 +1020,19 @@ export default function CustomerCatalogPage() {
                         <i className="far fa-clock"></i> {p.prepTime}
                       </span>
                     )}
+                    <button
+                      type="button"
+                      className={`b1-row-add-btn-inline ${isOut ? "disabled" : ""}`}
+                      disabled={isOut}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openProductModal(p);
+                      }}
+                      title={isOut ? "Agotado" : "Agregar al pedido"}
+                    >
+                      <i className={`fas ${isOut ? "fa-ban" : "fa-plus"}`}></i>
+                    </button>
                   </div>
-                </div>
-
-                <div className="b1-row-media-container">
-                  <img
-                    src={p.image || "/assets/images/logo.png"}
-                    alt={`${p.name} - Alakary`}
-                    loading="lazy"
-                    className="b1-row-thumb"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300";
-                    }}
-                  />
-                  <button
-                    type="button"
-                    className={`b1-row-add-btn ${isOut ? "disabled" : ""}`}
-                    disabled={isOut}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openProductModal(p);
-                    }}
-                    title={isOut ? "Agotado" : "Agregar al pedido"}
-                  >
-                    <i className={`fas ${isOut ? "fa-ban" : "fa-plus"}`}></i>
-                  </button>
                 </div>
               </div>
             );

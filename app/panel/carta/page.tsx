@@ -613,7 +613,20 @@ export default function OwnerMenuManagementPage() {
                 onClick={() => openEditProductModal(p)}
                 style={{ cursor: "pointer" }}
               >
-                {/* Info Container */}
+                {/* Food Thumbnail on Left */}
+                <div className="b1-row-media-container">
+                  <img
+                    src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200"}
+                    alt={p.name}
+                    className="b1-row-thumb"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
+                    }}
+                  />
+                </div>
+
+                {/* Info Container on Right */}
                 <div className="b1-row-info">
                   <div className="b1-row-badge-row">
                     {p.badge ? (
@@ -637,7 +650,7 @@ export default function OwnerMenuManagementPage() {
                     <span className="b1-row-price">${formatMoney(p.price)}</span>
 
                     {/* Action Buttons */}
-                    <div style={{ display: "flex", gap: 6 }} onClick={(e) => e.stopPropagation()}>
+                    <div style={{ display: "flex", gap: 6, marginLeft: "auto" }} onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         className="b1-cat-pill"
@@ -661,19 +674,6 @@ export default function OwnerMenuManagementPage() {
                       </button>
                     </div>
                   </div>
-                </div>
-
-                {/* Food Thumbnail */}
-                <div className="b1-row-media-container">
-                  <img
-                    src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200"}
-                    alt={p.name}
-                    className="b1-row-thumb"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
-                    }}
-                  />
                 </div>
               </div>
             );
