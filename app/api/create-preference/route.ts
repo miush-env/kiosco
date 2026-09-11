@@ -82,7 +82,7 @@ export async function POST(req: Request) {
           number: String(order.customerPhone || "").replace(/[^\d]/g, "").slice(0, 15) || "1172570867",
         },
         address: {
-          street_name: (order.customerAddress || "Paderewski 366").slice(0, 80),
+          street_name: (order.customerAddress || "Paderewski 3666").slice(0, 80),
         },
       },
       back_urls: {

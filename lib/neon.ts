@@ -178,7 +178,7 @@ export async function initNeonDatabase(): Promise<boolean> {
           'main',
           'Alakary',
           'Menú Digital & Pedidos Online',
-          'Paderewski 366',
+          'Paderewski 3666',
           '+5491172570867',
           '$',
           0,

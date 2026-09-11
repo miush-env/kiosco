@@ -60,7 +60,7 @@ export default function CustomerCatalogPage() {
   const [storeInfo, setStoreInfo] = useState<StoreInfo>({
     name: "Alakary",
     tagline: "Menú Digital & Pedidos Online",
-    address: "Paderewski 366",
+    address: "Paderewski 3666",
     whatsapp: "+5491172570867",
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -1115,43 +1115,43 @@ export default function CustomerCatalogPage() {
           style={{
             background: "var(--b1-color-surface)",
             borderRadius: "var(--b1-radius-xl)",
-            padding: "20px 18px",
-            marginBottom: "24px",
+            padding: "18px",
+            marginBottom: "16px",
             border: "1px solid var(--b1-color-border)",
             textAlign: "left",
             boxShadow: "var(--b1-shadow-xs)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
             <img
               src="/assets/images/logo.png"
-              alt="Alakary Logo"
-              style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover" }}
+              alt={storeInfo.name}
+              style={{ width: "34px", height: "34px", borderRadius: "50%", objectFit: "cover" }}
             />
             <div>
-              <strong style={{ fontSize: "16px", color: "var(--b1-color-text-main)", display: "block" }}>
+              <strong style={{ fontSize: "15px", color: "var(--b1-color-text-main)", display: "block" }}>
                 {storeInfo.name}
               </strong>
-              <span style={{ fontSize: "12px", color: "var(--b1-color-success)", fontWeight: 700 }}>
+              <span style={{ fontSize: "11px", color: "var(--b1-color-success)", fontWeight: 700 }}>
                 ● Abierto para Pedidos y Delivery
               </span>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "13px", color: "var(--b1-color-text-muted)" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "9px", fontSize: "12.5px", color: "var(--b1-color-text-muted)" }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-              <i className="fas fa-map-marker-alt" style={{ color: "var(--b1-color-primary)", marginTop: "3px" }}></i>
+              <i className="fas fa-map-marker-alt" style={{ color: "var(--b1-color-primary)", marginTop: "2px" }}></i>
               <div>
                 <strong style={{ color: "var(--b1-color-text-main)" }}>Dirección:</strong>{" "}
-                {storeInfo.address || "Paderewski 366, Buenos Aires, Argentina"}
-                <br />
+                {storeInfo.address || "Paderewski 3666, Valentín Alsina, Buenos Aires"}
+                <span style={{ margin: "0 6px", opacity: 0.5 }}>•</span>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeInfo.address || "Paderewski 366, Buenos Aires")}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeInfo.address || "Paderewski 3666, Valentín Alsina, Buenos Aires")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "var(--b1-color-primary)", fontSize: "12px", fontWeight: 700, textDecoration: "none" }}
+                  style={{ color: "var(--b1-color-primary)", fontSize: "11.5px", fontWeight: 700, textDecoration: "none" }}
                 >
-                  📍 Ver en Google Maps →
+                  Ver en Google Maps →
                 </a>
               </div>
             </div>
@@ -1187,27 +1187,9 @@ export default function CustomerCatalogPage() {
           </div>
         </div>
 
-        <div className="b1-agency-logo-row">
-          <img
-            src="/assets/images/logo.png"
-            alt={storeInfo.name}
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-          <span>{storeInfo.name}</span>
+        <div style={{ textAlign: "center", fontSize: "12px", color: "var(--b1-color-text-muted)", padding: "6px 0 16px" }}>
+          <strong>{storeInfo.name}</strong> • {storeInfo.tagline || "Menú Digital & Pedidos Online"}
         </div>
-        <p className="b1-agency-tagline">
-          {storeInfo.tagline || "Menú Digital & Pedidos Online"}
-        </p>
-        <a
-          href={`https://wa.me/${(storeInfo.whatsapp || "+5491172570867").replace(/[^\d]/g, "")}?text=${encodeURIComponent("¡Hola! Me interesa la app web para mi negocio")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="b1-agency-cta-btn"
-        >
-          <i className="fab fa-whatsapp"></i> ¿Querés una web como esta? Contactanos
-        </a>
       </footer>
 
       {/* ── 8. FLOATING BOTTOM CART BAR ─────────────────────────────────── */}
@@ -1661,7 +1643,7 @@ export default function CustomerCatalogPage() {
                       <i className="fas fa-map-marker-alt" style={{ color: "#3B82F6", fontSize: 18, marginTop: 2 }}></i>
                       <div>
                         <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)", display: "block" }}>
-                          Punto de retiro: {storeInfo.address || "Paderewski 366, Lanús / Valentín Alsina"}
+                          Punto de retiro: {storeInfo.address || "Paderewski 3666, Valentín Alsina"}
                         </strong>
                         <span style={{ fontSize: 12, color: "var(--b1-color-text-muted)" }}>
                           🕒 Listo para retirar en <strong>{estimatedPickupTime} aprox.</strong>
@@ -2778,7 +2760,7 @@ export default function CustomerCatalogPage() {
 
               {/* 5. Google Maps Location */}
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeInfo.address || "Paderewski 366, Buenos Aires")}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeInfo.address || "Paderewski 3666, Buenos Aires")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="b1-drawer-item"
@@ -2791,7 +2773,7 @@ export default function CustomerCatalogPage() {
                   <div>
                     <div style={{ fontWeight: 800 }}>Ubicación del Local</div>
                     <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
-                      {storeInfo.address || "Paderewski 366"}
+                      {storeInfo.address || "Paderewski 3666"}
                     </div>
                   </div>
                 </div>

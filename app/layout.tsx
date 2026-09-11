@@ -138,7 +138,7 @@ export default function RootLayout({
                     "servesCuisine": ["Comida Rápida", "Pizzas", "Empanadas", "Minutas", "Panchos"],
                     "address": {
                       "@type": "PostalAddress",
-                      "streetAddress": "Paderewski 366",
+                      "streetAddress": "Paderewski 3666",
                       "addressLocality": "Buenos Aires",
                       "addressCountry": "AR"
                     },
