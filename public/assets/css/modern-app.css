@@ -1307,3 +1307,45 @@ body.modal-open {
   color: #fff;
   text-decoration: none;
 }
+
+/* ── MODAL BACKDROP & CARD BASE ── */
+.b1-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  z-index: 99999 !important;
+  animation: b1ModalFadeIn 0.2s ease-out;
+}
+
+.b1-modal-card {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  border: 1px solid #E2E8F0 !important;
+  animation: b1ModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes b1ModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes b1ModalScaleUp {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+

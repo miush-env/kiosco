@@ -2129,7 +2129,15 @@ export default function CustomerCatalogPage() {
 
       {/* ── 8. MERCADO PAGO PAYMENT RETURN MODAL ───────────────────────── */}
       {mpReturnModal.isOpen && (
-        <div className="b1-modal-backdrop" style={{ zIndex: 99999 }}>
+        <div
+          className="b1-modal-backdrop"
+          style={{
+            zIndex: 99999,
+            backgroundColor: "rgba(15, 23, 42, 0.75)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+          }}
+        >
           <div
             className="b1-modal-card"
             style={{
@@ -2137,7 +2145,10 @@ export default function CustomerCatalogPage() {
               padding: 0,
               overflow: "hidden",
               borderRadius: 20,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35)",
+              backgroundColor: "#ffffff",
+              background: "#ffffff",
+              border: "1px solid #E2E8F0",
             }}
           >
             {/* Header banner */}
@@ -2147,47 +2158,48 @@ export default function CustomerCatalogPage() {
                   mpReturnModal.status === "failure"
                     ? "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)"
                     : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
-                color: "#fff",
-                padding: "24px 20px",
+                color: "#ffffff",
+                padding: "26px 20px 22px",
                 textAlign: "center",
               }}
             >
               <div
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 64,
+                  height: 64,
                   borderRadius: "50%",
-                  background: "rgba(255, 255, 255, 0.2)",
+                  background: "rgba(255, 255, 255, 0.25)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto 12px",
-                  fontSize: 28,
+                  fontSize: 30,
                   backdropFilter: "blur(4px)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               >
                 {mpReturnModal.status === "failure" ? (
-                  <i className="fas fa-times"></i>
+                  <i className="fas fa-times" style={{ color: "#fff" }}></i>
                 ) : (
-                  <i className="fas fa-check"></i>
+                  <i className="fas fa-check" style={{ color: "#fff" }}></i>
                 )}
               </div>
-              <h2 style={{ fontSize: 20, fontWeight: 900, margin: "0 0 6px" }}>
+              <h2 style={{ fontSize: 21, fontWeight: 900, margin: "0 0 6px", color: "#fff", letterSpacing: "-0.3px" }}>
                 {mpReturnModal.status === "failure"
                   ? "Pago No Completado"
                   : mpReturnModal.status === "pending"
                   ? "Pago en Proceso"
-                  : "¡Pago Acreditado con Éxito!"}
+                  : "¡Transferencia Exitosa!"}
               </h2>
-              <p style={{ fontSize: 13, opacity: 0.95, margin: 0 }}>
+              <p style={{ fontSize: 13, opacity: 0.95, margin: 0, color: "#fff" }}>
                 {mpReturnModal.status === "failure"
-                  ? "No se pudo procesar el pago en Mercado Pago."
-                  : "Tu pago por Mercado Pago fue procesado correctamente."}
+                  ? "El pago fue cancelado o rechazado por Mercado Pago."
+                  : "Tu pago por Mercado Pago fue acreditado con éxito."}
               </p>
             </div>
 
             {/* Modal Body */}
-            <div style={{ padding: "20px" }}>
+            <div style={{ padding: "20px", backgroundColor: "#ffffff" }}>
               {mpReturnModal.status !== "failure" ? (
                 <>
                   {/* WhatsApp Instruction Notice */}
@@ -2195,7 +2207,7 @@ export default function CustomerCatalogPage() {
                     style={{
                       background: "#ECFDF5",
                       border: "1.5px dashed #059669",
-                      borderRadius: 12,
+                      borderRadius: 14,
                       padding: "12px 14px",
                       marginBottom: 16,
                       fontSize: 13,
@@ -2207,13 +2219,13 @@ export default function CustomerCatalogPage() {
                   >
                     <i
                       className="fab fa-whatsapp"
-                      style={{ fontSize: 22, color: "#059669", marginTop: 2, flexShrink: 0 }}
+                      style={{ fontSize: 24, color: "#059669", marginTop: 2, flexShrink: 0 }}
                     ></i>
                     <div>
                       <strong style={{ display: "block", fontSize: 14, marginBottom: 2 }}>
                         ¡Paso final importante!
                       </strong>
-                      Tocá el botón verde abajo para <strong>enviar tu pedido a WhatsApp</strong> al local y confirmar la preparación.
+                      Tocá el botón verde abajo para <strong>enviar tu pedido a WhatsApp</strong> al local y comenzar la preparación.
                     </div>
                   </div>
 
@@ -2222,9 +2234,9 @@ export default function CustomerCatalogPage() {
                     <div
                       style={{
                         background: "#F8FAFC",
-                        borderRadius: 12,
+                        borderRadius: 14,
                         padding: "14px",
-                        marginBottom: 18,
+                        marginBottom: 16,
                         fontSize: 13,
                         border: "1px solid #E2E8F0",
                       }}
@@ -2234,25 +2246,26 @@ export default function CustomerCatalogPage() {
                           display: "flex",
                           justifyContent: "space-between",
                           marginBottom: 8,
-                          fontWeight: 700,
+                          fontWeight: 800,
+                          fontSize: 14,
                         }}
                       >
                         <span>
                           Pedido #{mpReturnModal.order.id ? mpReturnModal.order.id.slice(-6).toUpperCase() : "OK"}
                         </span>
-                        <span style={{ color: "#059669", fontWeight: 800 }}>
+                        <span style={{ color: "#059669", fontWeight: 900, fontSize: 15 }}>
                           ${formatMoney(mpReturnModal.order.total || 0)}
                         </span>
                       </div>
 
                       {mpReturnModal.order.customerName && (
-                        <div style={{ color: "var(--b1-color-text-muted)", fontSize: 12, marginBottom: 4 }}>
+                        <div style={{ color: "#475569", fontSize: 12, marginBottom: 4 }}>
                           👤 <strong>Cliente:</strong> {mpReturnModal.order.customerName}
                         </div>
                       )}
 
                       {mpReturnModal.order.deliveryType && (
-                        <div style={{ color: "var(--b1-color-text-muted)", fontSize: 12, marginBottom: 8 }}>
+                        <div style={{ color: "#475569", fontSize: 12, marginBottom: 8 }}>
                           📍 <strong>Modalidad:</strong>{" "}
                           {mpReturnModal.order.deliveryType === "retiro"
                             ? "Retiro en local"
@@ -2271,12 +2284,14 @@ export default function CustomerCatalogPage() {
                                 justifyContent: "space-between",
                                 fontSize: 12,
                                 marginBottom: 2,
+                                color: "#334155",
                               }}
                             >
                               <span>
                                 {it.quantity || 1}x {it.name || "Producto"}
+                                {it.comment && <span style={{ color: "#64748B", fontStyle: "italic", marginLeft: 4 }}>({it.comment})</span>}
                               </span>
-                              <span>${formatMoney((it.price || 0) * (it.quantity || 1))}</span>
+                              <span style={{ fontWeight: 600 }}>${formatMoney((it.price || 0) * (it.quantity || 1))}</span>
                             </div>
                           ))}
                         </div>
@@ -2305,7 +2320,7 @@ export default function CustomerCatalogPage() {
                       fontWeight: 800,
                       fontSize: 15,
                       textDecoration: "none",
-                      boxShadow: "0 4px 16px rgba(37, 211, 102, 0.4)",
+                      boxShadow: "0 6px 18px rgba(37, 211, 102, 0.4)",
                       marginBottom: 10,
                       cursor: "pointer",
                       boxSizing: "border-box",
@@ -2331,14 +2346,14 @@ export default function CustomerCatalogPage() {
                     style={{
                       width: "100%",
                       padding: "10px 14px",
-                      background: "#F1F5F9",
+                      background: "#F8FAFC",
                       border: "1px solid #CBD5E1",
                       borderRadius: 12,
                       fontWeight: 700,
                       fontSize: 13,
                       color: "#334155",
                       cursor: "pointer",
-                      marginBottom: 10,
+                      marginBottom: 8,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -2357,7 +2372,7 @@ export default function CustomerCatalogPage() {
                     onClick={() => setMpReturnModal((prev) => ({ ...prev, isOpen: false }))}
                     style={{
                       width: "100%",
-                      padding: "10px",
+                      padding: "8px",
                       background: "transparent",
                       border: "none",
                       color: "var(--b1-color-text-muted)",
@@ -2370,17 +2385,51 @@ export default function CustomerCatalogPage() {
                 </>
               ) : (
                 <>
-                  <p style={{ fontSize: 14, color: "#475569", marginBottom: 18, textAlign: "center" }}>
-                    Podés intentar nuevamente con otro medio de pago o seleccionar la opción de pago en efectivo al recibir tu pedido.
-                  </p>
-                  <button
-                    type="button"
-                    className="b1-btn-primary"
-                    style={{ width: "100%", justifyContent: "center" }}
-                    onClick={() => setMpReturnModal((prev) => ({ ...prev, isOpen: false }))}
+                  <div
+                    style={{
+                      background: "#FEF2F2",
+                      border: "1px solid #FCA5A5",
+                      borderRadius: 14,
+                      padding: "14px",
+                      marginBottom: 16,
+                      fontSize: 13,
+                      color: "#991B1B",
+                      textAlign: "center",
+                    }}
                   >
-                    Volver a intentar
-                  </button>
+                    No se completó la transferencia de Mercado Pago. Podés intentar nuevamente o hacer tu pedido pagando en efectivo al recibirlo.
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <button
+                      type="button"
+                      className="b1-btn-primary"
+                      style={{ width: "100%", justifyContent: "center", padding: "12px 16px" }}
+                      onClick={() => {
+                        setMpReturnModal((prev) => ({ ...prev, isOpen: false }));
+                        setIsCheckoutOpen(true);
+                      }}
+                    >
+                      <i className="fas fa-redo-alt" style={{ marginRight: 6 }}></i>
+                      Intentar de nuevo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMpReturnModal((prev) => ({ ...prev, isOpen: false }))}
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        background: "#F1F5F9",
+                        border: "1px solid #CBD5E1",
+                        borderRadius: 12,
+                        color: "#475569",
+                        fontSize: 13,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Cerrar y volver al menú
+                    </button>
+                  </div>
                 </>
               )}
             </div>

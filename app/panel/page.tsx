@@ -169,21 +169,48 @@ export default function AdminStockAndFinancePage() {
   const [manualExpenseDesc, setManualExpenseDesc] = useState("");
   const [manualExpenseCategory, setManualExpenseCategory] = useState("general");
 
+  // Helper to parse order items safely from JSON string, array, or object
+  const parseOrderItems = (rawItems: any): any[] => {
+    if (Array.isArray(rawItems)) return rawItems;
+    if (typeof rawItems === "string") {
+      try {
+        const parsed = JSON.parse(rawItems);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {}
+    }
+    if (rawItems && typeof rawItems === "object") {
+      try {
+        const vals = Object.values(rawItems);
+        if (Array.isArray(vals)) return vals;
+      } catch {}
+    }
+    return [];
+  };
+
   // Helper to build formatted message for delivery driver
   const formatDeliveryText = (order: Order) => {
     const isMP = order.paymentMethod === "mercadopago";
     let text = `🍕 *PEDIDO #${order.id.slice(-6).toUpperCase()} — ALAKARY*\n`;
     text += `👤 *Cliente:* ${order.customerName}\n`;
     if (order.customerPhone) text += `📱 *Teléfono:* ${order.customerPhone}\n`;
-    text += `📍 *Modalidad:* ${order.deliveryType === "envio" ? `Envío a Domicilio (${order.customerAddress || "Sin dirección"})` : "Retiro en Local"}\n`;
+    text += `📍 *Modalidad:* ${order.deliveryType === "retiro" ? "Retiro en Local" : `Envío a Domicilio (${order.customerAddress || "Sin dirección"})`}\n`;
     text += `💳 *Pago:* ${isMP ? "Mercado Pago (Pagado Online ✅)" : `Efectivo (Cobrar al entregar: $${formatMoney(order.total)} 💵)`}\n`;
     text += `\n*Detalle del pedido:*\n`;
 
-    (order.items || []).forEach((item) => {
-      text += `• *${item.quantity}x* ${item.name}`;
-      if (item.comment) text += ` _(${item.comment})_`;
-      text += ` — $${formatMoney(item.price * item.quantity)}\n`;
-    });
+    const itemsList = parseOrderItems(order.items);
+    if (itemsList.length === 0) {
+      text += `• 1x Pedido Alakary\n`;
+    } else {
+      itemsList.forEach((item: any) => {
+        const qty = item.quantity || item.qty || 1;
+        const name = item.name || item.title || "Producto";
+        const price = item.price ? Number(item.price) * Number(qty) : 0;
+        text += `• *${qty}x* ${name}`;
+        if (item.comment) text += ` _(${item.comment})_`;
+        if (price > 0) text += ` — $${formatMoney(price)}`;
+        text += `\n`;
+      });
+    }
 
     text += `\n💰 *TOTAL:* $${formatMoney(order.total)}\n`;
     return text;
@@ -1043,19 +1070,24 @@ export default function AdminStockAndFinancePage() {
                         PRODUCTOS DEL PEDIDO:
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        {order.items.map((item, idx) => (
-                          <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-                            <span>
-                              <strong>{item.quantity}x</strong> {item.name}
-                              {item.comment && (
-                                <span style={{ color: "var(--b1-color-text-muted)", fontStyle: "italic", marginLeft: 4 }}>
-                                  ({item.comment})
-                                </span>
-                              )}
-                            </span>
-                            <span style={{ fontWeight: 600 }}>${formatMoney(item.price * item.quantity)}</span>
-                          </div>
-                        ))}
+                        {parseOrderItems(order.items).map((item: any, idx: number) => {
+                          const qty = item.quantity || item.qty || 1;
+                          const name = item.name || item.title || "Producto";
+                          const price = item.price ? Number(item.price) * Number(qty) : 0;
+                          return (
+                            <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                              <span>
+                                <strong>{qty}x</strong> {name}
+                                {item.comment && (
+                                  <span style={{ color: "var(--b1-color-text-muted)", fontStyle: "italic", marginLeft: 4 }}>
+                                    ({item.comment})
+                                  </span>
+                                )}
+                              </span>
+                              <span style={{ fontWeight: 600 }}>${formatMoney(price)}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
 
