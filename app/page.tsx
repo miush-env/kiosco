@@ -877,7 +877,7 @@ export default function CustomerCatalogPage() {
             type="text"
             id="appSearchInput"
             className="b1-search-input"
-            placeholder="Buscar por plato o ingrediente (ej: cheddar, muzzarella)..."
+            placeholder="Buscar pizzas, empanadas, minutas, bebidas..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -928,7 +928,7 @@ export default function CustomerCatalogPage() {
       {!searchQuery && selectedCategory === "all" && suggestions.length > 0 && (
         <section id="suggestionsSection">
           <div className="b1-suggestions-header">
-            <h2 className="b1-suggestions-title" style={{ fontSize: "16px", fontWeight: 800 }}>Nuestras sugerencias y destacados</h2>
+            <h2 className="b1-suggestions-title" style={{ fontSize: "16px", fontWeight: 800 }}>Sugerencias y Destacados</h2>
             <span
               className="b1-suggestions-link"
               onClick={() => setSelectedCategory("all")}
@@ -985,7 +985,7 @@ export default function CustomerCatalogPage() {
           {searchQuery
             ? `Resultados para "${searchQuery}"`
             : selectedCategory === "all"
-            ? "Todos los Platos y Especialidades"
+            ? "Nuestra Carta"
             : categories.find((c) => c.id === selectedCategory)?.name || "Platos"}
         </h2>
       </section>
@@ -1363,12 +1363,12 @@ export default function CustomerCatalogPage() {
                     {/* Notes */}
                     <div className="b1-form-group" style={{ marginBottom: 16 }}>
                       <label className="b1-form-label">
-                        <i className="far fa-edit"></i> Aclaraciones (ej: sin cebolla, aderezos aparte)
+                        <i className="far fa-edit"></i> Indicaciones para la cocina (opcional)
                       </label>
                       <input
                         type="text"
                         className="b1-input"
-                        placeholder="Escribí aquí tu preferencia..."
+                        placeholder="Ej: bien cocida, sin orégano, aderezos aparte..."
                         value={detailComment}
                         onChange={(e) => setDetailComment(e.target.value)}
                         disabled={isSoldOut || isCappedInCart}
@@ -1383,6 +1383,7 @@ export default function CustomerCatalogPage() {
                       className="b1-btn-primary"
                       disabled={isSoldOut || isCappedInCart}
                       onClick={addProductFromDetail}
+                      style={{ padding: "14px 18px", fontSize: 15 }}
                     >
                       <span>
                         <i className={`fas ${isSoldOut || isCappedInCart ? "fa-ban" : "fa-plus-circle"}`} style={{ marginRight: 6 }}></i>
@@ -1390,9 +1391,9 @@ export default function CustomerCatalogPage() {
                           ? "Agotado por falta de stock"
                           : isCappedInCart
                           ? `Máximo en carrito (${maxStock})`
-                          : "Agregar a mi pedido"}
+                          : "Agregar al pedido"}
                       </span>
-                      <span>${formatMoney(selectedProduct.price * (isSoldOut || isCappedInCart ? 0 : detailQty))}</span>
+                      <span style={{ fontWeight: 900 }}>${formatMoney(selectedProduct.price * (isSoldOut || isCappedInCart ? 0 : detailQty))}</span>
                     </button>
                   </div>
                 </>
