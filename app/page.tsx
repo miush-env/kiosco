@@ -152,13 +152,13 @@ export default function CustomerCatalogPage() {
   }, [isAnyModalOpen]);
 
 
-  // Dark Mode / Theme State
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  // Dark / Light Mode Theme State
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem("kiosco_theme") as "light" | "dark" | null;
-      const initialTheme = savedTheme || "dark";
+      const initialTheme = (savedTheme === "dark" || savedTheme === "light") ? savedTheme : "light";
       setTheme(initialTheme);
       document.documentElement.setAttribute("data-theme", initialTheme);
     } catch (e) {}
@@ -1351,6 +1351,7 @@ export default function CustomerCatalogPage() {
                               fontWeight: 800,
                               minWidth: 24,
                               textAlign: "center",
+                              color: "var(--b1-color-text-main)",
                             }}
                           >
                             {isSoldOut || isCappedInCart ? 0 : detailQty}
@@ -1514,7 +1515,7 @@ export default function CustomerCatalogPage() {
                         >
                           <i className="fas fa-minus"></i>
                         </button>
-                        <span style={{ fontSize: 14, fontWeight: 800, minWidth: 16, textAlign: "center" }}>
+                        <span style={{ fontSize: 14, fontWeight: 800, minWidth: 16, textAlign: "center", color: "var(--b1-color-text-main)" }}>
                           {item.quantity}
                         </span>
                         <button

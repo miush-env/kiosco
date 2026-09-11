@@ -103,17 +103,17 @@ export default function RootLayout({
           <link rel="stylesheet" href="/assets/css/theme-variables.css" />
           <link rel="stylesheet" href="/assets/css/modern-app.css" />
 
-          {/* Instant Dark Mode Pre-loader */}
+          {/* Instant Theme Pre-loader */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
                 (function() {
                   try {
                     var saved = localStorage.getItem('kiosco_theme');
-                    var theme = saved ? saved : 'dark';
+                    var theme = (saved === 'dark' || saved === 'light') ? saved : 'light';
                     document.documentElement.setAttribute('data-theme', theme);
                   } catch (e) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.documentElement.setAttribute('data-theme', 'light');
                   }
                 })();
               `,

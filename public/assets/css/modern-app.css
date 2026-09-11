@@ -1267,20 +1267,26 @@ body.modal-open {
 }
 
 .b1-step-btn.minus {
-  background: #fff;
+  background: var(--b1-color-surface);
   color: var(--b1-color-danger);
-  border: 1px solid var(--b1-color-border);
+  border: 1.5px solid var(--b1-color-border);
   box-shadow: var(--b1-shadow-xs);
 }
 
 .b1-step-btn.plus {
   background: var(--b1-color-primary);
-  color: #fff;
+  color: #ffffff;
   box-shadow: 0 4px 10px var(--b1-color-primary-glow);
 }
 
 .b1-step-btn:active {
   transform: scale(0.88);
+}
+
+.b1-step-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Primary Button */
@@ -1325,7 +1331,7 @@ body.modal-open {
 .b1-input {
   width: 100%;
   background: var(--b1-color-surface-subtle);
-  border: 1px solid var(--b1-color-border);
+  border: 1.5px solid var(--b1-color-border);
   border-radius: var(--b1-radius-md);
   padding: 12px 14px;
   font-size: var(--b1-font-size-sm);
@@ -1336,9 +1342,13 @@ body.modal-open {
 }
 
 .b1-input:focus {
-  background: #fff;
+  background: var(--b1-color-surface);
   border-color: var(--b1-color-primary);
   box-shadow: 0 0 0 3px var(--b1-color-primary-glow);
+}
+
+.b1-input::placeholder {
+  color: var(--b1-color-text-muted);
 }
 
 .b1-choice-cards {
@@ -1475,35 +1485,59 @@ body.modal-open {
   text-decoration: none;
 }
 
-/* ── MODAL BACKDROP & CARD BASE ── */
+/* ── MODAL BACKDROP, SHEETS & CARD BASE ── */
 .b1-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(15, 23, 42, 0.7) !important;
+  background-color: var(--b1-color-overlay) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-end !important;
   justify-content: center !important;
-  padding: 16px !important;
   z-index: 99999 !important;
   animation: b1ModalFadeIn 0.2s ease-out;
 }
 
+@media (min-width: 640px) {
+  .b1-modal-backdrop {
+    align-items: center !important;
+    padding: 16px !important;
+  }
+}
+
+.b1-modal-sheet {
+  background-color: var(--b1-color-surface) !important;
+  color: var(--b1-color-text-main);
+  width: 100%;
+  max-width: var(--b1-max-width-app, 480px);
+  max-height: 92vh;
+  border-radius: 26px 26px 0 0 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--b1-shadow-sheet);
+  position: relative;
+  border: 1px solid var(--b1-color-border);
+  border-bottom: none;
+  animation: b1ModalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .b1-modal-card {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
+  background-color: var(--b1-color-surface) !important;
+  color: var(--b1-color-text-main);
   border-radius: 20px !important;
   width: 100% !important;
   max-width: 440px !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
   overflow: hidden !important;
   position: relative !important;
-  border: 1px solid #E2E8F0 !important;
+  border: 1px solid var(--b1-color-border) !important;
   animation: b1ModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: auto 16px;
 }
 
 @keyframes b1ModalFadeIn {
@@ -1516,105 +1550,35 @@ body.modal-open {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* ── COMPREHENSIVE DARK MODE COMPONENT STYLES ────────────────────────────── */
-[data-theme="dark"] body {
-  background-color: var(--b1-color-bg);
-  color: var(--b1-color-text-main);
+@keyframes b1ModalSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
-[data-theme="dark"] .b1-app-wrapper {
-  background-color: var(--b1-color-bg);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+/* ── THEME ENHANCEMENTS FOR DARK MODE ────────────────────────────────────── */
+[data-theme="dark"] .b1-topbar-brand,
+[data-theme="dark"] .b1-detail-title,
+[data-theme="dark"] .b1-row-title,
+[data-theme="dark"] .b1-modal-title,
+[data-theme="dark"] .b1-sheet-title {
+  color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .b1-topbar {
-  background-color: var(--b1-color-surface);
-  border-bottom-color: var(--b1-color-border);
+[data-theme="dark"] .b1-detail-circle-btn {
+  background: rgba(30, 41, 59, 0.85);
+  color: #F8FAFC;
+  border: 1px solid #334155;
 }
 
-[data-theme="dark"] .b1-topbar-info h1 {
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-icon-btn {
-  background: var(--b1-color-surface);
-  border-color: var(--b1-color-border);
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-icon-btn:hover {
-  background: var(--b1-color-surface-subtle);
-}
-
-[data-theme="dark"] .b1-search-box {
-  background: var(--b1-color-surface);
-  border-color: var(--b1-color-border);
-}
-
-[data-theme="dark"] .b1-search-input {
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-search-input::placeholder {
-  color: var(--b1-color-text-muted);
-}
-
-[data-theme="dark"] .b1-category-pill {
-  background: var(--b1-color-surface);
-  border-color: var(--b1-color-border);
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-category-pill.active {
-  background: var(--b1-color-primary-light);
-  border-color: var(--b1-color-primary);
-  color: var(--b1-color-primary);
-}
-
-[data-theme="dark"] .b1-suggestion-card {
-  background: var(--b1-color-surface);
-  border-color: var(--b1-color-border);
-}
-
-[data-theme="dark"] .b1-sugg-title {
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-sugg-rating {
-  background: rgba(245, 158, 11, 0.15);
-  border-color: rgba(245, 158, 11, 0.3);
-  color: #FCD34D;
-}
-
-[data-theme="dark"] .b1-product-row-card {
-  background: var(--b1-color-surface);
-  border-color: var(--b1-color-border);
-}
-
-[data-theme="dark"] .b1-product-row-card:hover {
-  border-color: #475569;
-}
-
-[data-theme="dark"] .b1-row-title {
-  color: var(--b1-color-text-main);
-}
-
-[data-theme="dark"] .b1-row-desc {
-  color: var(--b1-color-text-muted);
-}
-
-[data-theme="dark"] .b1-row-meta {
-  background: var(--b1-color-surface-subtle);
-  color: #cbd5e1;
-}
-
-[data-theme="dark"] .b1-row-thumb {
-  background: var(--b1-color-surface-subtle);
-  border-color: var(--b1-color-border);
+[data-theme="dark"] .b1-ingredient-chip,
+[data-theme="dark"] .b1-ingredient-tag {
+  background: #243048;
+  color: #CBD5E1;
+  border-color: #334155;
 }
 
 [data-theme="dark"] .b1-row-add-btn {
-  background: #1e293b !important;
+  background: #1E293B !important;
   color: var(--b1-color-primary) !important;
   border-color: #334155 !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
@@ -1623,68 +1587,5 @@ body.modal-open {
 [data-theme="dark"] .b1-row-add-btn:hover {
   background: var(--b1-color-primary) !important;
   color: #ffffff !important;
-}
-
-[data-theme="dark"] .b1-modal-card {
-  background-color: #172033 !important;
-  background: #172033 !important;
-  border-color: #2C3A56 !important;
-  color: #F8FAFC !important;
-}
-
-[data-theme="dark"] .b1-modal-title,
-[data-theme="dark"] .b1-sheet-title {
-  color: #F8FAFC !important;
-}
-
-[data-theme="dark"] .b1-sheet-card {
-  background-color: #172033 !important;
-  border-color: #2C3A56 !important;
-  color: #F8FAFC !important;
-}
-
-[data-theme="dark"] .b1-input,
-[data-theme="dark"] .b1-textarea,
-[data-theme="dark"] .b1-select,
-[data-theme="dark"] .b1-form-input,
-[data-theme="dark"] input[type="text"],
-[data-theme="dark"] input[type="tel"],
-[data-theme="dark"] input[type="number"],
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background-color: #0B0F19 !important;
-  color: #F8FAFC !important;
-  border-color: #2C3A56 !important;
-}
-
-[data-theme="dark"] .b1-cart-item {
-  background-color: #1E293B;
-  border-color: #2C3A56;
-}
-
-[data-theme="dark"] .b1-cart-item-title {
-  color: #F8FAFC;
-}
-
-[data-theme="dark"] .b1-cart-footer {
-  background-color: #172033;
-  border-top-color: #2C3A56;
-}
-
-[data-theme="dark"] .b1-qty-btn {
-  background-color: #243048;
-  color: #F8FAFC;
-  border-color: #334155;
-}
-
-[data-theme="dark"] .b1-page-btn {
-  background-color: #172033;
-  border-color: #2C3A56;
-  color: #F8FAFC;
-}
-
-[data-theme="dark"] .b1-footer-agency,
-[data-theme="dark"] .b1-greeting-section {
-  color: var(--b1-color-text-main);
 }
 
