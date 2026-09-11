@@ -107,15 +107,25 @@ export default function CustomerCatalogPage() {
   const [customerStreet, setCustomerStreet] = useState("");
   const [customerStreetNumber, setCustomerStreetNumber] = useState("");
   const [customerAddressDetails, setCustomerAddressDetails] = useState("");
+  
+  // Cash change options
+  const [cashChangeOption, setCashChangeOption] = useState<"exact" | "change">("exact");
+  const [cashAmountGiven, setCashAmountGiven] = useState<string>("");
+
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     phone?: string;
     street?: string;
     streetNumber?: string;
     address?: string;
+    cashAmount?: string;
   }>({});
   const [isProcessingMP, setIsProcessingMP] = useState(false);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+
+  // Delivery estimation centralized config
+  const estimatedDeliveryTime = "30-45 min";
+  const estimatedPickupTime = "15-25 min";
 
   // Refs for auto-focusing erroneous inputs
   const nameInputRef = React.useRef<HTMLInputElement>(null);
@@ -123,6 +133,7 @@ export default function CustomerCatalogPage() {
   const streetInputRef = React.useRef<HTMLInputElement>(null);
   const streetNumberInputRef = React.useRef<HTMLInputElement>(null);
   const addressInputRef = React.useRef<HTMLInputElement>(null);
+  const cashAmountInputRef = React.useRef<HTMLInputElement>(null);
 
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
 
@@ -570,23 +581,37 @@ export default function CustomerCatalogPage() {
       phone?: string;
       street?: string;
       streetNumber?: string;
-      address?: string;
+      cashAmount?: string;
     } = {};
 
+    // 1. Validar nombre
     if (!customerName.trim()) {
-      newErrors.name = "Por favor ingresá tu nombre completo.";
+      newErrors.name = "⚠️ Ingresá tu nombre completo.";
     }
 
-    if (!customerPhone.trim()) {
-      newErrors.phone = "Por favor ingresá tu teléfono / WhatsApp de contacto.";
+    // 2. Validar teléfono (normalización flexible: quita espacios y guiones, mínimo 8 dígitos)
+    const phoneDigits = customerPhone.replace(/\D/g, "");
+    if (!customerPhone.trim() || phoneDigits.length < 8) {
+      newErrors.phone = "⚠️ Ingresá un teléfono válido (mínimo 8 dígitos).";
     }
 
+    // 3. Validar dirección si es envío
     if (deliveryType === "envio") {
       if (!customerStreet.trim()) {
-        newErrors.street = "Por favor ingresá la calle de entrega.";
+        newErrors.street = "⚠️ Ingresá la calle de entrega.";
       }
       if (!customerStreetNumber.trim()) {
-        newErrors.streetNumber = "Por favor ingresá la altura / número.";
+        newErrors.streetNumber = "⚠️ Ingresá la altura / número.";
+      }
+    }
+
+    // 4. Validar vuelto si es efectivo y solicita vuelto
+    const numCashGiven = parseFloat(cashAmountGiven.replace(/[^0-9.]/g, "")) || 0;
+    if (paymentMethod === "efectivo" && cashChangeOption === "change") {
+      if (!cashAmountGiven.trim() || numCashGiven <= 0) {
+        newErrors.cashAmount = "⚠️ Ingresá con cuánto vas a pagar.";
+      } else if (numCashGiven < cartTotal) {
+        newErrors.cashAmount = `⚠️ El monto ($${formatMoney(numCashGiven)}) debe ser mayor o igual al total ($${formatMoney(cartTotal)}).`;
       }
     }
 
@@ -594,12 +619,19 @@ export default function CustomerCatalogPage() {
       setFormErrors(newErrors);
       if (newErrors.name) {
         nameInputRef.current?.focus();
+        nameInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       } else if (newErrors.phone) {
         phoneInputRef.current?.focus();
+        phoneInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       } else if (newErrors.street) {
         streetInputRef.current?.focus();
+        streetInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       } else if (newErrors.streetNumber) {
         streetNumberInputRef.current?.focus();
+        streetNumberInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else if (newErrors.cashAmount) {
+        cashAmountInputRef.current?.focus();
+        cashAmountInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }
       return;
     }
@@ -679,7 +711,14 @@ export default function CustomerCatalogPage() {
       if (deliveryType === "envio") {
         msg += `🏠 *Dirección:* ${fullAddress}\n`;
       }
-      msg += `💳 *Medio de pago:* Efectivo (Pago contra entrega)\n`;
+      
+      const cashChangeDue = Math.max(0, numCashGiven - cartTotal);
+      if (cashChangeOption === "change" && numCashGiven >= cartTotal) {
+        msg += `💳 *Medio de pago:* Efectivo (Paga con: $${formatMoney(numCashGiven)} — Vuelto: $${formatMoney(cashChangeDue)} 💵)\n`;
+      } else {
+        msg += `💳 *Medio de pago:* Efectivo (Monto exacto / Sin vuelto 💵)\n`;
+      }
+      
       msg += `\n*Detalle del pedido:*\n`;
 
       cart.forEach((item) => {
@@ -687,10 +726,14 @@ export default function CustomerCatalogPage() {
         if (item.comment) msg += `  _(Nota: ${item.comment})_\n`;
       });
 
-      if (deliveryCost > 0) {
-        msg += `\n🛵 *Envío:* $${formatMoney(deliveryCost)}\n`;
+      if (deliveryType === "envio") {
+        if (deliveryCost > 0) {
+          msg += `\n🛵 *Envío:* $${formatMoney(deliveryCost)}\n`;
+        } else {
+          msg += `\n🛵 *Envío:* ¡Gratis!\n`;
+        }
       } else {
-        msg += `\n🛵 *Envío:* ¡Gratis!\n`;
+        msg += `\n🏬 *Retiro:* En local (Gratis)\n`;
       }
       msg += `\n💰 *TOTAL:* $${formatMoney(cartTotal)}\n`;
 
@@ -1524,7 +1567,7 @@ export default function CustomerCatalogPage() {
            ══════════════════════════════════════════════════════════════════ */}
       {isCheckoutOpen && (
         <div className="b1-modal-backdrop" onClick={() => setIsCheckoutOpen(false)}>
-          <div className="b1-modal-sheet" onClick={(e) => e.stopPropagation()}>
+          <div className="b1-modal-sheet" onClick={(e) => e.stopPropagation()} style={{ display: "flex", flexDirection: "column", maxHeight: "92vh" }}>
             <div className="b1-sheet-drag-handle"></div>
             <div
               style={{
@@ -1533,9 +1576,13 @@ export default function CustomerCatalogPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                flexShrink: 0,
               }}
             >
-              <h5 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>Finalizar Pedido</h5>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <i className="fas fa-shopping-bag" style={{ color: "var(--b1-color-primary)", fontSize: 18 }}></i>
+                <h5 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>Finalizar Pedido</h5>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsCheckoutOpen(false)}
@@ -1546,8 +1593,8 @@ export default function CustomerCatalogPage() {
               </button>
             </div>
 
-            <div style={{ padding: "16px 20px", overflowY: "auto", flex: 1 }}>
-              {/* Validation Alert Banner */}
+            <div className="b1-checkout-body">
+              {/* Validation Alert Banner Summary */}
               {Object.keys(formErrors).length > 0 && (
                 <div
                   style={{
@@ -1567,13 +1614,15 @@ export default function CustomerCatalogPage() {
                   }}
                 >
                   <i className="fas fa-exclamation-triangle" style={{ fontSize: 15, color: "#DC2626" }}></i>
-                  <span>Por favor completá los campos obligatorios marcados en rojo.</span>
+                  <span>Por favor revisá los campos marcados en rojo para continuar.</span>
                 </div>
               )}
 
-              {/* 1. Forma de entrega */}
+              {/* 1. FORMA DE ENTREGA */}
               <div className="b1-form-group">
-                <label className="b1-form-label">1. Forma de entrega</label>
+                <div className="b1-checkout-section-title">
+                  <i className="fas fa-truck"></i> 1. Forma de entrega
+                </div>
                 <div className="b1-choice-cards">
                   <div
                     className={`b1-choice-card ${deliveryType === "envio" ? "active" : ""}`}
@@ -1582,25 +1631,53 @@ export default function CustomerCatalogPage() {
                     }}
                   >
                     <i className="fas fa-motorcycle" style={{ fontSize: 18, marginBottom: 4, display: "block" }}></i>
-                    <span>Envío (Gratis)</span>
+                    <strong style={{ display: "block" }}>Envío a Domicilio</strong>
+                    <span style={{ fontSize: 11, color: "var(--b1-color-success)", fontWeight: 700 }}>¡Envío Gratis!</span>
                   </div>
                   <div
                     className={`b1-choice-card ${deliveryType === "retiro" ? "active" : ""}`}
                     onClick={() => {
                       setDeliveryType("retiro");
-                      setFormErrors((prev) => ({ ...prev, address: undefined }));
+                      setFormErrors((prev) => ({ ...prev, street: undefined, streetNumber: undefined }));
                     }}
                   >
                     <i className="fas fa-store" style={{ fontSize: 18, marginBottom: 4, display: "block" }}></i>
-                    <span>Retiro en Local</span>
+                    <strong style={{ display: "block" }}>Retiro en Local</strong>
+                    <span style={{ fontSize: 11, color: "var(--b1-color-text-muted)" }}>En nuestro local</span>
                   </div>
                 </div>
+
+                {/* Delivery estimate note */}
+                {deliveryType === "envio" ? (
+                  <div style={{ marginTop: 6, display: "flex", alignItems: "center" }}>
+                    <span className="b1-delivery-estimate-tag">
+                      <i className="fas fa-clock"></i> Llega en {estimatedDeliveryTime} aprox.
+                    </span>
+                  </div>
+                ) : (
+                  /* Pickup in Store card */
+                  <div className="b1-pickup-box" style={{ marginTop: 10 }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <i className="fas fa-map-marker-alt" style={{ color: "#3B82F6", fontSize: 18, marginTop: 2 }}></i>
+                      <div>
+                        <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)", display: "block" }}>
+                          Punto de retiro: {storeInfo.address || "Paderewski 366, Lanús / Valentín Alsina"}
+                        </strong>
+                        <span style={{ fontSize: 12, color: "var(--b1-color-text-muted)" }}>
+                          🕒 Listo para retirar en <strong>{estimatedPickupTime} aprox.</strong>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* 2. Datos del cliente (Autocompletados y Editables) */}
+              {/* 2. DATOS DEL CLIENTE (Autocompletados y Editables) */}
               <div className="b1-form-group">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                  <label className="b1-form-label" style={{ margin: 0 }}>2. Tus datos de entrega</label>
+                  <div className="b1-checkout-section-title" style={{ margin: 0 }}>
+                    <i className="fas fa-user"></i> 2. Tus datos de contacto
+                  </div>
                   {(customerName || customerPhone) && (
                     <span
                       style={{
@@ -1615,9 +1692,9 @@ export default function CustomerCatalogPage() {
                         borderRadius: "10px",
                         border: "1px solid #A7F3D0",
                       }}
-                      title="Tus datos quedan guardados y podés modificarlos en cualquier momento"
+                      title="Datos guardados en tu dispositivo para mayor rapidez"
                     >
-                      <i className="fas fa-check-circle" style={{ fontSize: 11 }}></i> Autocompletado
+                      <i className="fas fa-check-circle" style={{ fontSize: 11 }}></i> ✓ Nombre y teléfono autocompletados
                     </span>
                   )}
                 </div>
@@ -1627,14 +1704,8 @@ export default function CustomerCatalogPage() {
                   <input
                     ref={nameInputRef}
                     type="text"
-                    className="b1-input"
+                    className={`b1-input ${formErrors.name ? "b1-input-error" : ""}`}
                     placeholder="Nombre completo *"
-                    style={{
-                      border: formErrors.name ? "1.5px solid #EF4444" : undefined,
-                      backgroundColor: formErrors.name ? "#FFF5F5" : undefined,
-                      boxShadow: formErrors.name ? "0 0 0 3px rgba(239, 68, 68, 0.15)" : undefined,
-                      transition: "all 0.2s ease",
-                    }}
                     value={customerName}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -1652,17 +1723,7 @@ export default function CustomerCatalogPage() {
                     }}
                   />
                   {formErrors.name && (
-                    <span
-                      style={{
-                        color: "#DC2626",
-                        fontSize: "11px",
-                        fontWeight: 700,
-                        marginTop: "4px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
+                    <span className="b1-field-error-msg">
                       <i className="fas fa-exclamation-circle"></i> {formErrors.name}
                     </span>
                   )}
@@ -1673,14 +1734,8 @@ export default function CustomerCatalogPage() {
                   <input
                     ref={phoneInputRef}
                     type="tel"
-                    className="b1-input"
-                    placeholder="Teléfono / WhatsApp (Obligatorio) *"
-                    style={{
-                      border: formErrors.phone ? "1.5px solid #EF4444" : undefined,
-                      backgroundColor: formErrors.phone ? "#FFF5F5" : undefined,
-                      boxShadow: formErrors.phone ? "0 0 0 3px rgba(239, 68, 68, 0.15)" : undefined,
-                      transition: "all 0.2s ease",
-                    }}
+                    className={`b1-input ${formErrors.phone ? "b1-input-error" : ""}`}
+                    placeholder="Teléfono / WhatsApp (ej: 11 2345-6789) *"
                     value={customerPhone}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -1698,45 +1753,29 @@ export default function CustomerCatalogPage() {
                     }}
                   />
                   {formErrors.phone && (
-                    <span
-                      style={{
-                        color: "#DC2626",
-                        fontSize: "11px",
-                        fontWeight: 700,
-                        marginTop: "4px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
+                    <span className="b1-field-error-msg">
                       <i className="fas fa-exclamation-circle"></i> {formErrors.phone}
                     </span>
                   )}
                 </div>
+              </div>
 
-                {/* Dirección de entrega */}
-                {deliveryType === "envio" && (
-                  <div style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 12, padding: "12px 14px" }}>
-                    <div style={{ marginBottom: 8 }}>
-                      <label className="b1-form-label" style={{ margin: 0, fontSize: 12 }}>
-                        Dirección de entrega *
-                      </label>
-                    </div>
-
-                    {/* Calle y Número en la misma fila */}
+              {/* 3. DIRECCIÓN DE ENTREGA (Solo para Envíos) */}
+              {deliveryType === "envio" && (
+                <div className="b1-form-group">
+                  <div className="b1-checkout-section-title">
+                    <i className="fas fa-map-marker-alt"></i> 3. Dirección de entrega
+                  </div>
+                  <div className="b1-checkout-card" style={{ padding: "14px" }}>
+                    {/* Calle y Altura */}
                     <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
                       <div style={{ flex: 2.3 }}>
                         <input
                           ref={streetInputRef}
                           type="text"
-                          className="b1-input"
-                          placeholder="Calle *"
-                          style={{
-                            background: "#ffffff",
-                            border: formErrors.street ? "1.5px solid #EF4444" : undefined,
-                            backgroundColor: formErrors.street ? "#FFF5F5" : "#ffffff",
-                            boxShadow: formErrors.street ? "0 0 0 3px rgba(239, 68, 68, 0.15)" : undefined,
-                          }}
+                          className={`b1-input ${formErrors.street ? "b1-input-error" : ""}`}
+                          placeholder="Calle (ej: Paderewski) *"
+                          style={{ background: "var(--b1-color-surface)" }}
                           value={customerStreet}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -1752,7 +1791,7 @@ export default function CustomerCatalogPage() {
                           }}
                         />
                         {formErrors.street && (
-                          <span style={{ color: "#DC2626", fontSize: "11px", fontWeight: 700, marginTop: "4px", display: "block" }}>
+                          <span className="b1-field-error-msg">
                             <i className="fas fa-exclamation-circle"></i> {formErrors.street}
                           </span>
                         )}
@@ -1762,14 +1801,9 @@ export default function CustomerCatalogPage() {
                         <input
                           ref={streetNumberInputRef}
                           type="text"
-                          className="b1-input"
-                          placeholder="Número *"
-                          style={{
-                            background: "#ffffff",
-                            border: formErrors.streetNumber ? "1.5px solid #EF4444" : undefined,
-                            backgroundColor: formErrors.streetNumber ? "#FFF5F5" : "#ffffff",
-                            boxShadow: formErrors.streetNumber ? "0 0 0 3px rgba(239, 68, 68, 0.15)" : undefined,
-                          }}
+                          className={`b1-input ${formErrors.streetNumber ? "b1-input-error" : ""}`}
+                          placeholder="Altura / N° *"
+                          style={{ background: "var(--b1-color-surface)" }}
                           value={customerStreetNumber}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -1785,7 +1819,7 @@ export default function CustomerCatalogPage() {
                           }}
                         />
                         {formErrors.streetNumber && (
-                          <span style={{ color: "#DC2626", fontSize: "11px", fontWeight: 700, marginTop: "4px", display: "block" }}>
+                          <span className="b1-field-error-msg">
                             <i className="fas fa-exclamation-circle"></i> {formErrors.streetNumber}
                           </span>
                         )}
@@ -1798,7 +1832,7 @@ export default function CustomerCatalogPage() {
                         type="text"
                         className="b1-input"
                         placeholder="Piso / Depto / Indicaciones de timbre (Opcional)"
-                        style={{ background: "#ffffff", fontSize: "12px" }}
+                        style={{ background: "var(--b1-color-surface)", fontSize: "12px" }}
                         value={customerAddressDetails}
                         onChange={(e) => {
                           const val = e.target.value;
@@ -1813,13 +1847,21 @@ export default function CustomerCatalogPage() {
                         }}
                       />
                     </div>
-                  </div>
-                )}
-              </div>
 
-              {/* 3. Medio de pago */}
+                    {/* Zone verification status */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--b1-color-success)", fontWeight: 700, marginTop: 8 }}>
+                      <i className="fas fa-check-circle"></i>
+                      <span>✓ Dirección dentro de zona de entrega habitual</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 4. MEDIO DE PAGO */}
               <div className="b1-form-group">
-                <label className="b1-form-label">3. Medio de pago</label>
+                <div className="b1-checkout-section-title">
+                  <i className="fas fa-credit-card"></i> {deliveryType === "envio" ? "4. Medio de pago" : "3. Medio de pago"}
+                </div>
                 <div className="b1-payment-chips">
                   <div
                     className={`b1-payment-chip ${paymentMethod === "mercadopago" ? "active" : ""}`}
@@ -1870,34 +1912,134 @@ export default function CustomerCatalogPage() {
                         Pago instantáneo y 100% seguro
                       </div>
                       <div style={{ fontSize: 12, color: "var(--b1-color-text-main)", lineHeight: 1.4 }}>
-                        Acepta <strong>Débito, Crédito, Dinero en cuenta</strong> o <strong>Transferencia bancaria / CVU</strong> desde cualquier banco o billetera virtual.
+                        Acepta <strong>Débito, Crédito, Dinero en cuenta</strong> o <strong>Transferencia bancaria / CVU</strong> desde cualquier billetera virtual.
                       </div>
                     </div>
                   </div>
                 )}
 
                 {paymentMethod === "efectivo" && (
-                  <div
-                    style={{
-                      background: "rgba(16, 185, 129, 0.08)",
-                      border: "1.5px dashed rgba(16, 185, 129, 0.4)",
-                      borderRadius: "var(--b1-radius-md)",
-                      padding: "10px 14px",
-                      marginTop: 10,
-                      fontSize: 12,
-                      color: "#065F46",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <i className="fas fa-hand-holding-usd" style={{ fontSize: 15 }}></i>
-                    <span>Abonás en efectivo cuando recibís el pedido o al retirar en el local.</span>
+                  <div style={{ marginTop: 10 }}>
+                    <div
+                      style={{
+                        background: "rgba(16, 185, 129, 0.08)",
+                        border: "1.5px dashed rgba(16, 185, 129, 0.4)",
+                        borderRadius: "var(--b1-radius-md)",
+                        padding: "10px 14px",
+                        fontSize: 12,
+                        color: "#065F46",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <i className="fas fa-hand-holding-usd" style={{ fontSize: 15 }}></i>
+                      <span>Abonás en efectivo cuando recibís el pedido o al retirar en el local.</span>
+                    </div>
+
+                    {/* Vuelto / Change Calculator */}
+                    <div className="b1-checkout-card" style={{ padding: "12px 14px", margin: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8, color: "var(--b1-color-text-main)" }}>
+                        ¿Necesitás vuelto?
+                      </div>
+                      <div style={{ display: "flex", gap: 8, marginBottom: cashChangeOption === "change" ? 10 : 0 }}>
+                        <button
+                          type="button"
+                          className={`b1-vuelto-btn ${cashChangeOption === "exact" ? "active" : ""}`}
+                          onClick={() => {
+                            setCashChangeOption("exact");
+                            if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
+                          }}
+                        >
+                          Pago Justo (Sin vuelto)
+                        </button>
+                        <button
+                          type="button"
+                          className={`b1-vuelto-btn ${cashChangeOption === "change" ? "active" : ""}`}
+                          onClick={() => setCashChangeOption("change")}
+                        >
+                          ¿Con cuánto vas a pagar?
+                        </button>
+                      </div>
+
+                      {cashChangeOption === "change" && (
+                        <div>
+                          <div style={{ position: "relative" }}>
+                            <span style={{ position: "absolute", left: 12, top: 11, fontWeight: 800, color: "var(--b1-color-text-muted)" }}>$</span>
+                            <input
+                              ref={cashAmountInputRef}
+                              type="number"
+                              inputMode="numeric"
+                              className={`b1-input ${formErrors.cashAmount ? "b1-input-error" : ""}`}
+                              placeholder={`Monto (ej: ${formatMoney(Math.ceil(cartTotal / 1000) * 1000 + 2000)})`}
+                              style={{ paddingLeft: 26, background: "var(--b1-color-surface)" }}
+                              value={cashAmountGiven}
+                              onChange={(e) => {
+                                setCashAmountGiven(e.target.value);
+                                if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
+                              }}
+                            />
+                          </div>
+
+                          {formErrors.cashAmount && (
+                            <span className="b1-field-error-msg">
+                              <i className="fas fa-exclamation-circle"></i> {formErrors.cashAmount}
+                            </span>
+                          )}
+
+                          {parseFloat(cashAmountGiven) >= cartTotal && (
+                            <div
+                              style={{
+                                marginTop: 8,
+                                background: "#ECFDF5",
+                                border: "1px solid #10B981",
+                                color: "#065F46",
+                                padding: "8px 12px",
+                                borderRadius: 10,
+                                fontSize: 12,
+                                fontWeight: 800,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                              }}
+                            >
+                              <i className="fas fa-money-bill-wave"></i>
+                              <span>Tu vuelto será: ${formatMoney(parseFloat(cashAmountGiven) - cartTotal)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* 4. Resumen */}
+              {/* 5. TU PEDIDO (Itemized Summary) */}
+              <div className="b1-checkout-card" style={{ marginBottom: 14 }}>
+                <div className="b1-checkout-section-title">
+                  <i className="fas fa-receipt"></i> Tu Pedido ({cartItemCount} {cartItemCount === 1 ? "plato" : "platos"})
+                </div>
+                <div className="b1-order-items-list">
+                  {cart.map((item) => (
+                    <div key={item.cartId} className="b1-order-item-row">
+                      <div style={{ flex: 1, paddingRight: 8 }}>
+                        <span className="b1-order-item-qty">{item.quantity}×</span>
+                        <span className="b1-order-item-name">{item.name}</span>
+                        {item.comment && (
+                          <span className="b1-order-item-note">
+                            <i className="fas fa-comment-dots" style={{ marginRight: 3 }}></i>
+                            {item.comment}
+                          </span>
+                        )}
+                      </div>
+                      <span className="b1-order-item-price">${formatMoney(item.price * item.quantity)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 6. DESGLOSE DE TOTALES */}
               <div className="b1-summary-box">
                 <div className="b1-summary-row">
                   <span>Subtotal pedido:</span>
@@ -1906,7 +2048,11 @@ export default function CustomerCatalogPage() {
                 <div className="b1-summary-row">
                   <span>Entrega:</span>
                   <strong style={{ color: "var(--b1-color-success)" }}>
-                    {deliveryCost === 0 ? "Gratis" : `$${formatMoney(deliveryCost)}`}
+                    {deliveryType === "retiro"
+                      ? "Retiro en local (Gratis)"
+                      : deliveryCost === 0
+                      ? "Envío Gratis"
+                      : `$${formatMoney(deliveryCost)}`}
                   </strong>
                 </div>
                 <div className="b1-summary-row total">
@@ -1918,13 +2064,14 @@ export default function CustomerCatalogPage() {
               </div>
             </div>
 
-            {/* Checkout Footer */}
-            <div style={{ padding: "14px 18px", borderTop: "1px solid var(--b1-color-border-light)" }}>
+            {/* Sticky Mobile / Desktop Footer with Safe Area */}
+            <div className="b1-checkout-sticky-footer">
               <button
                 type="button"
                 className="b1-btn-primary"
                 disabled={isProcessingMP || isSubmittingOrder}
                 onClick={handleFinalizeOrder}
+                style={{ padding: "14px 18px", fontSize: 15 }}
               >
                 <span>
                   {paymentMethod === "mercadopago" ? (
@@ -1935,11 +2082,11 @@ export default function CustomerCatalogPage() {
                   ) : (
                     <>
                       <i className="fab fa-whatsapp" style={{ fontSize: 18, marginRight: 6 }}></i>
-                      {isSubmittingOrder ? "Redirigiendo a WhatsApp..." : "Enviar por WhatsApp"}
+                      {isSubmittingOrder ? "Redirigiendo a WhatsApp..." : "Enviar Pedido por WhatsApp"}
                     </>
                   )}
                 </span>
-                <span>${formatMoney(cartTotal)}</span>
+                <span style={{ fontWeight: 900 }}>${formatMoney(cartTotal)}</span>
               </button>
             </div>
           </div>

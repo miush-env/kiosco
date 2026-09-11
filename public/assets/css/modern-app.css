@@ -1718,3 +1718,187 @@ body.modal-open {
   text-align: center;
 }
 
+/* ── CHECKOUT ENHANCEMENTS & MOBILE STICKY FOOTER ────────────────────────── */
+.b1-checkout-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .b1-checkout-body {
+    padding-bottom: 110px; /* Space for sticky footer on mobile */
+  }
+}
+
+.b1-checkout-sticky-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--b1-color-surface);
+  border-top: 1px solid var(--b1-color-border);
+  padding: 12px 18px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.b1-checkout-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.b1-field-error-msg {
+  color: #DC2626;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: b1-slide-up 0.15s ease-out;
+}
+
+.b1-input-error {
+  border-color: #EF4444 !important;
+  background-color: #FEF2F2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+[data-theme="dark"] .b1-input-error {
+  border-color: #EF4444 !important;
+  background-color: #3F1D1D !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+}
+
+.b1-checkout-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--b1-color-text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.b1-checkout-card {
+  background: var(--b1-color-surface-subtle);
+  border: 1px solid var(--b1-color-border);
+  border-radius: var(--b1-radius-lg);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.b1-order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.b1-order-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--b1-color-border-light);
+}
+
+.b1-order-item-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.b1-order-item-qty {
+  font-weight: 800;
+  color: var(--b1-color-primary);
+  margin-right: 6px;
+}
+
+.b1-order-item-name {
+  font-weight: 700;
+  color: var(--b1-color-text-main);
+}
+
+.b1-order-item-note {
+  font-size: 11px;
+  color: var(--b1-color-text-muted);
+  font-style: italic;
+  display: block;
+  margin-top: 2px;
+}
+
+.b1-order-item-price {
+  font-weight: 800;
+  color: var(--b1-color-text-main);
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.b1-vuelto-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--b1-radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid var(--b1-color-border);
+  background: var(--b1-color-surface);
+  color: var(--b1-color-text-main);
+  cursor: pointer;
+  transition: var(--b1-transition-fast);
+  text-align: center;
+}
+
+.b1-vuelto-btn.active {
+  border-color: var(--b1-color-primary);
+  background: var(--b1-color-primary-light);
+  color: var(--b1-color-primary);
+  box-shadow: 0 2px 8px rgba(255, 75, 43, 0.15);
+}
+
+.b1-pickup-box {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%);
+  border: 1.5px solid rgba(59, 130, 246, 0.25);
+  border-radius: var(--b1-radius-lg);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+[data-theme="dark"] .b1-pickup-box {
+  background: rgba(30, 58, 138, 0.2);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.b1-delivery-estimate-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+  background: #ECFDF5;
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1px solid #A7F3D0;
+  margin-top: 4px;
+}
+
+[data-theme="dark"] .b1-delivery-estimate-tag {
+  background: #064E3B;
+  color: #A7F3D0;
+  border-color: #047857;
+}
+
+
