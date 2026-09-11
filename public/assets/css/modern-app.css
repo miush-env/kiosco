@@ -350,8 +350,8 @@ body {
 }
 
 .b1-suggestion-card {
-  min-width: 220px;
-  max-width: 240px;
+  min-width: 240px;
+  max-width: 260px;
   flex-shrink: 0;
   scroll-snap-align: start;
   background: var(--b1-color-surface);
@@ -377,7 +377,7 @@ body {
 .b1-sugg-img-wrapper {
   position: relative;
   width: 100%;
-  height: 130px;
+  height: 135px;
   overflow: hidden;
   background: var(--b1-color-surface-subtle);
 }
@@ -394,7 +394,7 @@ body {
 }
 
 .b1-sugg-body {
-  padding: 12px 14px 14px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -402,11 +402,12 @@ body {
 }
 
 .b1-sugg-title {
-  margin: 0 0 6px;
-  font-size: 15px;
+  margin: 0 0 8px;
+  font-size: 17px;
   font-weight: 800;
-  color: var(--b1-color-text-main);
+  color: #0f172a;
   line-height: 1.25;
+  letter-spacing: -0.3px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -417,29 +418,32 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .b1-sugg-price {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
-  color: var(--b1-color-primary);
+  color: var(--b1-color-primary, #ea580c);
+  letter-spacing: -0.3px;
 }
 
 .b1-sugg-rating {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--b1-color-text-muted);
-  display: flex;
+  font-size: 14px;
+  font-weight: 800;
+  color: #78350f;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  background: #f8fafc;
-  padding: 2px 6px;
-  border-radius: 8px;
+  gap: 4px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  padding: 3px 8px;
+  border-radius: 10px;
 }
 
 .b1-sugg-rating i {
-  color: #f59e0b;
+  color: #d97706;
+  font-size: 13px;
 }
 
 /* ── 6. ALL PRODUCTS LIST (PEDIDOSYA FULL-WIDTH CARDS) ────────────────────── */
