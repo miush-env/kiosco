@@ -1516,3 +1516,175 @@ body.modal-open {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* ── COMPREHENSIVE DARK MODE COMPONENT STYLES ────────────────────────────── */
+[data-theme="dark"] body {
+  background-color: var(--b1-color-bg);
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-app-wrapper {
+  background-color: var(--b1-color-bg);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .b1-topbar {
+  background-color: var(--b1-color-surface);
+  border-bottom-color: var(--b1-color-border);
+}
+
+[data-theme="dark"] .b1-topbar-info h1 {
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-icon-btn {
+  background: var(--b1-color-surface);
+  border-color: var(--b1-color-border);
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-icon-btn:hover {
+  background: var(--b1-color-surface-subtle);
+}
+
+[data-theme="dark"] .b1-search-box {
+  background: var(--b1-color-surface);
+  border-color: var(--b1-color-border);
+}
+
+[data-theme="dark"] .b1-search-input {
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-search-input::placeholder {
+  color: var(--b1-color-text-muted);
+}
+
+[data-theme="dark"] .b1-category-pill {
+  background: var(--b1-color-surface);
+  border-color: var(--b1-color-border);
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-category-pill.active {
+  background: var(--b1-color-primary-light);
+  border-color: var(--b1-color-primary);
+  color: var(--b1-color-primary);
+}
+
+[data-theme="dark"] .b1-suggestion-card {
+  background: var(--b1-color-surface);
+  border-color: var(--b1-color-border);
+}
+
+[data-theme="dark"] .b1-sugg-title {
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-sugg-rating {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #FCD34D;
+}
+
+[data-theme="dark"] .b1-product-row-card {
+  background: var(--b1-color-surface);
+  border-color: var(--b1-color-border);
+}
+
+[data-theme="dark"] .b1-product-row-card:hover {
+  border-color: #475569;
+}
+
+[data-theme="dark"] .b1-row-title {
+  color: var(--b1-color-text-main);
+}
+
+[data-theme="dark"] .b1-row-desc {
+  color: var(--b1-color-text-muted);
+}
+
+[data-theme="dark"] .b1-row-meta {
+  background: var(--b1-color-surface-subtle);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .b1-row-thumb {
+  background: var(--b1-color-surface-subtle);
+  border-color: var(--b1-color-border);
+}
+
+[data-theme="dark"] .b1-row-add-btn {
+  background: #1e293b !important;
+  color: var(--b1-color-primary) !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .b1-row-add-btn:hover {
+  background: var(--b1-color-primary) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .b1-modal-card {
+  background-color: #172033 !important;
+  background: #172033 !important;
+  border-color: #2C3A56 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .b1-modal-title,
+[data-theme="dark"] .b1-sheet-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .b1-sheet-card {
+  background-color: #172033 !important;
+  border-color: #2C3A56 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .b1-input,
+[data-theme="dark"] .b1-textarea,
+[data-theme="dark"] .b1-select,
+[data-theme="dark"] .b1-form-input,
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #0B0F19 !important;
+  color: #F8FAFC !important;
+  border-color: #2C3A56 !important;
+}
+
+[data-theme="dark"] .b1-cart-item {
+  background-color: #1E293B;
+  border-color: #2C3A56;
+}
+
+[data-theme="dark"] .b1-cart-item-title {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .b1-cart-footer {
+  background-color: #172033;
+  border-top-color: #2C3A56;
+}
+
+[data-theme="dark"] .b1-qty-btn {
+  background-color: #243048;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .b1-page-btn {
+  background-color: #172033;
+  border-color: #2C3A56;
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .b1-footer-agency,
+[data-theme="dark"] .b1-greeting-section {
+  color: var(--b1-color-text-main);
+}
+

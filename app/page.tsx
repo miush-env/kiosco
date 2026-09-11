@@ -152,6 +152,27 @@ export default function CustomerCatalogPage() {
   }, [isAnyModalOpen]);
 
 
+  // Dark Mode / Theme State
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("kiosco_theme") as "light" | "dark" | null;
+      const initialTheme = savedTheme || "dark";
+      setTheme(initialTheme);
+      document.documentElement.setAttribute("data-theme", initialTheme);
+    } catch (e) {}
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    try {
+      localStorage.setItem("kiosco_theme", nextTheme);
+      document.documentElement.setAttribute("data-theme", nextTheme);
+    } catch (e) {}
+  };
+
   // Helper to persist customer profile for instant autocompletion
   const updateCustomerProfile = (
     name: string,
@@ -723,6 +744,20 @@ export default function CustomerCatalogPage() {
         </a>
 
         <div className="b1-topbar-actions">
+          {/* Dark / Light Mode Toggle Button */}
+          <button
+            type="button"
+            className="b1-icon-btn"
+            onClick={toggleTheme}
+            title={theme === "dark" ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
+            aria-label="Cambiar tema"
+          >
+            <i
+              className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"}`}
+              style={{ color: theme === "dark" ? "#FBBF24" : "var(--b1-color-text-main)", fontSize: 16 }}
+            ></i>
+          </button>
+
           {/* My saved delivery details button */}
           <button
             type="button"
@@ -789,7 +824,7 @@ export default function CustomerCatalogPage() {
 
       {/* ── 2. GREETING & HERO BANNER ────────────────────────────────────────── */}
       <section className="b1-greeting-section">
-        <div style={{ display: "inline-block", background: "#FFE8D6", color: "var(--b1-color-primary)", padding: "4px 10px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, marginBottom: "6px" }}>
+        <div style={{ display: "inline-block", background: "var(--b1-color-primary-light)", color: "var(--b1-color-primary)", padding: "4px 10px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, marginBottom: "6px" }}>
           ¡Hola! 👋 Pedí Online
         </div>
         <h1 className="b1-greeting-title" style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 6px", color: "var(--b1-color-text-main)", lineHeight: 1.25 }}>
@@ -958,9 +993,9 @@ export default function CustomerCatalogPage() {
             style={{
               textAlign: "center",
               padding: "40px 20px",
-              background: "#fff",
+              background: "var(--b1-color-surface)",
               borderRadius: "var(--b1-radius-lg)",
-              border: "1px solid var(--b1-color-border-light)",
+              border: "1px solid var(--b1-color-border)",
             }}
           >
             <i className="fas fa-search" style={{ fontSize: 32, color: "var(--b1-color-text-muted)", marginBottom: 8, display: "block" }}></i>
@@ -1070,11 +1105,11 @@ export default function CustomerCatalogPage() {
         {/* Local Business Information Card */}
         <div
           style={{
-            background: "#fff",
+            background: "var(--b1-color-surface)",
             borderRadius: "var(--b1-radius-xl)",
             padding: "20px 18px",
             marginBottom: "24px",
-            border: "1px solid var(--b1-color-border-light)",
+            border: "1px solid var(--b1-color-border)",
             textAlign: "left",
             boxShadow: "var(--b1-shadow-xs)",
           }}

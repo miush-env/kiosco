@@ -103,6 +103,23 @@ export default function RootLayout({
           <link rel="stylesheet" href="/assets/css/theme-variables.css" />
           <link rel="stylesheet" href="/assets/css/modern-app.css" />
 
+          {/* Instant Dark Mode Pre-loader */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    var saved = localStorage.getItem('kiosco_theme');
+                    var theme = saved ? saved : 'dark';
+                    document.documentElement.setAttribute('data-theme', theme);
+                  } catch (e) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                  }
+                })();
+              `,
+            }}
+          />
+
           {/* Schema.org Structured Data (JSON-LD) for Local Business & Menu */}
           <script
             type="application/ld+json"
@@ -170,7 +187,7 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body className="antialiased overflow-x-hidden bg-[#f8f9fa]">
+        <body className="antialiased overflow-x-hidden">
           {/* Google tag (gtag.js) GA4 */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-X1RFGB96TT"
