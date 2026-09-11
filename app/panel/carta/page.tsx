@@ -613,17 +613,6 @@ export default function OwnerMenuManagementPage() {
                 onClick={() => openEditProductModal(p)}
                 style={{ cursor: "pointer" }}
               >
-                {/* Food Thumbnail */}
-                <img
-                  src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200"}
-                  alt={p.name}
-                  className="b1-row-thumb"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
-                  }}
-                />
-
                 {/* Info Container */}
                 <div className="b1-row-info">
                   <div className="b1-row-badge-row">
@@ -668,9 +657,23 @@ export default function OwnerMenuManagementPage() {
                         title="Borrar plato"
                       >
                         <i className="fas fa-trash"></i>
+                        <span>Borrar</span>
                       </button>
                     </div>
                   </div>
+                </div>
+
+                {/* Food Thumbnail */}
+                <div className="b1-row-media-container">
+                  <img
+                    src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200"}
+                    alt={p.name}
+                    className="b1-row-thumb"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
+                    }}
+                  />
                 </div>
               </div>
             );

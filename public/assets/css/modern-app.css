@@ -334,33 +334,50 @@ body {
   cursor: pointer;
 }
 
+/* ── 5. SUGGESTIONS (PEDIDOSYA DESTACADOS CAROUSEL) ───────────────────────── */
 .b1-suggestions-grid {
-  padding: 4px 18px 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  padding: 4px 16px 16px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.b1-suggestions-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .b1-suggestion-card {
+  min-width: 220px;
+  max-width: 240px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
   background: var(--b1-color-surface);
-  border-radius: var(--b1-radius-lg);
+  border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--b1-color-border-light);
-  box-shadow: var(--b1-shadow-sm);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: var(--b1-transition-fast);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 
+.b1-suggestion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+}
+
 .b1-suggestion-card:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .b1-sugg-img-wrapper {
   position: relative;
   width: 100%;
-  height: 110px;
+  height: 130px;
   overflow: hidden;
   background: var(--b1-color-surface-subtle);
 }
@@ -372,8 +389,12 @@ body {
   transition: transform 0.3s ease;
 }
 
+.b1-suggestion-card:hover .b1-sugg-img {
+  transform: scale(1.04);
+}
+
 .b1-sugg-body {
-  padding: 10px 12px 12px;
+  padding: 12px 14px 14px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -381,9 +402,9 @@ body {
 }
 
 .b1-sugg-title {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: var(--b1-font-weight-bold);
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--b1-color-text-main);
   line-height: 1.25;
   display: -webkit-box;
@@ -396,99 +417,116 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .b1-sugg-price {
-  font-size: 14px;
-  font-weight: var(--b1-font-weight-heavy);
+  font-size: 16px;
+  font-weight: 800;
   color: var(--b1-color-primary);
 }
 
 .b1-sugg-rating {
-  font-size: 11px;
-  font-weight: var(--b1-font-weight-bold);
+  font-size: 12px;
+  font-weight: 700;
   color: var(--b1-color-text-muted);
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  background: #f8fafc;
+  padding: 2px 6px;
+  border-radius: 8px;
 }
 
 .b1-sugg-rating i {
-  color: var(--b1-color-accent);
+  color: #f59e0b;
 }
 
-/* ── 6. ALL PRODUCTS LIST (ROW CARDS WITH IMAGES) ──────────────────────────── */
+/* ── 6. ALL PRODUCTS LIST (PEDIDOSYA FULL-WIDTH CARDS) ────────────────────── */
 .b1-products-list {
-  padding: 6px 18px 24px;
+  padding: 8px 16px 36px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .b1-product-row-card {
-  background: var(--b1-color-surface);
-  border-radius: var(--b1-radius-lg);
-  padding: 12px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
   display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid var(--b1-color-border-light);
-  box-shadow: var(--b1-shadow-sm);
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   cursor: pointer;
-  transition: var(--b1-transition-fast);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  box-sizing: border-box;
+}
+
+.b1-product-row-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
 }
 
 .b1-product-row-card:active {
-  transform: scale(0.985);
-}
-
-.b1-row-thumb {
-  width: 86px;
-  height: 86px;
-  border-radius: var(--b1-radius-md);
-  object-fit: cover;
-  flex-shrink: 0;
-  background: var(--b1-color-surface-subtle);
-  border: 1px solid var(--b1-color-border-light);
+  transform: scale(0.99);
 }
 
 .b1-row-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .b1-row-badge-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .b1-item-badge {
-  background: var(--b1-color-primary-light);
-  color: var(--b1-color-primary);
-  font-size: 10px;
-  font-weight: var(--b1-font-weight-heavy);
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #ffedd5;
+  font-size: 11px;
+  font-weight: 800;
   padding: 2px 8px;
-  border-radius: var(--b1-radius-pill);
+  border-radius: 20px;
+  letter-spacing: -0.2px;
+}
+
+.b1-item-badge.out-of-stock {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
 }
 
 .b1-row-title {
-  margin: 0;
-  font-size: 15px;
-  font-weight: var(--b1-font-weight-bold);
-  color: var(--b1-color-text-main);
-  line-height: 1.2;
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  letter-spacing: -0.2px;
 }
 
 .b1-row-desc {
-  margin: 3px 0 6px;
-  font-size: 12px;
-  color: var(--b1-color-text-muted);
-  line-height: 1.35;
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -496,33 +534,102 @@ body {
 .b1-row-price-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  flex-wrap: wrap;
 }
 
 .b1-row-price {
-  font-size: 15px;
-  font-weight: var(--b1-font-weight-heavy);
-  color: var(--b1-color-primary);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--b1-color-primary, #ea580c);
+  letter-spacing: -0.3px;
 }
 
-.b1-row-add-btn {
-  background: var(--b1-color-primary);
-  color: #fff;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
+.b1-row-rating {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #fef3c7;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.b1-row-rating i {
+  color: #d97706;
+}
+
+.b1-row-meta {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.b1-row-media-container {
+  position: relative;
+  flex-shrink: 0;
+  width: 118px;
+  height: 118px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+}
+
+.b1-row-thumb {
+  width: 118px;
+  height: 118px;
+  border-radius: 16px;
+  object-fit: cover;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.b1-row-add-btn {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--b1-color-primary, #ea580c);
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 3px 10px var(--b1-color-primary-glow);
-  transition: var(--b1-transition-fast);
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.b1-row-add-btn:hover {
+  background: var(--b1-color-primary, #ea580c);
+  color: #ffffff;
+  border-color: var(--b1-color-primary, #ea580c);
+  transform: scale(1.1);
 }
 
 .b1-row-add-btn:active {
-  transform: scale(0.88);
+  transform: scale(0.92);
+}
+
+.b1-row-add-btn.disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ── PAGINATION CONTROLS ─────────────────────────────────────────────────── */
