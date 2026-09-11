@@ -1589,3 +1589,132 @@ body.modal-open {
   color: #ffffff !important;
 }
 
+/* ── HAMBURGER MENU DRAWER ────────────────────────────────────────────────── */
+.b1-drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--b1-color-overlay);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  justify-content: flex-end;
+  animation: b1ModalFadeIn 0.2s ease-out;
+}
+
+.b1-drawer-panel {
+  width: 85%;
+  max-width: 340px;
+  height: 100%;
+  background-color: var(--b1-color-surface);
+  color: var(--b1-color-text-main);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: b1DrawerSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-left: 1px solid var(--b1-color-border);
+}
+
+@keyframes b1DrawerSlideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.b1-drawer-header {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--b1-color-border-light);
+}
+
+.b1-drawer-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--b1-color-text-main);
+}
+
+.b1-drawer-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--b1-color-surface-subtle);
+  border: 1px solid var(--b1-color-border);
+  color: var(--b1-color-text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: var(--b1-transition-fast);
+}
+
+.b1-drawer-close-btn:hover {
+  background: var(--b1-color-border);
+}
+
+.b1-drawer-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.b1-drawer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--b1-radius-lg);
+  background: var(--b1-color-surface-subtle);
+  border: 1px solid var(--b1-color-border);
+  color: var(--b1-color-text-main);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--b1-transition-fast);
+}
+
+.b1-drawer-item:hover,
+.b1-drawer-item:active {
+  background: var(--b1-color-primary-light);
+  border-color: var(--b1-color-primary);
+  color: var(--b1-color-primary);
+  transform: translateX(-2px);
+}
+
+.b1-drawer-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.b1-drawer-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--b1-color-surface);
+  border: 1px solid var(--b1-color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--b1-color-primary);
+  flex-shrink: 0;
+}
+
+.b1-drawer-footer {
+  padding: 16px 18px 24px;
+  border-top: 1px solid var(--b1-color-border-light);
+  font-size: 12px;
+  color: var(--b1-color-text-muted);
+  text-align: center;
+}
+

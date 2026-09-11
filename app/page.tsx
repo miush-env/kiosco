@@ -124,9 +124,11 @@ export default function CustomerCatalogPage() {
   const streetNumberInputRef = React.useRef<HTMLInputElement>(null);
   const addressInputRef = React.useRef<HTMLInputElement>(null);
 
+  const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+
   // Lock background body scroll whenever any modal / sheet is open
   const isAnyModalOpen = Boolean(
-    selectedProduct || isCartOpen || isCheckoutOpen || isProfileOpen || mpReturnModal.isOpen
+    selectedProduct || isCartOpen || isCheckoutOpen || isProfileOpen || mpReturnModal.isOpen || isNavMenuOpen
   );
 
   useEffect(() => {
@@ -744,29 +746,29 @@ export default function CustomerCatalogPage() {
         </a>
 
         <div className="b1-topbar-actions">
-          {/* Dark / Light Mode Toggle Button */}
+          {/* Cart trigger button */}
           <button
             type="button"
-            className="b1-icon-btn"
-            onClick={toggleTheme}
-            title={theme === "dark" ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
-            aria-label="Cambiar tema"
+            className="b1-icon-btn primary"
+            onClick={() => setIsCartOpen(true)}
+            title="Ver carrito"
           >
-            <i
-              className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"}`}
-              style={{ color: theme === "dark" ? "#FBBF24" : "var(--b1-color-text-main)", fontSize: 16 }}
-            ></i>
+            <i className="fas fa-shopping-bag"></i>
+            {cartItemCount > 0 && (
+              <span className="b1-btn-badge">{cartItemCount}</span>
+            )}
           </button>
 
-          {/* My saved delivery details button */}
+          {/* Hamburger Menu Button */}
           <button
             type="button"
             className="b1-icon-btn"
-            onClick={() => setIsProfileOpen(true)}
-            title="Mis datos de entrega"
+            onClick={() => setIsNavMenuOpen(true)}
+            title="Menú de opciones"
+            aria-label="Abrir menú"
             style={{ position: "relative" }}
           >
-            <i className="fas fa-id-card"></i>
+            <i className="fas fa-bars"></i>
             {customerName && (
               <span
                 style={{
@@ -782,43 +784,6 @@ export default function CustomerCatalogPage() {
               ></span>
             )}
           </button>
-
-          {/* Admin panel link if logged in as admin/owner */}
-          {isSignedIn && (role === "admin" || role === "owner") && (
-            <Link
-              href="/panel"
-              className="b1-icon-btn"
-              title="Panel de Administración"
-            >
-              <i className="fas fa-sliders-h"></i>
-            </Link>
-          )}
-
-          {/* Cart trigger button */}
-          <button
-            type="button"
-            className="b1-icon-btn primary"
-            onClick={() => setIsCartOpen(true)}
-            title="Ver carrito"
-          >
-            <i className="fas fa-shopping-bag"></i>
-            {cartItemCount > 0 && (
-              <span className="b1-btn-badge">{cartItemCount}</span>
-            )}
-          </button>
-
-          {/* User / Sign In */}
-          <div style={{ marginLeft: 4 }}>
-            {!isSignedIn ? (
-              <SignInButton mode="modal">
-                <button className="b1-icon-btn" title="Iniciar sesión">
-                  <i className="fas fa-user"></i>
-                </button>
-              </SignInButton>
-            ) : (
-              <UserButton />
-            )}
-          </div>
         </div>
       </header>
 
@@ -2486,6 +2451,210 @@ export default function CustomerCatalogPage() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+           HAMBURGER NAVIGATION DRAWER / MENU
+           ══════════════════════════════════════════════════════════════════ */}
+      {isNavMenuOpen && (
+        <div className="b1-drawer-backdrop" onClick={() => setIsNavMenuOpen(false)}>
+          <div className="b1-drawer-panel" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="b1-drawer-header">
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <img
+                  src="/assets/images/logo.png"
+                  alt={storeInfo.name}
+                  style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover" }}
+                />
+                <h3 className="b1-drawer-title">{storeInfo.name}</h3>
+              </div>
+              <button
+                type="button"
+                className="b1-drawer-close-btn"
+                onClick={() => setIsNavMenuOpen(false)}
+                aria-label="Cerrar menú"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+
+            {/* Body Options */}
+            <div className="b1-drawer-body">
+              {/* User Account Bar */}
+              <div
+                style={{
+                  background: "var(--b1-color-surface-subtle)",
+                  border: "1px solid var(--b1-color-border)",
+                  borderRadius: "var(--b1-radius-lg)",
+                  padding: "12px 14px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 6,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {isSignedIn ? (
+                    <UserButton />
+                  ) : (
+                    <div
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        background: "var(--b1-color-surface)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "var(--b1-color-text-muted)",
+                      }}
+                    >
+                      <i className="fas fa-user"></i>
+                    </div>
+                  )}
+                  <div>
+                    <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)", display: "block" }}>
+                      {customerName || (isSignedIn ? "Mi Cuenta" : "Invitado")}
+                    </strong>
+                    <span style={{ fontSize: 11, color: "var(--b1-color-text-muted)" }}>
+                      {isSignedIn ? (role === "admin" || role === "owner" ? "Administrador" : "Cliente") : "Iniciá sesión para sincronizar"}
+                    </span>
+                  </div>
+                </div>
+
+                {!isSignedIn && (
+                  <SignInButton mode="modal">
+                    <button
+                      type="button"
+                      className="b1-btn-primary"
+                      style={{ width: "auto", padding: "6px 12px", fontSize: 12 }}
+                      onClick={() => setIsNavMenuOpen(false)}
+                    >
+                      Ingresar
+                    </button>
+                  </SignInButton>
+                )}
+              </div>
+
+              {/* 1. Theme Toggle (Modo Oscuro / Claro) */}
+              <div
+                className="b1-drawer-item"
+                onClick={() => {
+                  toggleTheme();
+                }}
+              >
+                <div className="b1-drawer-item-left">
+                  <div className="b1-drawer-item-icon">
+                    <i className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"}`} style={{ color: theme === "dark" ? "#FBBF24" : "var(--b1-color-primary)" }}></i>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800 }}>Tema de Pantalla</div>
+                    <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
+                      {theme === "dark" ? "Modo Oscuro (Activo)" : "Modo Claro (Activo)"}
+                    </div>
+                  </div>
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 800, color: "var(--b1-color-primary)" }}>
+                  {theme === "dark" ? "☀️ Cambiar" : "🌙 Cambiar"}
+                </span>
+              </div>
+
+              {/* 2. My Delivery Details */}
+              <div
+                className="b1-drawer-item"
+                onClick={() => {
+                  setIsNavMenuOpen(false);
+                  setIsProfileOpen(true);
+                }}
+              >
+                <div className="b1-drawer-item-left">
+                  <div className="b1-drawer-item-icon">
+                    <i className="fas fa-id-card"></i>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800 }}>Mis datos de entrega</div>
+                    <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
+                      {customerName ? `${customerName} • ${customerPhone || "Guardado"}` : "Guardá tu dirección y teléfono"}
+                    </div>
+                  </div>
+                </div>
+                <i className="fas fa-chevron-right" style={{ color: "var(--b1-color-text-muted)", fontSize: 12 }}></i>
+              </div>
+
+              {/* 3. Admin Panel (if authorized) */}
+              {isSignedIn && (role === "admin" || role === "owner") && (
+                <Link
+                  href="/panel"
+                  className="b1-drawer-item"
+                  onClick={() => setIsNavMenuOpen(false)}
+                >
+                  <div className="b1-drawer-item-left">
+                    <div className="b1-drawer-item-icon" style={{ background: "rgba(239, 68, 68, 0.1)", color: "#EF4444" }}>
+                      <i className="fas fa-sliders-h"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 800, color: "#EF4444" }}>Panel de Administración</div>
+                      <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
+                        Gestión de pedidos, stock y finanzas
+                      </div>
+                    </div>
+                  </div>
+                  <i className="fas fa-chevron-right" style={{ color: "var(--b1-color-text-muted)", fontSize: 12 }}></i>
+                </Link>
+              )}
+
+              {/* 4. WhatsApp Support */}
+              <a
+                href={`https://wa.me/${(storeInfo.whatsapp || "+5491172570867").replace(/[^\d]/g, "")}?text=${encodeURIComponent("¡Hola! Tengo una consulta sobre el menú de Alakary")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="b1-drawer-item"
+                onClick={() => setIsNavMenuOpen(false)}
+              >
+                <div className="b1-drawer-item-left">
+                  <div className="b1-drawer-item-icon" style={{ background: "rgba(37, 211, 102, 0.1)", color: "#25D366" }}>
+                    <i className="fab fa-whatsapp"></i>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800 }}>Contacto por WhatsApp</div>
+                    <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
+                      {storeInfo.whatsapp || "+54 9 11 7257-0867"}
+                    </div>
+                  </div>
+                </div>
+                <i className="fas fa-external-link-alt" style={{ color: "var(--b1-color-text-muted)", fontSize: 12 }}></i>
+              </a>
+
+              {/* 5. Google Maps Location */}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeInfo.address || "Paderewski 366, Buenos Aires")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="b1-drawer-item"
+                onClick={() => setIsNavMenuOpen(false)}
+              >
+                <div className="b1-drawer-item-left">
+                  <div className="b1-drawer-item-icon" style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3B82F6" }}>
+                    <i className="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800 }}>Ubicación del Local</div>
+                    <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", fontWeight: 500 }}>
+                      {storeInfo.address || "Paderewski 366"}
+                    </div>
+                  </div>
+                </div>
+                <i className="fas fa-external-link-alt" style={{ color: "var(--b1-color-text-muted)", fontSize: 12 }}></i>
+              </a>
+            </div>
+
+            {/* Footer */}
+            <div className="b1-drawer-footer">
+              <strong>{storeInfo.name}</strong> • Menú Digital & Pedidos Online
             </div>
           </div>
         </div>
