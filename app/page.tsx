@@ -980,7 +980,7 @@ export default function CustomerCatalogPage() {
                 className={`b1-product-row-card ${isOut ? "is-out-of-stock" : ""}`}
                 onClick={() => openProductModal(p)}
               >
-                {/* 1. Imagen a la izquierda */}
+                {/* 1. Imagen a la izquierda con botón "+" superpuesto */}
                 <div className="b1-row-media-container">
                   <img
                     src={p.image || "/assets/images/logo.png"}
@@ -992,8 +992,20 @@ export default function CustomerCatalogPage() {
                         "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300";
                     }}
                   />
-                  {isOut && (
+                  {isOut ? (
                     <span className="b1-img-out-badge">Agotado</span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="b1-row-add-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openProductModal(p);
+                      }}
+                      title="Agregar al pedido"
+                    >
+                      <i className="fas fa-plus"></i>
+                    </button>
                   )}
                 </div>
 
@@ -1020,18 +1032,6 @@ export default function CustomerCatalogPage() {
                         <i className="far fa-clock"></i> {p.prepTime}
                       </span>
                     )}
-                    <button
-                      type="button"
-                      className={`b1-row-add-btn-inline ${isOut ? "disabled" : ""}`}
-                      disabled={isOut}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openProductModal(p);
-                      }}
-                      title={isOut ? "Agotado" : "Agregar al pedido"}
-                    >
-                      <i className={`fas ${isOut ? "fa-ban" : "fa-plus"}`}></i>
-                    </button>
                   </div>
                 </div>
               </div>
