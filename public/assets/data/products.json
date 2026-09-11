@@ -1,0 +1,716 @@
+{
+  "storeInfo": {
+    "name": "Bloque 1",
+    "tagline": "Menú Digital & Pedidos Online",
+    "address": "Virgilio 3508",
+    "whatsapp": "+5491171449431",
+    "currencySymbol": "$",
+    "deliveryPrice": 0,
+    "deliveryFree": true
+  },
+  "categories": [
+    {
+      "id": "all",
+      "name": "Todos",
+      "icon": "🔥"
+    },
+    {
+      "id": "burgers",
+      "name": "Burgers",
+      "icon": "🍔"
+    },
+    {
+      "id": "pizzas-clasicas",
+      "name": "Pizzas",
+      "icon": "🍕"
+    },
+    {
+      "id": "pizzas-rellenas",
+      "name": "Rellenas",
+      "icon": "🧀"
+    },
+    {
+      "id": "pizzas-especiales",
+      "name": "Especiales",
+      "icon": "✨"
+    },
+    {
+      "id": "calzones",
+      "name": "Calzones",
+      "icon": "🥟"
+    },
+    {
+      "id": "empanadas",
+      "name": "Empanadas",
+      "icon": "🥟"
+    },
+    {
+      "id": "promos",
+      "name": "Promos",
+      "icon": "🏷️"
+    },
+    {
+      "id": "sandwiches",
+      "name": "Sandwichs",
+      "icon": "🥪"
+    }
+  ],
+  "products": [
+    {
+      "id": 20589032,
+      "categoryId": "burgers",
+      "name": "BURGUER ESCORPIO",
+      "description": "Doble carne vacuna seleccionada, abundante queso cheddar fundido, morrón asado, jamón cocido y porción de papas fritas crocantes.",
+      "ingredients": [
+        "Doble Carne 120g",
+        "Queso Cheddar Fundido",
+        "Morrón Asado",
+        "Jamón Cocido",
+        "Papas Fritas"
+      ],
+      "price": 15000,
+      "badge": "Más Pedido",
+      "rating": "4.9",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589033,
+      "categoryId": "burgers",
+      "name": "DOBLE CHEDDAR",
+      "description": "Doble medallón de carne artesanal bañado en doble porción de cheddar cremoso en pan brioche suave.",
+      "ingredients": [
+        "Doble Medallón de Carne",
+        "Doble Cheddar Cremoso",
+        "Pan Brioche Tostado"
+      ],
+      "price": 12000,
+      "rating": "4.7",
+      "prepTime": "15-20 min",
+      "image": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589034,
+      "categoryId": "burgers",
+      "name": "BACON BURGER",
+      "description": "Crocante panceta ahumada, doble carne, cebolla caramelizada casera, cheddar y guarnición de papas.",
+      "ingredients": [
+        "Doble Carne Vacuna",
+        "Panceta Crocante (Bacon)",
+        "Cebolla Caramelizada",
+        "Queso Cheddar",
+        "Papas Fritas"
+      ],
+      "price": 13000,
+      "badge": "Popular",
+      "rating": "4.8",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589035,
+      "categoryId": "burgers",
+      "name": "HAMBURGUESA JAMÓN Y QUESO",
+      "description": "Doble medallón de carne con lechuga fresca, queso cheddar derretido, jamón y papas fritas.",
+      "ingredients": [
+        "Doble Carne",
+        "Jamón Cocido",
+        "Queso Cheddar",
+        "Lechuga Fresca",
+        "Papas Fritas"
+      ],
+      "price": 14000,
+      "rating": "4.6",
+      "prepTime": "15-20 min",
+      "image": "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589036,
+      "categoryId": "burgers",
+      "name": "HAMBURGUESA SIMPLE",
+      "description": "Medallón de carne clásico con queso cheddar en pan tostado con sésamo.",
+      "ingredients": [
+        "Carne Vacuna 120g",
+        "Queso Cheddar",
+        "Pan con Sésamo"
+      ],
+      "price": 10000,
+      "rating": "4.5",
+      "prepTime": "15 min",
+      "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589037,
+      "categoryId": "burgers",
+      "name": "HAMBURGUESA TRIPLE",
+      "description": "Tres pisos de carne vacuna jugosa, triple cheddar fundido y porción extra de papas.",
+      "ingredients": [
+        "Triple Carne Vacuna",
+        "Triple Queso Cheddar",
+        "Papas Fritas"
+      ],
+      "price": 15000,
+      "badge": "Gigante",
+      "rating": "4.9",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589038,
+      "categoryId": "burgers",
+      "name": "CUÁDRUPLE SUPREMA",
+      "description": "Para los que se animan: 4 medallones de carne, 4 capas de cheddar derretido y papas fritas.",
+      "ingredients": [
+        "4 Medallones de Carne (480g)",
+        "4 Capas de Cheddar",
+        "Pan Brioche",
+        "Papas Fritas"
+      ],
+      "price": 17000,
+      "badge": "Monster",
+      "rating": "5.0",
+      "prepTime": "25-30 min",
+      "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589039,
+      "categoryId": "burgers",
+      "name": "PROVOLONE BURGER",
+      "description": "Doble carne a la plancha coronada con queso provolone fundido crocante, tomate y papas.",
+      "ingredients": [
+        "Doble Carne",
+        "Queso Provolone Gratinado",
+        "Queso Cheddar",
+        "Tomate",
+        "Papas Fritas"
+      ],
+      "price": 15000,
+      "rating": "4.8",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589040,
+      "categoryId": "burgers",
+      "name": "DOBLE PEPINILLOS",
+      "description": "Doble carne jugosa, pepinillos agridulces encurtidos, cheddar, lechuga fresca y papas.",
+      "ingredients": [
+        "Doble Carne",
+        "Pepinillos Agridulces",
+        "Queso Cheddar",
+        "Lechuga",
+        "Papas Fritas"
+      ],
+      "price": 15000,
+      "rating": "4.6",
+      "prepTime": "20 min",
+      "image": "https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589041,
+      "categoryId": "burgers",
+      "name": "SÚPER ESCORPIO BURGER",
+      "description": "Doble carne, jamón cocido, queso muzzarella, palmitos tiernos, salsa golf casera y papas.",
+      "ingredients": [
+        "Doble Carne",
+        "Jamón Cocido",
+        "Queso Muzzarella",
+        "Palmitos",
+        "Salsa Golf",
+        "Papas Fritas"
+      ],
+      "price": 16000,
+      "badge": "Especial",
+      "rating": "4.9",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589049,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA ESPECIAL ESCORPIO",
+      "description": "Masa artesanal a la piedra, salsa de tomate casera, jamón cocido, abundante muzzarella, morrón asado, huevo duro, orégano y aceitunas negras.",
+      "ingredients": [
+        "Masa Artesanal a la Piedra",
+        "Salsa de Tomate",
+        "Jamón Cocido",
+        "Muzzarella",
+        "Morrón Asado",
+        "Huevo Duro",
+        "Aceitunas Negras"
+      ],
+      "price": 16000,
+      "badge": "Favorita",
+      "rating": "4.9",
+      "prepTime": "25-30 min",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589050,
+      "categoryId": "pizzas-clasicas",
+      "name": "MUZZARELLA CLÁSICA",
+      "description": "La reina de la casa: masa crujiente a la piedra, salsa de tomate perfumada, abundante queso muzzarella, orégano y aceitunas verdes.",
+      "ingredients": [
+        "Masa a la Piedra",
+        "Salsa de Tomate Natural",
+        "Muzzarella de Primera Calidad",
+        "Orégano",
+        "Aceitunas Verdes"
+      ],
+      "price": 9000,
+      "badge": "Clásica",
+      "rating": "4.8",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589051,
+      "categoryId": "pizzas-clasicas",
+      "name": "MUZZARELLA DOBLE",
+      "description": "Para los amantes del queso: doble capa generosa de muzzarella derretida sobre masa a la piedra.",
+      "ingredients": [
+        "Masa Crujiente",
+        "Salsa de Tomate",
+        "Doble Porción de Muzzarella",
+        "Orégano",
+        "Aceitunas"
+      ],
+      "price": 12000,
+      "rating": "4.8",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589052,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA DE ANCHOAS",
+      "description": "Salsa de tomate, tiras de morrón asado, filetes de anchoas seleccionadas y aceitunas negras.",
+      "ingredients": [
+        "Masa a la Piedra",
+        "Salsa de Tomate",
+        "Morrón Asado",
+        "Anchoas",
+        "Orégano",
+        "Aceitunas Negras"
+      ],
+      "price": 12000,
+      "rating": "4.5",
+      "prepTime": "20 min",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589053,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA ROMANA",
+      "description": "Fusión de muzzarella dorada, salsa de tomate, morrones asados, anchoas sabrosas y aceitunas.",
+      "ingredients": [
+        "Muzzarella",
+        "Salsa de Tomate",
+        "Anchoas",
+        "Morrón Asado",
+        "Orégano",
+        "Aceitunas"
+      ],
+      "price": 14000,
+      "rating": "4.6",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589054,
+      "categoryId": "pizzas-clasicas",
+      "name": "FUGAZZA TRADICIONAL",
+      "description": "Abundante cebolla en pluma dorada con aceite de oliva extra virgen, pimienta negra molida y orégano.",
+      "ingredients": [
+        "Masa Suave",
+        "Cebolla Dorada",
+        "Aceite de Oliva Extra Virgen",
+        "Pimienta Negra",
+        "Orégano"
+      ],
+      "price": 8000,
+      "rating": "4.6",
+      "prepTime": "20 min",
+      "image": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589055,
+      "categoryId": "pizzas-clasicas",
+      "name": "FUGAZZA CON QUESO",
+      "description": "Base crujiente con muzzarella derretida, cubierta de abundante cebolla salteada y aceite de oliva.",
+      "ingredients": [
+        "Masa Artesanal",
+        "Muzzarella",
+        "Cebolla Salteada",
+        "Aceite de Oliva",
+        "Pimienta",
+        "Orégano"
+      ],
+      "price": 12000,
+      "badge": "Popular",
+      "rating": "4.8",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589057,
+      "categoryId": "pizzas-clasicas",
+      "name": "JAMÓN Y MORRÓN",
+      "description": "Salsa de tomate, jamón cocido en fetas, muzzarella fundida, tiras de morrón y aceitunas.",
+      "ingredients": [
+        "Salsa de Tomate",
+        "Jamón Cocido",
+        "Muzzarella",
+        "Morrón Asado",
+        "Orégano",
+        "Aceitunas"
+      ],
+      "price": 14000,
+      "rating": "4.8",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589059,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA NAPOLITANA",
+      "description": "Muzzarella derretida, rodajas de tomate fresco, toque de ajo picado fresco, orégano y aceitunas.",
+      "ingredients": [
+        "Muzzarella",
+        "Rodajas de Tomate Fresco",
+        "Ajo Salteado",
+        "Orégano",
+        "Aceitunas"
+      ],
+      "price": 17000,
+      "badge": "Recomendado",
+      "rating": "4.8",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589061,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA ROQUEFORT",
+      "description": "Combinación perfecta de queso muzzarella y queso roquefort intenso gratinado con aceitunas.",
+      "ingredients": [
+        "Muzzarella",
+        "Queso Roquefort Azul",
+        "Salsa de Tomate",
+        "Orégano",
+        "Aceitunas"
+      ],
+      "price": 14000,
+      "rating": "4.8",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1573821663912-569905455b1c?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589062,
+      "categoryId": "pizzas-clasicas",
+      "name": "PIZZA CALABRESA",
+      "description": "Rodajas de calabresa longaniza artesanal, muzzarella, morrón asado, orégano y aceitunas.",
+      "ingredients": [
+        "Rodajas de Calabresa",
+        "Muzzarella",
+        "Morrón Asado",
+        "Salsa de Tomate",
+        "Aceitunas"
+      ],
+      "price": 14000,
+      "badge": "Favorita",
+      "rating": "4.9",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589072,
+      "categoryId": "pizzas-rellenas",
+      "name": "FUGAZZETA AL ROQUEFORT RELLENA",
+      "description": "Doble masa rellena con jamón y muzzarella desbordante, cubierta con cebolla al oliva y roquefort.",
+      "ingredients": [
+        "Doble Masa Rellena",
+        "Jamón Cocido",
+        "Muzzarella Abundante",
+        "Queso Roquefort",
+        "Cebolla al Oliva",
+        "Pimienta"
+      ],
+      "price": 19000,
+      "badge": "Especialidad",
+      "rating": "5.0",
+      "prepTime": "30-35 min",
+      "image": "https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589073,
+      "categoryId": "pizzas-rellenas",
+      "name": "FUGAZZETA AL PROVOLONE RELLENA",
+      "description": "Rellena de jamón y muzzarella, coronada con cebolla caramelizada y queso provolone dorado.",
+      "ingredients": [
+        "Masa Rellena",
+        "Jamón Cocido",
+        "Muzzarella",
+        "Cebolla Salteada",
+        "Queso Provolone"
+      ],
+      "price": 18000,
+      "rating": "4.9",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589074,
+      "categoryId": "pizzas-rellenas",
+      "name": "FUGAZZETA ESPECIAL RELLENA",
+      "description": "Rellena con 500g de muzzarella y jamón, cubierta de cebolla dorada, aceite de oliva y pimienta.",
+      "ingredients": [
+        "500g de Muzzarella",
+        "Jamón Cocido",
+        "Cebolla Dorada",
+        "Aceite de Oliva",
+        "Pimienta"
+      ],
+      "price": 18000,
+      "badge": "Más Vendida",
+      "rating": "5.0",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589075,
+      "categoryId": "pizzas-rellenas",
+      "name": "SÚPER RELLENA DE LA CASA",
+      "description": "Relleno explosivo de jamón y muzzarella, cubierta con cebolla, rodajas de tomate fresco, oliva y orégano.",
+      "ingredients": [
+        "Masa Doble Rellena",
+        "Jamón",
+        "Muzzarella",
+        "Cebolla",
+        "Tomate Fresco",
+        "Oliva",
+        "Pimienta"
+      ],
+      "price": 19000,
+      "badge": "Imperdible",
+      "rating": "5.0",
+      "prepTime": "30-35 min",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589078,
+      "categoryId": "pizzas-especiales",
+      "name": "SÚPER BLOQUE 1 (PIZZA)",
+      "description": "Nuestra creación insignia: salsa, jamón cocido, muzzarella, cebolla dorada, rodajas de tomate, huevo duro picado, orégano y aceitunas negras.",
+      "ingredients": [
+        "Salsa Especial",
+        "Jamón",
+        "Muzzarella",
+        "Cebolla Dorada",
+        "Tomate",
+        "Huevo Duro",
+        "Aceitunas Negras"
+      ],
+      "price": 19000,
+      "badge": "Casa Bloque 1",
+      "rating": "5.0",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589079,
+      "categoryId": "pizzas-especiales",
+      "name": "FAINÁ ARTESANAL",
+      "description": "Porción de fainá tradicional crujiente por fuera y tierna por dentro con pimienta negra molida.",
+      "ingredients": [
+        "Harina de Garbanzos",
+        "Aceite de Oliva",
+        "Pimienta Negra"
+      ],
+      "price": 1500,
+      "rating": "4.9",
+      "prepTime": "10 min",
+      "image": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589080,
+      "categoryId": "calzones",
+      "name": "CALZÓN ESCORPIO",
+      "description": "Calzón gigante relleno de jamón, muzzarella derretida, morrón asado, palmitos tiernos, rodajas de tomate y salsa golf.",
+      "ingredients": [
+        "Masa de Pizza Horneada",
+        "Jamón Cocido",
+        "Muzzarella",
+        "Morrón Asado",
+        "Palmitos",
+        "Tomate",
+        "Salsa Golf"
+      ],
+      "price": 18000,
+      "badge": "Gigante",
+      "rating": "4.9",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589081,
+      "categoryId": "calzones",
+      "name": "CALZÓN NAPOLITANO",
+      "description": "Relleno con jamón, abundante muzzarella, rodajas de tomate fresco, ajo picado y orégano.",
+      "ingredients": [
+        "Jamón",
+        "Muzzarella",
+        "Tomate Fresco",
+        "Ajo",
+        "Orégano"
+      ],
+      "price": 16000,
+      "rating": "4.7",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589083,
+      "categoryId": "calzones",
+      "name": "CALZÓN CALABRESA",
+      "description": "Relleno con rodajas de calabresa crocante, muzzarella fundida, tomate fresco y morrones.",
+      "ingredients": [
+        "Rodajas de Calabresa",
+        "Muzzarella",
+        "Tomate",
+        "Morrón",
+        "Orégano"
+      ],
+      "price": 20000,
+      "rating": "4.8",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589087,
+      "categoryId": "empanadas",
+      "name": "EMPANADA (1 UNIDAD)",
+      "description": "Empanada artesanal de masa casera al horno (Carne suave, Carne picante, Pollo, Jamón y Queso, Roquefort, Verdura o Humita).",
+      "ingredients": [
+        "Masa Casera Hojaldrada",
+        "Relleno Artesanal",
+        "Horneadas al Momento"
+      ],
+      "price": 1700,
+      "rating": "4.9",
+      "prepTime": "15 min",
+      "image": "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589092,
+      "categoryId": "empanadas",
+      "name": "MEDIA DOCENA DE EMPANADAS (6u)",
+      "description": "Pack de 6 empanadas artesanales a elección cocinadas en horno de piedra.",
+      "ingredients": [
+        "6 Empanadas Artesanales",
+        "Sabores Variados a Elección"
+      ],
+      "price": 10200,
+      "badge": "Ahorro",
+      "rating": "5.0",
+      "prepTime": "20 min",
+      "image": "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589098,
+      "categoryId": "empanadas",
+      "name": "DOCENA DE EMPANADAS (12u)",
+      "description": "Docena completa de 12 empanadas artesanales rellenas a elección.",
+      "ingredients": [
+        "12 Empanadas Artesanales",
+        "Sabores a Elección"
+      ],
+      "price": 20000,
+      "badge": "Promo Docena",
+      "rating": "5.0",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589043,
+      "categoryId": "promos",
+      "name": "PROMO 3 PIZZAS DE MUZZARELLA",
+      "description": "Mega combo ahorro: 3 pizzas grandes de muzzarella clásicas con orégano y aceitunas.",
+      "ingredients": [
+        "3 Pizzas Grandes de Muzzarella",
+        "Salsa de Tomate",
+        "Aceitunas"
+      ],
+      "price": 38000,
+      "badge": "Mega Ahorro",
+      "rating": "4.9",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589044,
+      "categoryId": "promos",
+      "name": "COMBO 1 MUZZA + 1 JAMÓN + 6 EMPANADAS",
+      "description": "Combo fiesta: 1 pizza de muzzarella + 1 pizza de jamón + media docena de empanadas.",
+      "ingredients": [
+        "1 Pizza de Muzzarella",
+        "1 Pizza de Jamón",
+        "6 Empanadas Artesanales"
+      ],
+      "price": 38000,
+      "badge": "Super Combo",
+      "rating": "5.0",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589045,
+      "categoryId": "promos",
+      "name": "COMBO 1 PIZZA MUZZA + 12 EMPANADAS",
+      "description": "1 Pizza grande de muzzarella + 1 docena completa de empanadas artesanales a elección.",
+      "ingredients": [
+        "1 Pizza de Muzzarella",
+        "12 Empanadas Artesanales"
+      ],
+      "price": 32000,
+      "badge": "Más Elegido",
+      "rating": "4.9",
+      "prepTime": "30 min",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589042,
+      "categoryId": "sandwiches",
+      "name": "MILANESA CON FRITAS COMPLETA",
+      "description": "Generosa milanesa de carne vacuna tiernizada a caballo o clásica con abundante porción de papas fritas.",
+      "ingredients": [
+        "Milanesa de Carne Vacuna",
+        "Porción de Papas Fritas Crocantes",
+        "Limón"
+      ],
+      "price": 20000,
+      "badge": "Abundante",
+      "rating": "4.9",
+      "prepTime": "20-25 min",
+      "image": "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": 20589099,
+      "categoryId": "sandwiches",
+      "name": "SÁNDWICH DE MILANESA EN PAN DE PIZZA",
+      "description": "Milanesa de carne crujiente horneada adentro de masa de pizza recién hecha, salsa, muzzarella derretida y jamón.",
+      "ingredients": [
+        "Pan de Masa de Pizza Horneado",
+        "Milanesa de Carne",
+        "Salsa",
+        "Muzzarella",
+        "Jamón"
+      ],
+      "price": 12000,
+      "badge": "Recomendado",
+      "rating": "4.9",
+      "prepTime": "25 min",
+      "image": "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&auto=format&fit=crop&q=80"
+    }
+  ]
+}

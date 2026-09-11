@@ -1,0 +1,34 @@
+{
+  "storeInfo": {
+    "name": "Alakary",
+    "tagline": "Menú Digital & Pedidos Online",
+    "address": "Paderewski 366",
+    "whatsapp": "+5491172570867",
+    "currencySymbol": "$",
+    "deliveryPrice": 0,
+    "deliveryFree": true
+  },
+  "categories": [
+    {
+      "id": "all",
+      "name": "Todos",
+      "icon": "🔥"
+    },
+    {
+      "id": "pizzas",
+      "name": "Pizzas",
+      "icon": "🍕"
+    },
+    {
+      "id": "empanadas",
+      "name": "Empanadas",
+      "icon": "🥟"
+    },
+    {
+      "id": "bebidas",
+      "name": "Bebidas",
+      "icon": "🥤"
+    }
+  ],
+  "products": []
+}

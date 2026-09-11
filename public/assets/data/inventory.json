@@ -1,0 +1,207 @@
+[
+  {
+    "id": "ing_carne",
+    "name": "Medallón de Carne Vacuna 120g",
+    "category": "Carnes",
+    "stock": 45,
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "🥩",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_cheddar",
+    "name": "Queso Cheddar Fundido",
+    "category": "Lácteos y Quesos",
+    "stock": 14,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🧀",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_muzzarella",
+    "name": "Muzzarella de Primera Calidad",
+    "category": "Lácteos y Quesos",
+    "stock": 28,
+    "unit": "porciones (250g)",
+    "minAlert": 15,
+    "icon": "🧀",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_roquefort",
+    "name": "Queso Roquefort / Azul",
+    "category": "Lácteos y Quesos",
+    "stock": 12,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🧀",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_papas",
+    "name": "Papas Fritas Crocantes",
+    "category": "Guarniciones",
+    "stock": 40,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🍟",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_jamon",
+    "name": "Jamón Cocido",
+    "category": "Fiambres",
+    "stock": 91,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🥓",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_bacon",
+    "name": "Panceta Crocante (Bacon)",
+    "category": "Fiambres",
+    "stock": 22,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🥓",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_masa_pizza",
+    "name": "Masa de Pizza a la Piedra",
+    "category": "Panadería",
+    "stock": 38,
+    "unit": "bollos",
+    "minAlert": 15,
+    "icon": "🍕",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_pan_brioche",
+    "name": "Pan Brioche para Hamburguesa",
+    "category": "Panadería",
+    "stock": 45,
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "🍔",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_salsa_tomate",
+    "name": "Salsa de Tomate Natural Casera",
+    "category": "Salsas",
+    "stock": 40,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🥫",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_morron",
+    "name": "Morrón Asado al Horno",
+    "category": "Verduras",
+    "stock": 25,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🫑",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_cebolla",
+    "name": "Cebolla Caramelizada al Oliva",
+    "category": "Verduras",
+    "stock": 18,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🧅",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_aceitunas",
+    "name": "Aceitunas Verdes y Negras",
+    "category": "Verduras",
+    "stock": 35,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🫒",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_palmitos",
+    "name": "Palmitos Tiernos",
+    "category": "Verduras",
+    "stock": 0,
+    "unit": "porciones",
+    "minAlert": 15,
+    "icon": "🎋",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_empanadas_stock",
+    "name": "Empanadas Listas para Hornear",
+    "category": "Elaborados",
+    "stock": 60,
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "🥟",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_milanesa",
+    "name": "Milanesa de Carne Vacuna",
+    "category": "Carnes",
+    "stock": 20,
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "🥩",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "ing_huevo",
+    "name": "Huevo Duro / Frito",
+    "category": "Huevos",
+    "stock": 30,
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "🥚",
+    "barcode": null,
+    "lots": []
+  },
+  {
+    "id": "prod_gaseosas_mt69dwaz",
+    "name": "Gaseosas",
+    "category": "Bebidas",
+    "unit": "unidades",
+    "minAlert": 15,
+    "icon": "📦",
+    "barcode": "7798113301024",
+    "stock": 5,
+    "lots": [
+      {
+        "id": "lot_mt69dwaz_qsjc5h",
+        "qty": 5,
+        "expirationDate": null,
+        "addedDate": "2026-08-23"
+      }
+    ]
+  }
+]

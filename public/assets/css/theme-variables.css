@@ -1,0 +1,84 @@
+/**
+ * ==============================================================================
+ *  BLOQUE 1 - DESIGN SYSTEM & THEME VARIABLES
+ * ==============================================================================
+ *  All design tokens, colors, typography, radii, shadows, and spacings are 
+ *  defined here using the '--b1-' prefix.
+ *  You can customize the whole look & feel easily by editing the values below!
+ * ==============================================================================
+ */
+
+:root {
+  /* ── 1. BRAND COLORS (VIBRANT ORANGE PALETTE) ────────────────────────────── */
+  --b1-color-primary: #FF6B00;             /* Main brand orange */
+  --b1-color-primary-hover: #E55F00;       /* Darker orange on tap/hover */
+  --b1-color-primary-dark: #C94E00;        /* Deep shade for active borders */
+  --b1-color-primary-light: #FFF3EB;      /* Ultra-light orange for active badge/pill backgrounds */
+  --b1-color-primary-glow: rgba(255, 107, 0, 0.28); /* Focus & button glow shadow */
+  --b1-color-primary-gradient: linear-gradient(135deg, #FF7E1D 0%, #FF5500 100%);
+  --b1-color-hero-gradient: linear-gradient(135deg, #FF7E1D 0%, #FF3D00 100%);
+  --b1-color-accent: #FFA928;              /* Warm accent gold / star rating */
+
+  /* ── 2. NEUTRAL & SURFACE COLORS ─────────────────────────────────────────── */
+  --b1-color-bg: #F8F9FA;                  /* Main screen background (light gray/clean) */
+  --b1-color-surface: #FFFFFF;             /* White background for cards, modals, sheets */
+  --b1-color-surface-subtle: #F3F4F6;      /* Subtle background for inputs & inactive chips */
+  --b1-color-border: #E5E7EB;              /* Thin clean border lines */
+  --b1-color-border-light: #F0F1F3;        /* Soft separator lines */
+  --b1-color-overlay: rgba(15, 17, 23, 0.6); /* Backdrop for modals & bottom sheets */
+
+  /* ── 3. TEXT & TYPOGRAPHY COLORS ─────────────────────────────────────────── */
+  --b1-color-text-main: #18191F;           /* High emphasis titles & price */
+  --b1-color-text-body: #4B5563;           /* Standard readable description text */
+  --b1-color-text-muted: #8E8E93;          /* Low emphasis / small captions */
+  --b1-color-text-inverse: #FFFFFF;        /* White text for orange buttons & headers */
+  --b1-color-text-price: #FF6B00;          /* Highlighted item price */
+  --b1-color-success: #10B981;             /* Success green for free shipping / badges */
+  --b1-color-danger: #EF4444;              /* Trash & alert red */
+
+  /* ── 4. TYPOGRAPHY SIZES & WEIGHTS ───────────────────────────────────────── */
+  --b1-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --b1-font-size-xs: 0.75rem;              /* 12px */
+  --b1-font-size-sm: 0.875rem;             /* 14px */
+  --b1-font-size-base: 1rem;               /* 16px */
+  --b1-font-size-lg: 1.125rem;             /* 18px */
+  --b1-font-size-xl: 1.25rem;              /* 20px */
+  --b1-font-size-2xl: 1.5rem;              /* 24px */
+
+  --b1-font-weight-regular: 400;
+  --b1-font-weight-medium: 500;
+  --b1-font-weight-semibold: 600;
+  --b1-font-weight-bold: 700;
+  --b1-font-weight-heavy: 800;
+
+  /* ── 5. BORDER RADII (MODERN ROUNDED APP STYLE) ───────────────────────────── */
+  --b1-radius-sm: 8px;
+  --b1-radius-md: 14px;
+  --b1-radius-lg: 20px;                    /* Standard food card radius */
+  --b1-radius-xl: 26px;                    /* Bottom sheet top corners */
+  --b1-radius-pill: 9999px;                /* Fully rounded badges, buttons, chips */
+
+  /* ── 6. SHADOWS & ELEVATION ──────────────────────────────────────────────── */
+  --b1-shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --b1-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --b1-shadow-card: 0 8px 24px rgba(24, 25, 31, 0.06);
+  --b1-shadow-card-hover: 0 12px 30px rgba(255, 107, 0, 0.15);
+  --b1-shadow-button: 0 6px 18px rgba(255, 107, 0, 0.35);
+  --b1-shadow-bottom-bar: 0 -8px 28px rgba(0, 0, 0, 0.09);
+  --b1-shadow-sheet: 0 -12px 36px rgba(0, 0, 0, 0.18);
+
+  /* ── 7. SPACING & SIZING ─────────────────────────────────────────────────── */
+  --b1-space-2: 0.5rem;                    /* 8px */
+  --b1-space-3: 0.75rem;                   /* 12px */
+  --b1-space-4: 1rem;                      /* 16px */
+  --b1-space-5: 1.25rem;                   /* 20px */
+  --b1-space-6: 1.5rem;                    /* 24px */
+  --b1-space-8: 2rem;                      /* 32px */
+  --b1-max-width-app: 480px;               /* Centered mobile-app frame width */
+  --b1-bottom-bar-height: 80px;            /* Bottom navigation clearance */
+
+  /* ── 8. ANIMATION & TRANSITIONS ──────────────────────────────────────────── */
+  --b1-transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --b1-transition-base: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --b1-transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "id": "exp_mt69dwb3_980ffd",
+    "date": "2026-08-23",
+    "description": "Compra de stock: Gaseosas",
+    "amount": 1800,
+    "category": "stock",
+    "relatedProductId": "prod_gaseosas_mt69dwaz",
+    "source": "stock_entry"
+  },
+  {
+    "id": "exp_mt69e02e_cbzk9x",
+    "date": "2026-08-23",
+    "description": "Compra de stock: Gaseosas",
+    "amount": 1800,
+    "category": "stock",
+    "relatedProductId": "prod_gaseosas_mt69dwaz",
+    "source": "stock_entry"
+  },
+  {
+    "id": "exp_mt69e1we_mdm03j",
+    "date": "2026-08-23",
+    "description": "Compra de stock: Gaseosas",
+    "amount": 1800,
+    "category": "stock",
+    "relatedProductId": "prod_gaseosas_mt69dwaz",
+    "source": "stock_entry"
+  },
+  {
+    "id": "exp_mt69e26d_gz07rh",
+    "date": "2026-08-23",
+    "description": "Compra de stock: Gaseosas",
+    "amount": 1800,
+    "category": "stock",
+    "relatedProductId": "prod_gaseosas_mt69dwaz",
+    "source": "stock_entry"
+  },
+  {
+    "id": "exp_mt69e2c0_azbmkm",
+    "date": "2026-08-23",
+    "description": "Compra de stock: Gaseosas",
+    "amount": 1800,
+    "category": "stock",
+    "relatedProductId": "prod_gaseosas_mt69dwaz",
+    "source": "stock_entry"
+  },
+  {
+    "id": "exp_mtlvsc83_2419bg",
+    "date": "2026-09-03",
+    "description": "Test gasto",
+    "amount": 20000,
+    "category": "servicios",
+    "source": "manual"
+  },
+  {
+    "id": "exp_mtlvvg9g_mbc5z7",
+    "date": "2026-09-03",
+    "description": "Compra de stock: Cebolla Caramelizada al Oliva",
+    "amount": 5000,
+    "category": "stock",
+    "relatedProductId": "ing_cebolla",
+    "source": "stock_entry"
+  }
+]

@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* Preserve pure brand theme without dark-mode overrides */
+:root {
+  --background: #f8f9fa;
+  --foreground: #18191f;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #18191f;
+  margin: 0;
+  padding: 0;
+}
+
+/* Modal and sheet custom overlay styles with strong glassmorphism blur and isolation */
+.b1-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1050;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+
+@media (min-width: 576px) {
+  .b1-modal-backdrop {
+    align-items: center;
+  }
+}
+
+.b1-modal-sheet {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 26px 26px 0 0;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: b1-slide-up 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overscroll-behavior: contain;
+  touch-action: auto;
+}
+
+.b1-modal-sheet [style*="overflow-y: auto"],
+.b1-modal-sheet [style*="overflow-y:auto"] {
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 576px) {
+  .b1-modal-sheet {
+    border-radius: 26px;
+    max-height: 88vh;
+  }
+}
+
+@keyframes b1-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
