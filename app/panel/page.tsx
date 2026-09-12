@@ -34,6 +34,9 @@ import {
   Calendar,
   ShoppingCart,
   UtensilsCrossed,
+  Utensils,
+  Pizza,
+  ClipboardList,
 } from "lucide-react";
 
 interface Lot {
@@ -687,6 +690,14 @@ export default function AdminStockAndFinancePage() {
     return orders.filter((o) => o.status === "pendiente").length;
   }, [orders]);
 
+  const orderStats = useMemo(() => {
+    const total = orders.length;
+    const pending = orders.filter((o) => o.status === "pendiente").length;
+    const approved = orders.filter((o) => o.status === "aprobado").length;
+    const rejected = orders.filter((o) => o.status === "rechazado").length;
+    return { total, pending, approved, rejected };
+  }, [orders]);
+
   const filteredOrders = useMemo(() => {
     return orders.filter((o) => {
       if (orderFilter === "all") return true;
@@ -895,24 +906,30 @@ export default function AdminStockAndFinancePage() {
            ══════════════════════════════════════════════════════════════════ */}
       {activeTab === "orders" && (
         <div style={{ paddingTop: 14 }}>
-          {/* Barra de Filtros Segmentada con Iconos (Exacto al boceto) */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-2 shadow-2xs grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+          {/* Barra de Filtros Segmentada con Iconos y Cards */}
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-2 sm:p-2.5 shadow-2xs grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 mb-4">
             {/* 1. Todos */}
             <button
               type="button"
               onClick={() => setOrderFilter("all")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer ${
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
                 orderFilter === "all"
-                  ? "bg-slate-50 border border-slate-200 shadow-2xs"
-                  : "hover:bg-slate-50/70"
+                  ? "bg-slate-100/90 border-slate-300 shadow-2xs text-slate-900 ring-2 ring-slate-400/20"
+                  : "bg-slate-50/50 hover:bg-slate-100/70 border-slate-200/60 text-slate-700"
               }`}
             >
-              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                orderFilter === "all"
+                  ? "bg-slate-800 text-white shadow-2xs"
+                  : "bg-slate-200/80 text-slate-600"
+              }`}>
+                <ClipboardList className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.3]" />
               </div>
-              <div className="text-left min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="text-xs font-black text-slate-900 leading-tight">Todos</div>
-                <div className="text-xs font-semibold text-slate-500">({orders.length})</div>
+                <div className="text-[11px] font-bold text-slate-500 mt-0.5">
+                  ({orderStats.total})
+                </div>
               </div>
             </button>
 
@@ -920,19 +937,23 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("pendiente")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
                 orderFilter === "pendiente"
-                  ? "bg-amber-50/70 border border-amber-200 shadow-2xs"
-                  : "hover:bg-slate-50/70"
+                  ? "bg-amber-50 border-amber-300 shadow-2xs text-amber-950 ring-2 ring-amber-400/25"
+                  : "bg-amber-50/30 hover:bg-amber-50/70 border-amber-200/60 text-slate-700"
               }`}
             >
-              <div className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
-                <Clock className="w-4 h-4 text-sky-600 stroke-[2.5]" />
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                orderFilter === "pendiente"
+                  ? "bg-amber-500 text-white shadow-2xs"
+                  : "bg-amber-100 text-amber-700"
+              }`}>
+                <Clock className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
-              <div className="text-left min-w-0">
-                <div className="text-xs font-black text-slate-900 leading-tight truncate">Efectivo Pendiente</div>
-                <div className="text-xs font-semibold text-slate-500">
-                  ({orders.filter((o) => o.paymentMethod === "efectivo" && o.status === "pendiente").length})
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-black text-slate-900 leading-snug break-words">Efectivo Pendiente</div>
+                <div className={`text-[11px] font-bold mt-0.5 ${orderStats.pending > 0 ? "text-amber-700" : "text-slate-500"}`}>
+                  ({orderStats.pending})
                 </div>
               </div>
             </button>
@@ -941,19 +962,23 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("aprobado")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
                 orderFilter === "aprobado"
-                  ? "bg-emerald-50/70 border border-emerald-200 shadow-2xs"
-                  : "hover:bg-slate-50/70"
+                  ? "bg-emerald-50 border-emerald-300 shadow-2xs text-emerald-950 ring-2 ring-emerald-400/25"
+                  : "bg-emerald-50/30 hover:bg-emerald-50/70 border-emerald-200/60 text-slate-700"
               }`}
             >
-              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                <Package className="w-4 h-4 text-purple-600 stroke-[2.5]" />
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                orderFilter === "aprobado"
+                  ? "bg-emerald-600 text-white shadow-2xs"
+                  : "bg-emerald-100 text-emerald-700"
+              }`}>
+                <CheckCircle2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
-              <div className="text-left min-w-0">
-                <div className="text-xs font-black text-slate-900 leading-tight truncate">Cobrados / Pagados</div>
-                <div className="text-xs font-semibold text-slate-500">
-                  ({orders.filter((o) => o.status === "aprobado").length})
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-black text-slate-900 leading-snug break-words">Cobrados / Pagados</div>
+                <div className={`text-[11px] font-bold mt-0.5 ${orderStats.approved > 0 ? "text-emerald-700" : "text-slate-500"}`}>
+                  ({orderStats.approved})
                 </div>
               </div>
             </button>
@@ -962,19 +987,23 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("rechazado")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
                 orderFilter === "rechazado"
-                  ? "bg-rose-50/70 border border-rose-200 shadow-2xs"
-                  : "hover:bg-slate-50/70"
+                  ? "bg-rose-50 border-rose-300 shadow-2xs text-rose-950 ring-2 ring-rose-400/25"
+                  : "bg-rose-50/30 hover:bg-rose-50/70 border-rose-200/60 text-slate-700"
               }`}
             >
-              <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
-                <Ban className="w-4 h-4 text-rose-600 stroke-[2.5]" />
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                orderFilter === "rechazado"
+                  ? "bg-rose-600 text-white shadow-2xs"
+                  : "bg-rose-100 text-rose-700"
+              }`}>
+                <Ban className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
-              <div className="text-left min-w-0">
-                <div className="text-xs font-black text-slate-900 leading-tight">Cancelados</div>
-                <div className="text-xs font-semibold text-slate-500">
-                  ({orders.filter((o) => o.status === "rechazado").length})
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-black text-slate-900 leading-snug break-words">Cancelados</div>
+                <div className={`text-[11px] font-bold mt-0.5 ${orderStats.rejected > 0 ? "text-rose-700" : "text-slate-500"}`}>
+                  ({orderStats.rejected})
                 </div>
               </div>
             </button>
@@ -983,10 +1012,26 @@ export default function AdminStockAndFinancePage() {
           {/* Orders List */}
           {filteredOrders.length === 0 ? (
             <div className="adm-empty-state" style={{ padding: "40px 20px", textAlign: "center", background: "#fff", borderRadius: 14 }}>
-              <div style={{ fontSize: 36, marginBottom: 8 }}>🔔</div>
-              <div style={{ fontWeight: 800, fontSize: 16 }}>No hay pedidos en esta sección</div>
+              <div style={{ fontSize: 36, marginBottom: 8 }}>
+                {orderFilter === "pendiente" ? "⏳" : orderFilter === "aprobado" ? "✅" : orderFilter === "rechazado" ? "🚫" : "🔔"}
+              </div>
+              <div style={{ fontWeight: 800, fontSize: 16 }}>
+                {orderFilter === "pendiente"
+                  ? "No hay pedidos pendientes de cobro"
+                  : orderFilter === "aprobado"
+                  ? "No hay pedidos cobrados aún"
+                  : orderFilter === "rechazado"
+                  ? "No hay pedidos cancelados"
+                  : "No hay pedidos en esta sección"}
+              </div>
               <div style={{ color: "var(--b1-color-text-muted)", fontSize: 13, marginTop: 4 }}>
-                Los nuevos pedidos en efectivo y por Mercado Pago aparecerán acá en tiempo real.
+                {orderFilter === "pendiente"
+                  ? "Todos los pedidos en efectivo se encuentran al día."
+                  : orderFilter === "aprobado"
+                  ? "Los pedidos cobrados y entregados aparecerán listados acá."
+                  : orderFilter === "rechazado"
+                  ? "Los pedidos que sean cancelados aparecerán acá."
+                  : "Los nuevos pedidos en efectivo y por Mercado Pago aparecerán acá en tiempo real."}
               </div>
             </div>
           ) : (
@@ -1007,138 +1052,163 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-xs space-y-4 transition-all"
+                    className={`bg-white border rounded-3xl p-5 shadow-xs space-y-3.5 transition-all ${
+                      isRejected
+                        ? "border-rose-200/80 bg-rose-50/15 opacity-85"
+                        : isPending
+                        ? "border-slate-200/90 shadow-2xs hover:border-amber-300"
+                        : "border-slate-200/90 hover:border-emerald-200"
+                    }`}
                   >
-                    {/* 1. Header: Avatar + Cliente + Precio + Badge de Pago */}
-                    <div className="flex items-start justify-between gap-3 flex-wrap sm:flex-nowrap">
-                      <div className="flex items-center gap-3.5">
+                    {/* 1. Header: Avatar + Cliente e ID + Precio */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
                         {/* Cloche Avatar Badge */}
-                        <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#064e3b] text-white flex items-center justify-center shrink-0 shadow-xs relative overflow-hidden">
-                          <svg className="w-7 h-7 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M18 15v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1" />
-                            <path d="M4 15h16" />
-                            <path d="M12 4a8 8 0 0 0-8 8h16a8 8 0 0 0-8-8z" />
-                            <path d="M12 2v2" />
-                            <path d="M2 11h2" />
-                            <path d="M20 11h2" />
-                          </svg>
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ${
+                          isRejected
+                            ? "bg-rose-100 text-rose-600"
+                            : "bg-[#064e3b] text-emerald-300"
+                        }`}>
+                          <Utensils className="w-6 h-6" />
                         </div>
 
                         <div>
-                          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
+                          <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight">
                             {order.customerName}
                           </h3>
-                          <div className="mt-1 flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                              #{shortId}
-                            </span>
-                            {isPickup && order.transferRef && (
-                              <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
-                                Retiro: #{order.transferRef}
-                              </span>
-                            )}
-                          </div>
+                          <span className="font-mono text-xs font-semibold text-slate-400 mt-0.5 block">
+                            #{shortId}
+                          </span>
                         </div>
                       </div>
 
-                      {/* Precio Total y Método */}
+                      {/* Precio Total */}
                       <div className="text-right shrink-0">
-                        <div className="text-2xl sm:text-3xl font-black text-slate-900 leading-none">
+                        <div className="text-2xl font-black text-slate-900 leading-none">
                           ${formatMoney(order.total)}
-                        </div>
-                        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80">
-                          <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>{isCash ? "EFECTIVO" : "MERCADO PAGO"}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* 2. Sub-header: Modalidad & Fecha */}
-                    <div className="flex items-center gap-3 text-xs flex-wrap">
+                    {/* 2. Badges: Estado / Pago + Código de Retiro */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {isCash ? (
+                        isPending ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#fffbeb] text-amber-800 border border-amber-300">
+                            <Clock className="w-3.5 h-3.5 text-amber-600 stroke-[2.5]" />
+                            <span>Efectivo Pendiente</span>
+                          </span>
+                        ) : isApproved ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                            <span>Efectivo Cobrado</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300">
+                            <Ban className="w-3.5 h-3.5 text-rose-600" />
+                            <span>Cancelado</span>
+                          </span>
+                        )
+                      ) : isMP ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-800 border border-sky-300">
+                          <CreditCard className="w-3.5 h-3.5 text-sky-600" />
+                          <span>Mercado Pago</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-300">
+                          <CreditCard className="w-3.5 h-3.5 text-slate-600" />
+                          <span>{String(order.paymentMethod || "Pedido").toUpperCase()}</span>
+                        </span>
+                      )}
+
+                      {isPickup && order.transferRef && (
+                        <span className="inline-flex items-center text-xs font-mono font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-md">
+                          #{order.transferRef}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* 3. Modalidad & Fecha */}
+                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium flex-wrap">
                       {isPickup ? (
-                        <span className="inline-flex items-center gap-1.5 font-bold text-[#b45309] bg-[#fffbeb] border border-[#fde68a] px-3.5 py-1.5 rounded-full text-xs">
-                          <Store className="w-4 h-4 text-[#d97706]" />
+                        <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
+                          <Store className="w-3.5 h-3.5 text-slate-400" />
                           <span>Retiro en local</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 font-bold text-sky-800 bg-sky-50 border border-sky-200/80 px-3.5 py-1.5 rounded-full text-xs">
-                          <MapPin className="w-4 h-4 text-sky-600" />
+                        <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
+                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
                           <span>{order.customerAddress || "Sin dirección"}</span>
                         </span>
                       )}
 
-                      <span className="text-slate-300 font-light">|</span>
+                      <span className="text-slate-300 font-light">•</span>
 
-                      <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-                        <Calendar className="w-4 h-4 text-slate-400" />
-                        <span>{order.date} • {timeString || "14:15"}</span>
+                      <div className="flex items-center gap-1 text-slate-400">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                        <span>{order.date || "Hoy"} · {timeString || "14:15"}</span>
                       </div>
                     </div>
 
-                    {/* 3. Productos Box */}
-                    <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-3.5 space-y-2.5">
-                      <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
-                        <ShoppingCart className="w-3.5 h-3.5" />
-                        <span>PRODUCTOS</span>
-                      </div>
+                    {/* 4. Productos List (sin cajas pesadas, con thumbnail suave) */}
+                    <div className="border-t border-slate-100 pt-3.5 space-y-3">
+                      {itemsList.map((item: any, idx: number) => {
+                        const qty = item.quantity || item.qty || 1;
+                        const name = item.name || item.title || "Producto";
+                        const price = item.price ? Number(item.price) * Number(qty) : 0;
+                        const desc = item.description || item.comment || "";
+                        const image = item.image || item.imageUrl || null;
 
-                      <div className="space-y-2.5">
-                        {itemsList.map((item: any, idx: number) => {
-                          const qty = item.quantity || item.qty || 1;
-                          const name = item.name || item.title || "Producto";
-                          const price = item.price ? Number(item.price) * Number(qty) : 0;
-                          const desc = item.description || item.comment || "";
-                          const image = item.image || item.imageUrl || null;
-
-                          return (
-                            <div key={idx} className="flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-3 min-w-0">
-                                {image ? (
-                                  <img
-                                    src={image}
-                                    alt={name}
-                                    className="w-12 h-12 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-white"
-                                  />
-                                ) : (
-                                  <div className="w-12 h-12 rounded-xl bg-orange-100 border border-orange-200/60 text-orange-600 flex items-center justify-center shrink-0 font-bold text-base">
-                                    🍕
-                                  </div>
-                                )}
-                                <div className="min-w-0">
-                                  <h4 className="text-sm font-black text-slate-900 leading-snug truncate">
-                                    {qty}x {name}
-                                  </h4>
-                                  {desc && (
-                                    <p className="text-xs text-slate-500 truncate mt-0.5">
-                                      {desc}
-                                    </p>
-                                  )}
+                        return (
+                          <div key={idx} className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
+                              {image ? (
+                                <img
+                                  src={image}
+                                  alt={name}
+                                  className="w-12 h-12 rounded-2xl object-cover border border-slate-200/80 shrink-0 bg-white"
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-2xl bg-[#fff7ed] border border-orange-100/80 text-orange-500 flex items-center justify-center shrink-0">
+                                  <Pizza className="w-6 h-6 text-orange-400" />
                                 </div>
-                              </div>
-
-                              <div className="text-sm font-black text-slate-900 shrink-0">
-                                ${formatMoney(price)}
+                              )}
+                              <div className="min-w-0">
+                                <h4 className="text-sm font-black text-slate-900 leading-snug truncate">
+                                  {qty}x {name}
+                                </h4>
+                                {desc && (
+                                  <p className="text-xs text-slate-400 font-medium truncate mt-0.5">
+                                    {desc}
+                                  </p>
+                                )}
                               </div>
                             </div>
-                          );
-                        })}
-                      </div>
+
+                            <div className="text-sm font-black text-slate-900 shrink-0">
+                              ${formatMoney(price)}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
 
-                    {/* 4. WhatsApp Cliente Row */}
+                    {/* 5. WhatsApp Cliente Row */}
                     {order.customerPhone && (
-                      <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-2.5 px-3.5 flex items-center justify-between gap-2">
+                      <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-2.5 px-3 flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-2xs">
-                            <MessageCircle className="w-4 h-4 fill-white" />
+                          <div className="w-10 h-10 rounded-full bg-[#00c950] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                            <MessageCircle className="w-5 h-5 fill-white text-white" />
                           </div>
                           <div>
-                            <div className="text-[11px] font-medium text-slate-500">WhatsApp Cliente:</div>
+                            <div className="text-[11px] font-medium text-slate-400 leading-none">
+                              WhatsApp
+                            </div>
                             <a
                               href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-xs font-black text-slate-800 hover:text-emerald-700 transition-colors"
+                              className="text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors block mt-1 leading-none"
                             >
                               {order.customerPhone}
                             </a>
@@ -1166,9 +1236,25 @@ export default function AdminStockAndFinancePage() {
                       </div>
                     )}
 
-                    {/* 5. Botonera de Acciones (Cancelar y Confirmar Entrega) */}
+                    {/* 6. Botonera de Acciones (Confirmar Entrega y Cancelar) */}
                     {!isApproved && !isRejected ? (
-                      <div className="flex items-center gap-3 pt-1">
+                      <div className="space-y-2 pt-1">
+                        <button
+                          type="button"
+                          disabled={updatingOrderId === order.id}
+                          onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
+                          className="w-full py-3.5 px-6 text-sm font-black text-white bg-[#007a4d] hover:bg-[#006640] active:scale-[0.99] rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                          <Check className="w-5 h-5 stroke-[3]" />
+                          <span>
+                            {updatingOrderId === order.id
+                              ? "Guardando..."
+                              : isPickup
+                              ? "Confirmar Entrega"
+                              : "Confirmar Entrega"}
+                          </span>
+                        </button>
+
                         <button
                           type="button"
                           disabled={updatingOrderId === order.id}
@@ -1177,26 +1263,10 @@ export default function AdminStockAndFinancePage() {
                               handleUpdateOrderStatus(order.id, "rechazado");
                             }
                           }}
-                          className="py-3 px-6 text-sm font-extrabold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200/90 rounded-2xl transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                          className="w-full text-center py-1.5 text-xs font-bold text-red-600 hover:text-red-700 flex items-center justify-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                         >
-                          <Trash2 className="w-4 h-4 text-rose-600" />
+                          <Trash2 className="w-3.5 h-3.5 text-red-600" />
                           <span>Cancelar</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          disabled={updatingOrderId === order.id}
-                          onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
-                          className="flex-1 py-3 px-6 text-sm font-extrabold text-white bg-[#059669] hover:bg-[#047857] active:scale-[0.99] rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                        >
-                          <Check className="w-5 h-5 stroke-[2.8]" />
-                          <span>
-                            {updatingOrderId === order.id
-                              ? "Guardando..."
-                              : isPickup
-                              ? "Confirmar Entrega"
-                              : "Confirmar Entrega"}
-                          </span>
                         </button>
                       </div>
                     ) : isApproved ? (
