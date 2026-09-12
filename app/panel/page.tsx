@@ -1052,7 +1052,7 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className={`bg-white border rounded-3xl p-5 shadow-xs space-y-3.5 transition-all ${
+                    className={`bg-white border rounded-3xl p-3.5 shadow-xs space-y-3 transition-all ${
                       isRejected
                         ? "border-rose-200/80 bg-rose-50/15 opacity-85"
                         : isPending
