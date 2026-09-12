@@ -16,6 +16,12 @@ import {
   BarChart3,
   Search,
   ExternalLink,
+  MessageCircle,
+  X,
+  Phone,
+  MapPin,
+  Store,
+  CheckCheck,
 } from "lucide-react";
 
 interface Lot {
@@ -927,298 +933,214 @@ export default function AdminStockAndFinancePage() {
                 const isRejected = order.status === "rechazado";
                 const isMP = order.paymentMethod === "mercadopago";
                 const isCash = order.paymentMethod === "efectivo" || !order.paymentMethod;
+                const isPickup = order.deliveryType === "retiro";
+                const shortId = order.id.slice(-6).toUpperCase();
+                const itemsList = parseOrderItems(order.items);
+                const timeString = order.createdAt
+                  ? new Date(order.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                  : "";
 
                 return (
                   <div
                     key={order.id}
-                    style={{
-                      background: "#fff",
-                      borderRadius: 14,
-                      border: isPending ? "2px solid #F59E0B" : isMP ? "1.5px solid rgba(0, 158, 227, 0.35)" : "1px solid var(--adm-border)",
-                      boxShadow: isPending ? "0 4px 14px rgba(245, 158, 11, 0.15)" : "0 2px 6px rgba(0,0,0,0.04)",
-                      padding: 16,
-                      position: "relative",
-                    }}
+                    className="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden transition-all"
                   >
-                    {/* Header Row */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-                      <div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                          <strong style={{ fontSize: 16 }}>#{order.id.slice(-6).toUpperCase()}</strong>
-                          
-                          {/* Payment method badge */}
-                          {isMP ? (
-                            <span
-                              style={{
-                                fontSize: 11,
-                                fontWeight: 800,
-                                padding: "3px 8px",
-                                borderRadius: 8,
-                                background: "#E0F2FE",
-                                color: "#0284C7",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 4,
-                              }}
-                            >
-                              <i className="fas fa-bolt"></i> Mercado Pago
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                fontSize: 11,
-                                fontWeight: 800,
-                                padding: "3px 8px",
-                                borderRadius: 8,
-                                background: "#ECFDF5",
-                                color: "#059669",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 4,
-                              }}
-                            >
-                              💵 Efectivo
-                            </span>
-                          )}
+                    {/* 1. Header de la Orden */}
+                    <div className="p-4 pb-3 border-b border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono font-bold text-gray-900 text-sm tracking-wide">
+                          #{shortId}
+                        </span>
 
-                          {/* Status Badge */}
-                          <span
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 800,
-                              textTransform: "uppercase",
-                              padding: "2px 8px",
-                              borderRadius: 10,
-                              background: isPending ? "#FEF3C7" : isApproved ? "#D1FAE5" : "#FEE2E2",
-                              color: isPending ? "#B45309" : isApproved ? "#047857" : "#B91C1C",
-                            }}
-                          >
-                            {isPending ? "🟡 Pendiente de Cobro" : isApproved ? (isMP ? "🟢 Pago Acreditado" : "🟢 Cobrado & Entregado") : "🔴 Cancelado"}
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                            isCash
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
+                              : "bg-sky-50 text-sky-700 border-sky-200/60"
+                          }`}
+                        >
+                          {isCash ? "Efectivo" : "Mercado Pago"}
+                        </span>
+
+                        {isPending && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/60">
+                            Pendiente de cobro
                           </span>
-                        </div>
-                        <div style={{ fontSize: 12, color: "var(--b1-color-text-muted)", marginTop: 4 }}>
-                          {order.date} • {order.createdAt ? new Date(order.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
-                        </div>
+                        )}
+                        {isApproved && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+                            {isMP ? "Pago Acreditado" : "Cobrado & Entregado"}
+                          </span>
+                        )}
+                        {isRejected && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200/60">
+                            Cancelado
+                          </span>
+                        )}
                       </div>
 
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 18, fontWeight: 900, color: "var(--adm-primary)" }}>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-gray-900">
                           ${formatMoney(order.total)}
-                        </div>
+                        </span>
+                        <span className="block text-[11px] text-gray-400 font-medium">
+                          {order.date} {timeString ? `• ${timeString}` : ""}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Customer & Delivery Details */}
-                    <div style={{ background: "#F8FAFC", borderRadius: 10, padding: 12, marginBottom: 12, fontSize: 13 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                        <span><strong>👤 Cliente:</strong> {order.customerName}</span>
+                    {/* 2. Información de Cliente y Modalidad */}
+                    <div className="p-4 py-3 bg-gray-50/50 space-y-2 text-xs">
+                      <div className="flex items-center justify-between text-gray-700">
+                        <div className="flex items-center gap-1.5 font-medium">
+                          <span className="text-gray-400">Cliente:</span>
+                          <span className="font-bold text-gray-900">{order.customerName}</span>
+                        </div>
                         {order.customerPhone && (
                           <a
-                            href={`https://wa.me/${order.customerPhone.replace(/[^\d]/g, "")}`}
+                            href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                              color: "#059669",
-                              fontWeight: 700,
-                              textDecoration: "none",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                            }}
+                            className="text-emerald-600 font-semibold hover:underline flex items-center gap-1 cursor-pointer no-underline"
                           >
-                            <i className="fab fa-whatsapp"></i> {order.customerPhone}
+                            <Phone className="w-3 h-3" />
+                            <span>{order.customerPhone}</span>
                           </a>
                         )}
                       </div>
-                      <div>
-                        <strong>📍 Modalidad:</strong>{" "}
-                        {order.deliveryType === "envio" ? `Envío a domicilio (${order.customerAddress || "Sin dirección"})` : "Retiro en local"}
+
+                      <div className="flex items-center gap-1.5 text-gray-700">
+                        {isPickup ? (
+                          <div className="flex items-center gap-1 text-gray-800 font-medium">
+                            <Store className="w-3.5 h-3.5 text-orange-500" />
+                            <span>Modalidad: <strong>Retiro en el local</strong></span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 text-gray-800 font-medium">
+                            <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                            <span>Envío a: <strong>{order.customerAddress || "Sin dirección"}</strong></span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Payment Info Card */}
-                    {isMP && (
-                      <div
-                        style={{
-                          background: "linear-gradient(135deg, rgba(0, 158, 227, 0.08) 0%, rgba(0, 158, 227, 0.02) 100%)",
-                          border: "1px solid rgba(0, 158, 227, 0.3)",
-                          borderRadius: 10,
-                          padding: "10px 12px",
-                          marginBottom: 12,
-                          fontSize: 12,
-                          color: "#0369A1",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <i className="fas fa-check-circle" style={{ fontSize: 16, color: "#0284C7" }}></i>
-                        <span>El cliente abonó online por Mercado Pago. El dinero está acreditado en tu cuenta y la ganancia registrada en Finanzas.</span>
-                      </div>
-                    )}
-
-                    {isCash && isPending && (
-                      <div
-                        style={{
-                          background: "#FFFBEB",
-                          border: "1.5px dashed #F59E0B",
-                          borderRadius: 10,
-                          padding: "10px 12px",
-                          marginBottom: 12,
-                          fontSize: 12,
-                          color: "#92400E",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <i className="fas fa-hand-holding-usd" style={{ fontSize: 16, color: "#D97706" }}></i>
-                        <span><strong>Cobro en Efectivo:</strong> Cobrar <strong>${formatMoney(order.total)}</strong> al cliente contra entrega o al retirar.</span>
-                      </div>
-                    )}
-
-                    {/* Items List */}
-                    <div style={{ borderTop: "1px solid #E2E8F0", paddingTop: 10, marginBottom: 12 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--b1-color-text-muted)", marginBottom: 6 }}>
-                        PRODUCTOS DEL PEDIDO:
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        {parseOrderItems(order.items).map((item: any, idx: number) => {
+                    {/* 3. Lista de Productos */}
+                    <div className="p-4 py-3 border-t border-gray-100">
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">
+                        Productos del pedido
+                      </span>
+                      <div className="space-y-1 text-xs text-gray-800">
+                        {itemsList.map((item: any, idx: number) => {
                           const qty = item.quantity || item.qty || 1;
                           const name = item.name || item.title || "Producto";
                           const price = item.price ? Number(item.price) * Number(qty) : 0;
                           return (
-                            <div key={idx} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                            <div key={idx} className="flex justify-between items-center py-0.5">
                               <span>
-                                <strong>{qty}x</strong> {name}
+                                <strong className="font-bold text-gray-900">{qty}x</strong> {name}
                                 {item.comment && (
-                                  <span style={{ color: "var(--b1-color-text-muted)", fontStyle: "italic", marginLeft: 4 }}>
+                                  <span className="text-gray-400 italic ml-1">
                                     ({item.comment})
                                   </span>
                                 )}
                               </span>
-                              <span style={{ fontWeight: 600 }}>${formatMoney(price)}</span>
+                              <span className="font-semibold text-gray-700">
+                                ${formatMoney(price)}
+                              </span>
                             </div>
                           );
                         })}
                       </div>
                     </div>
 
-                    {/* Action Bar for Delivery & Operations */}
-                    <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-                      {/* 📋 Copy Order Details for Delivery Driver */}
-                      <button
-                        type="button"
-                        onClick={() => handleCopyOrder(order)}
-                        style={{
-                          flex: 1,
-                          minWidth: 150,
-                          background: copiedOrderId === order.id ? "#ECFDF5" : "#F8FAFC",
-                          color: copiedOrderId === order.id ? "#059669" : "#334155",
-                          border: "1.5px solid " + (copiedOrderId === order.id ? "#10B981" : "#CBD5E1"),
-                          borderRadius: 10,
-                          padding: "9px 12px",
-                          fontWeight: 700,
-                          fontSize: 12,
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 6,
-                          transition: "all 0.15s ease",
-                        }}
-                      >
-                        <i className={copiedOrderId === order.id ? "fas fa-check-circle" : "fas fa-copy"}></i>
-                        <span>{copiedOrderId === order.id ? "¡Copiado para Repartidor! ✅" : "📋 Copiar para Delivery"}</span>
-                      </button>
-
-                      {/* 📲 Quick Share on WhatsApp */}
-                      <button
-                        type="button"
-                        onClick={() => handleShareWhatsApp(order)}
-                        title="Enviar detalle a WhatsApp"
-                        style={{
-                          background: "#25D366",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: 10,
-                          padding: "9px 12px",
-                          fontWeight: 700,
-                          fontSize: 12,
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 6,
-                        }}
-                      >
-                        <i className="fab fa-whatsapp"></i>
-                        <span>WhatsApp</span>
-                      </button>
-                    </div>
-
-                    {/* Action Buttons for Cash Orders */}
-                    {isCash && isPending && (
-                      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-                        <button
-                          type="button"
-                          disabled={updatingOrderId === order.id}
-                          onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
-                          style={{
-                            flex: 1,
-                            background: "#059669",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 10,
-                            padding: "10px 14px",
-                            fontWeight: 800,
-                            fontSize: 13,
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 6,
-                          }}
-                        >
-                          <i className="fas fa-check-circle"></i>
-                          <span>{updatingOrderId === order.id ? "Guardando..." : "✅ Confirmar Cobro & Entrega"}</span>
-                        </button>
+                    {/* 4. Botonera de Acciones con Jerarquía Clara */}
+                    <div className="p-3 bg-gray-50/70 border-t border-gray-100 space-y-2">
+                      {/* Acciones Secundarias */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {!isPickup ? (
+                          <button
+                            type="button"
+                            onClick={() => handleCopyOrder(order)}
+                            className="py-2 px-3 bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                          >
+                            {copiedOrderId === order.id ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <span className="text-emerald-700 font-bold">¡Copiado!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5 text-gray-500" />
+                                <span>Copiar Delivery</span>
+                              </>
+                            )}
+                          </button>
+                        ) : (
+                          <div className="hidden" />
+                        )}
 
                         <button
                           type="button"
-                          disabled={updatingOrderId === order.id}
                           onClick={() => {
-                            if (confirm("¿Cancelar este pedido? El stock de los insumos será devuelto automáticamente al inventario.")) {
-                              handleUpdateOrderStatus(order.id, "rechazado");
+                            if (order.customerPhone) {
+                              const cleanPhone = order.customerPhone.replace(/\D/g, "");
+                              window.open(`https://wa.me/549${cleanPhone}`, "_blank");
+                            } else {
+                              handleShareWhatsApp(order);
                             }
                           }}
-                          style={{
-                            background: "#FEE2E2",
-                            color: "#DC2626",
-                            border: "1px solid #FCA5A5",
-                            borderRadius: 10,
-                            padding: "10px 14px",
-                            fontWeight: 700,
-                            fontSize: 13,
-                            cursor: "pointer",
-                          }}
+                          className={`${
+                            isPickup ? "col-span-2" : "col-span-1"
+                          } py-2 px-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 text-emerald-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer`}
                         >
-                          ❌ Cancelar
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>Chat WhatsApp</span>
                         </button>
                       </div>
-                    )}
 
-                    {isApproved && (
-                      <div style={{ color: "#059669", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4, marginTop: 10 }}>
-                        <i className="fas fa-check-double"></i> Venta confirmada y registrada en Finanzas
-                      </div>
-                    )}
+                      {/* Acciones Primarias */}
+                      {isPending && (
+                        <div className="flex items-center gap-2 pt-1">
+                          <button
+                            type="button"
+                            disabled={updatingOrderId === order.id}
+                            onClick={() => {
+                              if (confirm("¿Cancelar este pedido? El stock de los insumos será devuelto automáticamente al inventario.")) {
+                                handleUpdateOrderStatus(order.id, "rechazado");
+                              }
+                            }}
+                            className="py-2.5 px-4 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-xl transition-colors border border-rose-200/50 flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            <span>Cancelar</span>
+                          </button>
 
-                    {isRejected && (
-                      <div style={{ color: "#DC2626", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4, marginTop: 10 }}>
-                        <i className="fas fa-times-circle"></i> Pedido cancelado (Insumos reestablecidos)
-                      </div>
-                    )}
+                          <button
+                            type="button"
+                            disabled={updatingOrderId === order.id}
+                            onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
+                            className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          >
+                            <Check className="w-4 h-4 stroke-[2.5]" />
+                            <span>{updatingOrderId === order.id ? "Guardando..." : "Confirmar Cobro y Entrega"}</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {isApproved && (
+                        <div className="flex items-center gap-1.5 text-emerald-700 text-xs font-semibold pt-1">
+                          <CheckCheck className="w-4 h-4 text-emerald-600" />
+                          <span>Venta confirmada y registrada en Finanzas</span>
+                        </div>
+                      )}
+
+                      {isRejected && (
+                        <div className="flex items-center gap-1.5 text-rose-600 text-xs font-semibold pt-1">
+                          <X className="w-4 h-4 text-rose-500" />
+                          <span>Pedido cancelado (Insumos reestablecidos)</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
