@@ -694,18 +694,31 @@ export default function OwnerMenuManagementPage() {
             {/* Sheet Handle */}
             <div className="b1-sheet-drag-handle"></div>
 
-            {/* Hero Image / Top Bar */}
-            <div className="b1-detail-hero-wrapper" style={{ height: formImage ? 150 : 54, background: formImage ? "#000" : "var(--b1-color-surface-subtle)" }}>
+            <div className="b1-detail-hero-wrapper" style={{ position: "relative", height: formImage ? 150 : 54, background: formImage ? "#000" : "var(--b1-color-surface-subtle)", overflow: "hidden", borderRadius: "28px 28px 0 0" }}>
               {formImage && (
-                <img
-                  src={formImage}
-                  alt="Preview"
-                  className="b1-detail-hero-img"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600";
-                  }}
-                />
+                <>
+                  <img
+                    src={formImage}
+                    alt="Preview"
+                    className="b1-detail-hero-img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600";
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: "70%",
+                      background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </>
               )}
               <div className="b1-detail-nav-top">
                 <div style={{ fontWeight: 800, fontSize: 14, color: formImage ? "#fff" : "var(--b1-color-text-main)", textShadow: formImage ? "0 1px 4px rgba(0,0,0,0.8)" : "none" }}>

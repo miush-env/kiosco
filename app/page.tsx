@@ -1221,17 +1221,30 @@ export default function CustomerCatalogPage() {
             style={{ borderRadius: "26px 26px 0 0" }}
           >
             {/* Hero Image */}
-            <div className="b1-detail-hero-wrapper">
+            <div className="b1-detail-hero-wrapper" style={{ position: "relative", width: "100%", height: 210, overflow: "hidden", borderRadius: "26px 26px 0 0" }}>
               <img
                 src={selectedProduct.image || "/assets/images/logo.png"}
                 alt={selectedProduct.name}
                 className="b1-detail-hero-img"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
                     "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600";
                 }}
               />
-              <div className="b1-detail-nav-top">
+              {/* Gradient protection overlay for contrast */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "65%",
+                  background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%)",
+                  pointerEvents: "none",
+                }}
+              />
+              <div className="b1-detail-nav-top" style={{ position: "absolute", top: 12, left: 12, right: 12, display: "flex", justifyContent: "space-between", zIndex: 10 }}>
                 <button
                   type="button"
                   className="b1-detail-circle-btn"
@@ -1290,20 +1303,46 @@ export default function CustomerCatalogPage() {
                     )}
 
                     {/* Ingredients */}
-                    {selectedProduct.ingredients && selectedProduct.ingredients.length > 0 && (
-                      <div style={{ marginBottom: 16 }}>
-                        <div className="b1-ingredients-title">
-                          <i className="fas fa-utensils"></i> Ingredientes incluidos:
+                    {(() => {
+                      const rawIng = selectedProduct.ingredients;
+                      const ingList: string[] = Array.isArray(rawIng)
+                        ? rawIng.flatMap((item) => String(item).split(/[,•\n]+/)).map((s) => s.trim()).filter(Boolean)
+                        : typeof rawIng === "string"
+                        ? (rawIng as string).split(/[,•\n]+/).map((s) => s.trim()).filter(Boolean)
+                        : [];
+
+                      if (ingList.length === 0) return null;
+
+                      return (
+                        <div style={{ marginBottom: 16 }}>
+                          <div className="b1-ingredients-title" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--b1-color-text-muted)", marginBottom: 8 }}>
+                            <i className="fas fa-utensils" style={{ color: "var(--b1-color-primary)" }}></i>
+                            <span>Ingredientes incluidos</span>
+                          </div>
+                          <div className="b1-ingredients-list" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                            {ingList.map((ing, i) => (
+                              <span
+                                key={i}
+                                className="b1-ingredient-chip"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  padding: "4px 10px",
+                                  borderRadius: 20,
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  background: "var(--b1-color-surface-subtle)",
+                                  color: "var(--b1-color-text-main)",
+                                  border: "1px solid var(--b1-color-border)",
+                                }}
+                              >
+                                {ing}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                        <div className="b1-ingredients-list">
-                          {selectedProduct.ingredients.map((ing, i) => (
-                            <span key={i} className="b1-ingredient-chip">
-                              {ing}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                      );
+                    })()}
 
                     {/* Quantity Stepper */}
                     <div
@@ -1463,9 +1502,57 @@ export default function CustomerCatalogPage() {
             {/* Cart Items */}
             <div style={{ padding: "16px 20px", overflowY: "auto", flex: 1 }}>
               {cart.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "30px 0", color: "var(--b1-color-text-muted)" }}>
-                  <i className="fas fa-shopping-bag" style={{ fontSize: 32, marginBottom: 8, display: "block" }}></i>
-                  <span>Tu carrito está vacío.</span>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px", textAlign: "center" }}>
+                  <div
+                    style={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: "50%",
+                      background: "var(--b1-color-primary-light, #FFF7ED)",
+                      border: "1px solid rgba(234, 88, 12, 0.2)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 16,
+                      boxShadow: "0 4px 12px rgba(234, 88, 12, 0.12)",
+                    }}
+                  >
+                    <i className="fas fa-shopping-bag" style={{ fontSize: 26, color: "var(--b1-color-primary, #EA580C)" }}></i>
+                  </div>
+                  <h4 style={{ fontSize: 18, fontWeight: 800, color: "var(--b1-color-text-main)", margin: "0 0 6px", letterSpacing: "-0.2px" }}>
+                    Tu carrito está vacío
+                  </h4>
+                  <p style={{ fontSize: 13, color: "var(--b1-color-text-muted)", margin: "0 0 22px", maxWidth: 240, lineHeight: 1.45 }}>
+                    Agregá tus platos favoritos para empezar tu pedido.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      const target = document.getElementById("allProductsSectionHeader") || document.getElementById("dynamicProductsContainer");
+                      if (target) {
+                        target.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
+                    className="b1-btn-primary"
+                    style={{
+                      width: "100%",
+                      maxWidth: 250,
+                      padding: "12px 20px",
+                      fontSize: 14,
+                      fontWeight: 700,
+                      borderRadius: 16,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
+                      boxShadow: "0 4px 14px rgba(234, 88, 12, 0.25)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span>Explorar la carta</span>
+                    <i className="fas fa-arrow-right" style={{ fontSize: 12 }}></i>
+                  </button>
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
