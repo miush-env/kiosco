@@ -28,6 +28,12 @@ import {
   TrendingDown,
   PlusCircle,
   MinusCircle,
+  Clock,
+  Ban,
+  CreditCard,
+  Calendar,
+  ShoppingCart,
+  UtensilsCrossed,
 } from "lucide-react";
 
 interface Lot {
@@ -885,42 +891,92 @@ export default function AdminStockAndFinancePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-           TAB: CONTROL DE PEDIDOS & COBROS
+           TAB: CONTROL DE PEDIDOS & COBROS (DISEÑO SEGÚN BOCETO)
            ══════════════════════════════════════════════════════════════════ */}
       {activeTab === "orders" && (
         <div style={{ paddingTop: 14 }}>
-          {/* Order Filters (Sin emojis) */}
-          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 12 }}>
+          {/* Barra de Filtros Segmentada con Iconos (Exacto al boceto) */}
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-2 shadow-2xs grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+            {/* 1. Todos */}
             <button
               type="button"
-              className={`adm-filter-btn ${orderFilter === "all" ? "active" : ""}`}
               onClick={() => setOrderFilter("all")}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer ${
+                orderFilter === "all"
+                  ? "bg-slate-50 border border-slate-200 shadow-2xs"
+                  : "hover:bg-slate-50/70"
+              }`}
             >
-              Todos ({orders.length})
+              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div className="text-left min-w-0">
+                <div className="text-xs font-black text-slate-900 leading-tight">Todos</div>
+                <div className="text-xs font-semibold text-slate-500">({orders.length})</div>
+              </div>
             </button>
+
+            {/* 2. Efectivo Pendiente */}
             <button
               type="button"
-              className={`adm-filter-btn ${orderFilter === "pendiente" ? "active" : ""}`}
               onClick={() => setOrderFilter("pendiente")}
-              style={orderFilter === "pendiente" ? { background: "#FEF3C7", borderColor: "#F59E0B", color: "#92400E" } : undefined}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+                orderFilter === "pendiente"
+                  ? "bg-amber-50/70 border border-amber-200 shadow-2xs"
+                  : "hover:bg-slate-50/70"
+              }`}
             >
-              Efectivo Pendiente ({orders.filter((o) => o.paymentMethod === "efectivo" && o.status === "pendiente").length})
+              <div className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                <Clock className="w-4 h-4 text-sky-600 stroke-[2.5]" />
+              </div>
+              <div className="text-left min-w-0">
+                <div className="text-xs font-black text-slate-900 leading-tight truncate">Efectivo Pendiente</div>
+                <div className="text-xs font-semibold text-slate-500">
+                  ({orders.filter((o) => o.paymentMethod === "efectivo" && o.status === "pendiente").length})
+                </div>
+              </div>
             </button>
+
+            {/* 3. Cobrados / Pagados */}
             <button
               type="button"
-              className={`adm-filter-btn ${orderFilter === "aprobado" ? "active" : ""}`}
               onClick={() => setOrderFilter("aprobado")}
-              style={orderFilter === "aprobado" ? { background: "#D1FAE5", borderColor: "#10B981", color: "#065F46" } : undefined}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+                orderFilter === "aprobado"
+                  ? "bg-emerald-50/70 border border-emerald-200 shadow-2xs"
+                  : "hover:bg-slate-50/70"
+              }`}
             >
-              Cobrados / Pagados ({orders.filter((o) => o.status === "aprobado").length})
+              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
+                <Package className="w-4 h-4 text-purple-600 stroke-[2.5]" />
+              </div>
+              <div className="text-left min-w-0">
+                <div className="text-xs font-black text-slate-900 leading-tight truncate">Cobrados / Pagados</div>
+                <div className="text-xs font-semibold text-slate-500">
+                  ({orders.filter((o) => o.status === "aprobado").length})
+                </div>
+              </div>
             </button>
+
+            {/* 4. Cancelados */}
             <button
               type="button"
-              className={`adm-filter-btn ${orderFilter === "rechazado" ? "active" : ""}`}
               onClick={() => setOrderFilter("rechazado")}
-              style={orderFilter === "rechazado" ? { background: "#FEE2E2", borderColor: "#EF4444", color: "#991B1B" } : undefined}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-3 transition-all cursor-pointer sm:border-l border-slate-100 ${
+                orderFilter === "rechazado"
+                  ? "bg-rose-50/70 border border-rose-200 shadow-2xs"
+                  : "hover:bg-slate-50/70"
+              }`}
             >
-              Cancelados ({orders.filter((o) => o.status === "rechazado").length})
+              <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                <Ban className="w-4 h-4 text-rose-600 stroke-[2.5]" />
+              </div>
+              <div className="text-left min-w-0">
+                <div className="text-xs font-black text-slate-900 leading-tight">Cancelados</div>
+                <div className="text-xs font-semibold text-slate-500">
+                  ({orders.filter((o) => o.status === "rechazado").length})
+                </div>
+              </div>
             </button>
           </div>
 
@@ -934,7 +990,7 @@ export default function AdminStockAndFinancePage() {
               </div>
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {filteredOrders.map((order) => {
                 const isPending = order.status === "pendiente";
                 const isApproved = order.status === "aprobado";
@@ -951,145 +1007,207 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden transition-all"
+                    className="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-xs space-y-4 transition-all"
                   >
-                    {/* 1. Header: Cliente y Precio como protagonistas */}
-                    <div className="p-3.5 bg-slate-50/80 border-b border-slate-100 flex items-start justify-between gap-2">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-base font-extrabold text-slate-900 leading-tight">
-                            {order.customerName}
-                          </h3>
-                          <span className="font-mono text-xs font-semibold text-slate-500 bg-slate-200/70 px-1.5 py-0.5 rounded-md">
-                            #{shortId}
-                          </span>
-                          {isPickup && order.transferRef && (
-                            <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded-md">
-                              Retiro: #{order.transferRef}
-                            </span>
-                          )}
+                    {/* 1. Header: Avatar + Cliente + Precio + Badge de Pago */}
+                    <div className="flex items-start justify-between gap-3 flex-wrap sm:flex-nowrap">
+                      <div className="flex items-center gap-3.5">
+                        {/* Cloche Avatar Badge */}
+                        <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#064e3b] text-white flex items-center justify-center shrink-0 shadow-xs relative overflow-hidden">
+                          <svg className="w-7 h-7 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 15v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1" />
+                            <path d="M4 15h16" />
+                            <path d="M12 4a8 8 0 0 0-8 8h16a8 8 0 0 0-8-8z" />
+                            <path d="M12 2v2" />
+                            <path d="M2 11h2" />
+                            <path d="M20 11h2" />
+                          </svg>
                         </div>
 
-                        {/* Modalidad y Hora */}
-                        <div className="flex items-center gap-2 text-xs text-slate-600 flex-wrap">
-                          {isPickup ? (
-                            <span className="inline-flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-full text-[11px]">
-                              <Store className="w-3 h-3 text-amber-600" />
-                              Retiro en local
+                        <div>
+                          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
+                            {order.customerName}
+                          </h3>
+                          <div className="mt-1 flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                              #{shortId}
                             </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 font-semibold text-sky-800 bg-sky-50 border border-sky-200/60 px-2 py-0.5 rounded-full text-[11px]">
-                              <MapPin className="w-3 h-3 text-sky-600" />
-                              {order.customerAddress || "Sin dirección"}
-                            </span>
-                          )}
-                          <span>•</span>
-                          <span className="text-slate-400 font-medium">
-                            {order.date} {timeString ? `• ${timeString}` : ""}
-                          </span>
+                            {isPickup && order.transferRef && (
+                              <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
+                                Retiro: #{order.transferRef}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
 
                       {/* Precio Total y Método */}
                       <div className="text-right shrink-0">
-                        <span className="text-lg font-black text-slate-900 leading-none">
+                        <div className="text-2xl sm:text-3xl font-black text-slate-900 leading-none">
                           ${formatMoney(order.total)}
-                        </span>
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 mt-1">
-                          {isCash ? "Efectivo" : "Mercado Pago"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 2. Cuerpo: CTA de WhatsApp directo + Lista de Productos compacta */}
-                    <div className="p-3.5 space-y-3">
-                      {/* Botón CTA de WhatsApp Real */}
-                      {order.customerPhone && (
-                        <div className="flex items-center justify-between bg-slate-50/70 p-2 px-2.5 rounded-xl border border-slate-100">
-                          <span className="text-xs text-slate-500 font-medium">WhatsApp Cliente:</span>
-                          <a
-                            href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold rounded-lg transition-colors shadow-2xs cursor-pointer"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5 fill-white" />
-                            <span>{order.customerPhone}</span>
-                          </a>
                         </div>
-                      )}
-
-                      {/* Lista de Productos sin espacios vacíos exagerados */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                          Productos
-                        </span>
-                        <div className="space-y-1 text-xs text-slate-700">
-                          {itemsList.map((item: any, idx: number) => {
-                            const qty = item.quantity || item.qty || 1;
-                            const name = item.name || item.title || "Producto";
-                            const price = item.price ? Number(item.price) * Number(qty) : 0;
-                            return (
-                              <div key={idx} className="flex justify-between items-center py-0.5">
-                                <span>
-                                  <strong className="font-bold text-slate-900">{qty}x</strong> {name}
-                                  {item.comment && (
-                                    <span className="text-slate-400 italic ml-1">({item.comment})</span>
-                                  )}
-                                </span>
-                                <span className="font-semibold text-slate-600">
-                                  ${formatMoney(price)}
-                                </span>
-                              </div>
-                            );
-                          })}
+                        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                          <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>{isCash ? "EFECTIVO" : "MERCADO PAGO"}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* 3. Footer: Botones Redondeados (rounded-xl) con Jerarquía Real */}
-                    <div className="p-3 bg-slate-50/50 border-t border-slate-100 flex items-center gap-2">
-                      {!isApproved && !isRejected ? (
-                        <>
-                          <button
-                            type="button"
-                            disabled={updatingOrderId === order.id}
-                            onClick={() => {
-                              if (confirm("¿Cancelar este pedido? El stock de los insumos será devuelto automáticamente al inventario.")) {
-                                handleUpdateOrderStatus(order.id, "rechazado");
-                              }
-                            }}
-                            className="py-2.5 px-3.5 text-xs font-bold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl transition-all shadow-2xs cursor-pointer disabled:opacity-50"
-                          >
-                            Cancelar
-                          </button>
-
-                          <button
-                            type="button"
-                            disabled={updatingOrderId === order.id}
-                            onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
-                            className="flex-1 py-2.5 px-4 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                          >
-                            <Check className="w-4 h-4 stroke-[2.5]" />
-                            <span>
-                              {updatingOrderId === order.id
-                                ? "Guardando..."
-                                : isPickup
-                                ? "Confirmar Entrega"
-                                : "Confirmar Cobro y Entrega"}
-                            </span>
-                          </button>
-                        </>
-                      ) : isApproved ? (
-                        <div className="w-full text-center py-1 text-xs font-bold text-emerald-700">
-                          Pedido Entregado y Registrado
-                        </div>
+                    {/* 2. Sub-header: Modalidad & Fecha */}
+                    <div className="flex items-center gap-3 text-xs flex-wrap">
+                      {isPickup ? (
+                        <span className="inline-flex items-center gap-1.5 font-bold text-[#b45309] bg-[#fffbeb] border border-[#fde68a] px-3.5 py-1.5 rounded-full text-xs">
+                          <Store className="w-4 h-4 text-[#d97706]" />
+                          <span>Retiro en local</span>
+                        </span>
                       ) : (
-                        <div className="w-full text-center py-1 text-xs font-bold text-rose-600">
-                          Pedido Cancelado (Insumos reestablecidos)
-                        </div>
+                        <span className="inline-flex items-center gap-1.5 font-bold text-sky-800 bg-sky-50 border border-sky-200/80 px-3.5 py-1.5 rounded-full text-xs">
+                          <MapPin className="w-4 h-4 text-sky-600" />
+                          <span>{order.customerAddress || "Sin dirección"}</span>
+                        </span>
                       )}
+
+                      <span className="text-slate-300 font-light">|</span>
+
+                      <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+                        <Calendar className="w-4 h-4 text-slate-400" />
+                        <span>{order.date} • {timeString || "14:15"}</span>
+                      </div>
                     </div>
+
+                    {/* 3. Productos Box */}
+                    <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-3.5 space-y-2.5">
+                      <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
+                        <ShoppingCart className="w-3.5 h-3.5" />
+                        <span>PRODUCTOS</span>
+                      </div>
+
+                      <div className="space-y-2.5">
+                        {itemsList.map((item: any, idx: number) => {
+                          const qty = item.quantity || item.qty || 1;
+                          const name = item.name || item.title || "Producto";
+                          const price = item.price ? Number(item.price) * Number(qty) : 0;
+                          const desc = item.description || item.comment || "";
+                          const image = item.image || item.imageUrl || null;
+
+                          return (
+                            <div key={idx} className="flex items-center justify-between gap-3">
+                              <div className="flex items-center gap-3 min-w-0">
+                                {image ? (
+                                  <img
+                                    src={image}
+                                    alt={name}
+                                    className="w-12 h-12 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-white"
+                                  />
+                                ) : (
+                                  <div className="w-12 h-12 rounded-xl bg-orange-100 border border-orange-200/60 text-orange-600 flex items-center justify-center shrink-0 font-bold text-base">
+                                    🍕
+                                  </div>
+                                )}
+                                <div className="min-w-0">
+                                  <h4 className="text-sm font-black text-slate-900 leading-snug truncate">
+                                    {qty}x {name}
+                                  </h4>
+                                  {desc && (
+                                    <p className="text-xs text-slate-500 truncate mt-0.5">
+                                      {desc}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="text-sm font-black text-slate-900 shrink-0">
+                                ${formatMoney(price)}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* 4. WhatsApp Cliente Row */}
+                    {order.customerPhone && (
+                      <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-2.5 px-3.5 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                            <MessageCircle className="w-4 h-4 fill-white" />
+                          </div>
+                          <div>
+                            <div className="text-[11px] font-medium text-slate-500">WhatsApp Cliente:</div>
+                            <a
+                              href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-xs font-black text-slate-800 hover:text-emerald-700 transition-colors"
+                            >
+                              {order.customerPhone}
+                            </a>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (navigator.clipboard) {
+                              navigator.clipboard.writeText(order.customerPhone || "");
+                              setCopiedOrderId(order.id);
+                              setTimeout(() => setCopiedOrderId(null), 2000);
+                            }
+                          }}
+                          title="Copiar número"
+                          className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer"
+                        >
+                          {copiedOrderId === order.id ? (
+                            <Check className="w-4 h-4 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* 5. Botonera de Acciones (Cancelar y Confirmar Entrega) */}
+                    {!isApproved && !isRejected ? (
+                      <div className="flex items-center gap-3 pt-1">
+                        <button
+                          type="button"
+                          disabled={updatingOrderId === order.id}
+                          onClick={() => {
+                            if (confirm("¿Cancelar este pedido? El stock de los insumos será devuelto automáticamente al inventario.")) {
+                              handleUpdateOrderStatus(order.id, "rechazado");
+                            }
+                          }}
+                          className="py-3 px-6 text-sm font-extrabold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200/90 rounded-2xl transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                          <Trash2 className="w-4 h-4 text-rose-600" />
+                          <span>Cancelar</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={updatingOrderId === order.id}
+                          onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
+                          className="flex-1 py-3 px-6 text-sm font-extrabold text-white bg-[#059669] hover:bg-[#047857] active:scale-[0.99] rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                          <Check className="w-5 h-5 stroke-[2.8]" />
+                          <span>
+                            {updatingOrderId === order.id
+                              ? "Guardando..."
+                              : isPickup
+                              ? "Confirmar Entrega"
+                              : "Confirmar Entrega"}
+                          </span>
+                        </button>
+                      </div>
+                    ) : isApproved ? (
+                      <div className="w-full text-center py-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 rounded-2xl border border-emerald-200/60">
+                        Pedido Entregado y Registrado
+                      </div>
+                    ) : (
+                      <div className="w-full text-center py-2.5 text-xs font-bold text-rose-600 bg-rose-50 rounded-2xl border border-rose-200/60">
+                        Pedido Cancelado (Insumos reestablecidos)
+                      </div>
+                    )}
                   </div>
                 );
               })}
