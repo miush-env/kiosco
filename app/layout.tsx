@@ -89,6 +89,7 @@ export default function RootLayout({
       <html
         lang="es"
         className={`${geistSans.variable} ${geistMono.variable}`}
+        suppressHydrationWarning
       >
         <head>
           <link
@@ -191,7 +192,7 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body className="antialiased overflow-x-hidden">
+        <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
           {/* Google tag (gtag.js) GA4 */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-X1RFGB96TT"
