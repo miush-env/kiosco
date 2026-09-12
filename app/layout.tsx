@@ -36,9 +36,14 @@ export const metadata: Metadata = {
     canonical: "https://kiosco-update.vercel.app/",
   },
   icons: {
-    icon: "/assets/images/logo.png",
+    icon: [
+      { url: "/assets/images/logo.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
     shortcut: "/assets/images/logo.png",
-    apple: "/assets/images/logo.png",
+    apple: [
+      { url: "/assets/images/logo.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     title: "Alakary | Menú Digital, Pizzas y Delivery Online",
