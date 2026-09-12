@@ -14,6 +14,7 @@ import {
   Sparkles,
   Edit2,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 
 function getCategoryLucideIcon(catId: string, name?: string) {
@@ -611,21 +612,39 @@ export default function OwnerMenuManagementPage() {
               border: "1px solid var(--b1-color-border-light)",
             }}
           >
-            <i className="fas fa-search" style={{ fontSize: 32, color: "var(--b1-color-text-muted)", marginBottom: 8, display: "block" }}></i>
-            <strong style={{ display: "block", color: "var(--b1-color-text-main)", marginBottom: 4 }}>
-              No se encontraron platos
+            <Search style={{ width: 36, height: 36, color: "var(--b1-color-text-muted)", margin: "0 auto 10px", display: "block" }} />
+            <strong style={{ display: "block", color: "var(--b1-color-text-main)", fontSize: 15, marginBottom: 4 }}>
+              {products.length > 0 ? "No encontramos platos con este filtro" : "No tenés platos creados aún"}
             </strong>
-            <span style={{ fontSize: 13, color: "var(--b1-color-text-muted)", display: "block", marginBottom: 14 }}>
-              Aún no creaste platos en la carta. ¡Hacé clic en "+ Nuevo Plato" para armar tu menú!
+            <span style={{ fontSize: 13, color: "var(--b1-color-text-muted)", display: "block", marginBottom: 16, maxWidth: 360, margin: "0 auto 16px" }}>
+              {products.length > 0
+                ? "Probá cambiando la categoría o borrando el término de búsqueda para ver todos los platos."
+                : "¡Hacé clic en el botón de abajo para armar la carta digital de tu local!"}
             </span>
-            <button
-              type="button"
-              className="b1-btn-primary"
-              style={{ width: "auto", margin: "0 auto", padding: "8px 18px", fontSize: 13 }}
-              onClick={openNewProductModal}
-            >
-              <i className="fas fa-plus"></i> Crear Primer Plato
-            </button>
+            {products.length > 0 ? (
+              <button
+                type="button"
+                className="b1-btn-primary"
+                style={{ width: "auto", margin: "0 auto", padding: "8px 18px", fontSize: 13, display: "inline-flex", alignItems: "center", gap: 6 }}
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("all");
+                }}
+              >
+                <RefreshCw style={{ width: 14, height: 14 }} />
+                <span>Limpiar filtros / Ver todos</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="b1-btn-primary"
+                style={{ width: "auto", margin: "0 auto", padding: "8px 18px", fontSize: 13, display: "inline-flex", alignItems: "center", gap: 6 }}
+                onClick={openNewProductModal}
+              >
+                <Plus style={{ width: 15, height: 15 }} />
+                <span>Crear Primer Plato</span>
+              </button>
+            )}
           </div>
         ) : (
           filteredProducts.map((p) => {
@@ -926,42 +945,57 @@ export default function OwnerMenuManagementPage() {
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "space-between",
-                              background: "#fff",
-                              border: "1px solid var(--b1-color-border-light)",
-                              borderRadius: "var(--b1-radius-md)",
-                              padding: "8px 12px",
+                              background: "var(--b1-color-surface, #fff)",
+                              border: "1px solid var(--b1-color-border-light, #E2E8F0)",
+                              borderRadius: "var(--b1-radius-md, 12px)",
+                              padding: "10px 14px",
                               boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                              gap: 12,
                             }}
                           >
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                              <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)" }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0, flex: 1 }}>
+                              <strong style={{ fontSize: 13, color: "var(--b1-color-text-main, #0F172A)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {line.name}
                               </strong>
-                              <span style={{ fontSize: 11, color: isLowStock ? "#dc2626" : "var(--b1-color-text-muted)" }}>
-                                Descuenta: <strong>{line.qty} {line.unit || "u."}</strong> por plato | Stock actual: <strong>{currentStock} {line.unit || "u."}</strong>
-                              </span>
+                              <div style={{ fontSize: 11, color: "var(--b1-color-text-muted, #64748B)", display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                                <span>
+                                  Descuenta: <strong style={{ color: "var(--b1-color-text-main, #0F172A)" }}>{line.qty} {line.unit || "u."}</strong> por plato
+                                </span>
+                                <span>•</span>
+                                <span style={{ color: isLowStock ? "#DC2626" : "var(--b1-color-text-muted, #64748B)" }}>
+                                  Stock: <strong style={{ color: isLowStock ? "#DC2626" : "#059669" }}>{currentStock} {line.unit || "u."}</strong>
+                                </span>
+                              </div>
                             </div>
 
                             <button
                               type="button"
                               onClick={() => removeRecipeLine(line.barcode)}
                               style={{
-                                background: "#fee2e2",
+                                background: "transparent",
                                 border: "none",
-                                color: "#b91c1c",
-                                width: 28,
-                                height: 28,
-                                borderRadius: "50%",
+                                color: "var(--b1-color-text-muted, #94A3B8)",
+                                width: 32,
+                                height: 32,
+                                borderRadius: "8px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 cursor: "pointer",
-                                fontSize: 12,
-                                transition: "all 0.2s",
+                                transition: "all 0.15s ease",
+                                flexShrink: 0,
                               }}
-                              title="Quitar ingrediente"
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = "#FEE2E2";
+                                (e.currentTarget as HTMLElement).style.color = "#DC2626";
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.background = "transparent";
+                                (e.currentTarget as HTMLElement).style.color = "var(--b1-color-text-muted, #94A3B8)";
+                              }}
+                              title="Quitar ingrediente de la receta"
                             >
-                              <i className="fas fa-times"></i>
+                              <Trash2 style={{ width: 16, height: 16 }} />
                             </button>
                           </div>
                         );
@@ -970,17 +1004,17 @@ export default function OwnerMenuManagementPage() {
                   ) : (
                     <div
                       style={{
-                        padding: "12px",
+                        padding: "14px",
                         textAlign: "center",
                         background: "#fff",
-                        border: "1px dashed var(--b1-color-border)",
-                        borderRadius: "var(--b1-radius-md)",
+                        border: "1px dashed var(--b1-color-border, #CBD5E1)",
+                        borderRadius: "var(--b1-radius-md, 12px)",
                         marginBottom: 12,
                         fontSize: 12,
-                        color: "var(--b1-color-text-muted)",
+                        color: "var(--b1-color-text-muted, #64748B)",
                       }}
                     >
-                      <i className="fas fa-info-circle mr-1" style={{ color: "var(--b1-color-primary)" }}></i>
+                      <i className="fas fa-info-circle mr-1" style={{ color: "var(--b1-color-primary, #EA580C)" }}></i>
                       Todavía no agregaste ingredientes del stock. Seleccionalos abajo para descontar stock automáticamente.
                     </div>
                   )}
@@ -1030,12 +1064,12 @@ export default function OwnerMenuManagementPage() {
                         <button
                           type="button"
                           className="b1-btn-primary"
-                          style={{ width: "auto", padding: "0 14px", flexShrink: 0 }}
+                          style={{ width: "auto", padding: "0 14px", flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                           onClick={addRecipeLine}
                           disabled={!recipePickBarcode}
                           title="Vincular ingrediente"
                         >
-                          <i className="fas fa-plus"></i>
+                          <Plus style={{ width: 16, height: 16 }} />
                         </button>
                       </div>
 

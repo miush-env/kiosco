@@ -1325,7 +1325,45 @@ export default function AdminStockAndFinancePage() {
                 Cargando stock...
               </div>
             ) : filteredInventory.length === 0 ? (
-              <div className="adm-empty-state">No se encontraron insumos.</div>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "36px 20px",
+                  background: "var(--b1-color-surface, #fff)",
+                  borderRadius: "var(--b1-radius-lg, 16px)",
+                  border: "1px solid var(--b1-color-border, #E2E8F0)",
+                }}
+              >
+                <Package style={{ width: 36, height: 36, color: "var(--b1-color-text-muted, #94A3B8)", margin: "0 auto 10px" }} />
+                <strong style={{ display: "block", color: "var(--b1-color-text-main, #0F172A)", fontSize: 14, marginBottom: 4 }}>
+                  No se encontraron insumos
+                </strong>
+                <p style={{ fontSize: 12, color: "var(--b1-color-text-muted, #64748B)", margin: "0 auto 14px", maxWidth: 320 }}>
+                  Probá ajustando la búsqueda o seleccionando otra categoría.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                    setStockStatusFilter("all");
+                  }}
+                  className="adm-btn-sm-primary"
+                  style={{
+                    margin: "0 auto",
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "7px 14px",
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  <RefreshCw style={{ width: 13, height: 13 }} />
+                  <span>Limpiar filtros / Ver todos</span>
+                </button>
+              </div>
             ) : (
               filteredInventory.map((item) => {
                 const minThreshold = item.minAlert !== undefined ? item.minAlert : 15;
@@ -1440,23 +1478,34 @@ export default function AdminStockAndFinancePage() {
                   className={`adm-fin-pill ${financePeriod === p ? "active" : ""}`}
                   onClick={() => setFinancePeriod(p)}
                 >
-                  {p === "today" ? "Hoy" : p === "week" ? "7d" : p === "month" ? "30d" : "Todo"}
+                  {p === "today" ? "Hoy" : p === "week" ? "Esta Semana" : p === "month" ? "Este Mes" : "Todo"}
                 </button>
               ))}
             </div>
 
-            <div className="adm-actions-row">
-              <button type="button" className="adm-btn-sm-success" onClick={() => setIsManualSaleOpen(true)}>
-                <i className="fas fa-plus"></i> Venta
+            <div className="adm-actions-row" style={{ display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                className="adm-btn-sm-primary"
+                onClick={() => setIsManualSaleOpen(true)}
+                style={{ fontSize: 12, display: "inline-flex", alignItems: "center", gap: 5 }}
+              >
+                <Plus style={{ width: 13, height: 13 }} />
+                <span>Venta</span>
               </button>
-              <button type="button" className="adm-btn-sm-danger" onClick={() => setIsManualExpenseOpen(true)}>
-                <i className="fas fa-minus"></i> Gasto
+              <button
+                type="button"
+                className="adm-btn-sm-primary"
+                onClick={() => setIsManualExpenseOpen(true)}
+                style={{ fontSize: 12, background: "var(--adm-surface-subtle, #F1F5F9)", color: "var(--adm-danger, #EF4444)", border: "1px solid var(--b1-color-border, #E2E8F0)", display: "inline-flex", alignItems: "center", gap: 5 }}
+              >
+                <span>− Gasto</span>
               </button>
             </div>
           </section>
 
-          {/* Finance Metrics */}
-          <section className="adm-metrics-grid cols-3" style={{ padding: "14px 0 0" }}>
+          {/* Metrics Overview 3-grid */}
+          <section className="adm-metrics-grid" style={{ marginTop: 12 }}>
             <div className="adm-metric-card normal">
               <div className="adm-metric-label" style={{ marginBottom: 4 }}>Ingresos</div>
               <div className="adm-metric-val" style={{ color: "var(--adm-success)", fontSize: 15 }}>
@@ -1483,59 +1532,212 @@ export default function AdminStockAndFinancePage() {
           </section>
 
           {/* Sales & Expenses Lists */}
-          <section style={{ padding: "16px 0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <section style={{ padding: "16px 0 24px", display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <h4 style={{ fontSize: 13, fontWeight: 800, color: "var(--adm-text-main)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
-                  <i className="fas fa-arrow-down" style={{ color: "var(--adm-success)" }}></i> Ventas
+                  <i className="fas fa-arrow-down" style={{ color: "var(--adm-success)" }}></i> Ventas & Pedidos
                 </h4>
                 <span style={{ fontSize: 11, color: "var(--adm-text-muted)", fontWeight: 700 }}>{filteredSales.length} registros</span>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {filteredSales.length === 0 ? (
-                  <div className="adm-empty-state">No hay ventas registradas.</div>
+                  <div className="adm-empty-state" style={{ padding: "20px 14px", fontSize: 12 }}>
+                    No hay ventas registradas en este período.
+                  </div>
                 ) : (
-                  filteredSales.map((s) => (
-                    <div key={s.id} className="adm-card adm-fin-expense-row">
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--adm-text-main)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {s.description || (s.items && s.items.length > 0 ? s.items.map((i) => i.name).join(", ") : "Venta")}
+                  filteredSales.map((s) => {
+                    let customerName = "Venta Mostrador";
+                    let statusText = "Aprobado";
+                    let shortCode = "";
+
+                    if (s.description) {
+                      const match = s.description.match(/Pedido\s+([^\s-]+)\s*-\s*([^(]+)(?:\(([^)]+)\))?/i);
+                      if (match) {
+                        const rawId = match[1];
+                        shortCode = rawId.includes("_")
+                          ? "#" + rawId.split("_").pop()?.substring(0, 6).toUpperCase()
+                          : "#" + rawId.slice(-6).toUpperCase();
+                        customerName = match[2].trim();
+                        if (match[3]) statusText = match[3].trim();
+                      } else {
+                        customerName = s.description;
+                      }
+                    } else if (s.items && s.items.length > 0) {
+                      customerName = s.items.map((i) => `${i.quantity}x ${i.name}`).join(", ");
+                    }
+
+                    if (!shortCode && s.id) {
+                      shortCode = s.id.includes("_")
+                        ? "#" + s.id.split("_").pop()?.substring(0, 6).toUpperCase()
+                        : "#" + s.id.slice(-6).toUpperCase();
+                    }
+
+                    const isCancelled =
+                      statusText.toLowerCase().includes("cancelado") ||
+                      statusText.toLowerCase().includes("rechazado");
+
+                    return (
+                      <div
+                        key={s.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "12px 14px",
+                          background: "var(--b1-color-surface, #fff)",
+                          border: "1px solid var(--b1-color-border, #E2E8F0)",
+                          borderRadius: 14,
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                          gap: 12,
+                        }}
+                      >
+                        <div style={{ display: "flex", flexDirection: "column", gap: 3, minWidth: 0, flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                            <span
+                              style={{
+                                fontSize: 13,
+                                fontWeight: 700,
+                                color: "var(--adm-text-main, #0F172A)",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {customerName}
+                            </span>
+                            <span
+                              style={{
+                                padding: "2px 7px",
+                                borderRadius: 10,
+                                fontSize: 10,
+                                fontWeight: 800,
+                                background: isCancelled ? "#FEE2E2" : "#ECFDF5",
+                                color: isCancelled ? "#DC2626" : "#059669",
+                                border: `1px solid ${isCancelled ? "#FECACA" : "#A7F3D0"}`,
+                              }}
+                            >
+                              {statusText}
+                            </span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              fontSize: 11,
+                              color: "var(--adm-text-muted, #64748B)",
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            {shortCode && (
+                              <span style={{ fontFamily: "monospace", fontWeight: 700, color: "var(--adm-text-main, #0F172A)" }}>
+                                {shortCode}
+                              </span>
+                            )}
+                            {shortCode && <span>•</span>}
+                            <span style={{ textTransform: "capitalize" }}>
+                              {s.paymentMethod === "mercadopago"
+                                ? "Mercado Pago"
+                                : s.paymentMethod === "efectivo"
+                                ? "Efectivo"
+                                : s.paymentMethod || "Mostrador"}
+                            </span>
+                            <span>•</span>
+                            <span>{s.date}</span>
+                          </div>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--adm-text-subtle)" }}>
-                          {s.date} • {s.paymentMethod || "mostrador"}
-                        </div>
+                        <span
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 800,
+                            color: "var(--adm-success, #10B981)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          +${formatMoney(s.total)}
+                        </span>
                       </div>
-                      <span className="adm-fin-income-amount">+${formatMoney(s.total)}</span>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>
 
             <div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <h4 style={{ fontSize: 13, fontWeight: 800, color: "var(--adm-text-main)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
-                  <i className="fas fa-arrow-up" style={{ color: "var(--adm-danger)" }}></i> Gastos
+                  <i className="fas fa-arrow-up" style={{ color: "var(--adm-danger)" }}></i> Gastos Operativos
                 </h4>
                 <span style={{ fontSize: 11, color: "var(--adm-text-muted)", fontWeight: 700 }}>{filteredExpenses.length} registros</span>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {filteredExpenses.length === 0 ? (
-                  <div className="adm-empty-state">No hay gastos registrados.</div>
+                  <div className="adm-empty-state" style={{ padding: "20px 14px", fontSize: 12 }}>
+                    No hay gastos registrados en este período.
+                  </div>
                 ) : (
                   filteredExpenses.map((e) => (
-                    <div key={e.id} className="adm-card adm-fin-expense-row">
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--adm-text-main)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {e.description}
+                    <div
+                      key={e.id}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "12px 14px",
+                        background: "var(--b1-color-surface, #fff)",
+                        border: "1px solid var(--b1-color-border, #E2E8F0)",
+                        borderRadius: 14,
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                        gap: 12,
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column", gap: 3, minWidth: 0, flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span
+                            style={{
+                              fontSize: 13,
+                              fontWeight: 700,
+                              color: "var(--adm-text-main, #0F172A)",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {e.description}
+                          </span>
+                          {e.category && (
+                            <span
+                              style={{
+                                padding: "2px 7px",
+                                borderRadius: 10,
+                                fontSize: 10,
+                                fontWeight: 700,
+                                background: "var(--adm-surface-subtle, #F1F5F9)",
+                                color: "var(--adm-text-muted, #64748B)",
+                                border: "1px solid var(--b1-color-border, #E2E8F0)",
+                              }}
+                            >
+                              {e.category}
+                            </span>
+                          )}
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--adm-text-subtle)" }}>
-                          {e.date} • {e.category}
+                        <div style={{ fontSize: 11, color: "var(--adm-text-muted, #64748B)" }}>
+                          {e.date}
                         </div>
                       </div>
-                      <span className="adm-fin-expense-amount">-${formatMoney(e.amount)}</span>
+                      <span
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 800,
+                          color: "var(--adm-danger, #EF4444)",
+                          flexShrink: 0,
+                        }}
+                      >
+                        -${formatMoney(e.amount)}
+                      </span>
                     </div>
                   ))
                 )}
