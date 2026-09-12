@@ -132,6 +132,7 @@ export default function CustomerCatalogPage() {
   // Cash change options
   const [cashChangeOption, setCashChangeOption] = useState<"exact" | "change">("exact");
   const [cashAmountGiven, setCashAmountGiven] = useState<string>("");
+  const [pickupCode, setPickupCode] = useState<string>(() => Math.floor(1000 + Math.random() * 9000).toString());
 
   const [formErrors, setFormErrors] = useState<{
     name?: string;
@@ -616,7 +617,7 @@ export default function CustomerCatalogPage() {
       newErrors.phone = "⚠️ Ingresá un teléfono válido (mínimo 8 dígitos).";
     }
 
-    // 3. Validar dirección si es envío
+    // 3. Validar dirección solo si es envío
     if (deliveryType === "envio") {
       if (!customerStreet.trim()) {
         newErrors.street = "⚠️ Ingresá la calle de entrega.";
@@ -624,15 +625,15 @@ export default function CustomerCatalogPage() {
       if (!customerStreetNumber.trim()) {
         newErrors.streetNumber = "⚠️ Ingresá la altura / número.";
       }
-    }
 
-    // 4. Validar vuelto si es efectivo y solicita vuelto
-    const numCashGiven = parseFloat(cashAmountGiven.replace(/[^0-9.]/g, "")) || 0;
-    if (paymentMethod === "efectivo" && cashChangeOption === "change") {
-      if (!cashAmountGiven.trim() || numCashGiven <= 0) {
-        newErrors.cashAmount = "⚠️ Ingresá con cuánto vas a pagar.";
-      } else if (numCashGiven < cartTotal) {
-        newErrors.cashAmount = `⚠️ El monto ($${formatMoney(numCashGiven)}) debe ser mayor o igual al total ($${formatMoney(cartTotal)}).`;
+      // Validar vuelto si es efectivo y solicita vuelto
+      const numCashGiven = parseFloat(cashAmountGiven.replace(/[^0-9.]/g, "")) || 0;
+      if (paymentMethod === "efectivo" && cashChangeOption === "change") {
+        if (!cashAmountGiven.trim() || numCashGiven <= 0) {
+          newErrors.cashAmount = "⚠️ Ingresá con cuánto vas a pagar.";
+        } else if (numCashGiven < cartTotal) {
+          newErrors.cashAmount = `⚠️ El monto ($${formatMoney(numCashGiven)}) debe ser mayor o igual al total ($${formatMoney(cartTotal)}).`;
+        }
       }
     }
 
@@ -660,6 +661,10 @@ export default function CustomerCatalogPage() {
     // Clear errors if all valid
     setFormErrors({});
 
+    // Ensure 4-digit pickup code
+    const currentPickupCode = pickupCode || Math.floor(1000 + Math.random() * 9000).toString();
+    if (!pickupCode) setPickupCode(currentPickupCode);
+
     const fullAddress =
       deliveryType === "envio"
         ? customerStreetNumber.trim()
@@ -667,9 +672,10 @@ export default function CustomerCatalogPage() {
               customerAddressDetails.trim() ? " (" + customerAddressDetails.trim() + ")" : ""
             }`
           : customerStreet.trim()
-        : "Retiro en local";
+        : `Retiro en local (Código: #${currentPickupCode})`;
 
-    if (paymentMethod === "mercadopago") {
+    // If Delivery and Mercado Pago
+    if (deliveryType === "envio" && paymentMethod === "mercadopago") {
       setIsProcessingMP(true);
       try {
         const res = await fetch("/api/create-preference", {
@@ -699,7 +705,7 @@ export default function CustomerCatalogPage() {
       return;
     }
 
-    // Handle Cash Payment (Deduct stock on submit and redirect out to WhatsApp)
+    // Handle Orders via WhatsApp (Retiro en local OR Envío en efectivo)
     setIsSubmittingOrder(true);
     try {
       const orderRes = await fetch("/api/orders", {
@@ -712,7 +718,8 @@ export default function CustomerCatalogPage() {
           customerAddress: fullAddress,
           deliveryType,
           total: cartTotal,
-          paymentMethod: "efectivo",
+          paymentMethod: deliveryType === "retiro" ? "retiro" : "efectivo",
+          transferRef: deliveryType === "retiro" ? currentPickupCode : undefined,
         }),
       });
       const orderData = await orderRes.json();
@@ -721,42 +728,55 @@ export default function CustomerCatalogPage() {
         return;
       }
 
-      // Format WhatsApp message for Cash
-      let msg = `🍕 *NUEVO PEDIDO — ${storeInfo.name}*\n\n`;
-      if (orderData.orderId) {
-        msg += `🆔 *Pedido:* #${orderData.orderId.slice(-6).toUpperCase()}\n`;
-      }
-      msg += `👤 *Cliente:* ${customerName}\n`;
-      if (customerPhone) msg += `📱 *Teléfono:* ${customerPhone}\n`;
-      msg += `📍 *Modalidad:* ${deliveryType === "envio" ? "Envío a Domicilio" : "Retiro en Local"}\n`;
-      if (deliveryType === "envio") {
-        msg += `🏠 *Dirección:* ${fullAddress}\n`;
-      }
-      
-      const cashChangeDue = Math.max(0, numCashGiven - cartTotal);
-      if (cashChangeOption === "change" && numCashGiven >= cartTotal) {
-        msg += `💳 *Medio de pago:* Efectivo (Paga con: $${formatMoney(numCashGiven)} — Vuelto: $${formatMoney(cashChangeDue)} 💵)\n`;
+      // Format WhatsApp message
+      let msg = "";
+      if (deliveryType === "retiro") {
+        msg += `🍕 *NUEVO PEDIDO PARA RETIRAR — ${storeInfo.name}*\n\n`;
+        if (orderData.orderId) {
+          msg += `🆔 *Pedido:* #${orderData.orderId.slice(-6).toUpperCase()}\n`;
+        }
+        msg += `🔑 *Código de Retiro:* #${currentPickupCode}\n`;
+        msg += `👤 *Cliente:* ${customerName}\n`;
+        if (customerPhone) msg += `📱 *Teléfono:* ${customerPhone}\n`;
+        msg += `📍 *Modalidad:* Retiro en el Local (${storeInfo.address || "Paderewski 3666"})\n\n`;
+        msg += `*Detalle del pedido:*\n`;
+        cart.forEach((item) => {
+          msg += `• *${item.quantity}x* ${item.name} — $${formatMoney(item.price * item.quantity)}\n`;
+          if (item.comment) msg += `  _(Nota: ${item.comment})_\n`;
+        });
+        msg += `\n🏬 *Retiro:* En local (Gratis)\n`;
+        msg += `💰 *TOTAL A PAGAR AL RETIRAR:* $${formatMoney(cartTotal)}\n`;
       } else {
-        msg += `💳 *Medio de pago:* Efectivo (Monto exacto / Sin vuelto 💵)\n`;
-      }
-      
-      msg += `\n*Detalle del pedido:*\n`;
+        const numCashGiven = parseFloat(cashAmountGiven.replace(/[^0-9.]/g, "")) || 0;
+        msg += `🍕 *NUEVO PEDIDO A DOMICILIO — ${storeInfo.name}*\n\n`;
+        if (orderData.orderId) {
+          msg += `🆔 *Pedido:* #${orderData.orderId.slice(-6).toUpperCase()}\n`;
+        }
+        msg += `👤 *Cliente:* ${customerName}\n`;
+        if (customerPhone) msg += `📱 *Teléfono:* ${customerPhone}\n`;
+        msg += `📍 *Modalidad:* Envío a Domicilio\n`;
+        msg += `🏠 *Dirección:* ${fullAddress}\n`;
 
-      cart.forEach((item) => {
-        msg += `• *${item.quantity}x* ${item.name} — $${formatMoney(item.price * item.quantity)}\n`;
-        if (item.comment) msg += `  _(Nota: ${item.comment})_\n`;
-      });
+        const cashChangeDue = Math.max(0, numCashGiven - cartTotal);
+        if (cashChangeOption === "change" && numCashGiven >= cartTotal) {
+          msg += `💳 *Medio de pago:* Efectivo (Paga con: $${formatMoney(numCashGiven)} — Vuelto: $${formatMoney(cashChangeDue)} 💵)\n`;
+        } else {
+          msg += `💳 *Medio de pago:* Efectivo (Monto exacto / Sin vuelto 💵)\n`;
+        }
 
-      if (deliveryType === "envio") {
+        msg += `\n*Detalle del pedido:*\n`;
+        cart.forEach((item) => {
+          msg += `• *${item.quantity}x* ${item.name} — $${formatMoney(item.price * item.quantity)}\n`;
+          if (item.comment) msg += `  _(Nota: ${item.comment})_\n`;
+        });
+
         if (deliveryCost > 0) {
           msg += `\n🛵 *Envío:* $${formatMoney(deliveryCost)}\n`;
         } else {
           msg += `\n🛵 *Envío:* ¡Gratis!\n`;
         }
-      } else {
-        msg += `\n🏬 *Retiro:* En local (Gratis)\n`;
+        msg += `\n💰 *TOTAL:* $${formatMoney(cartTotal)}\n`;
       }
-      msg += `\n💰 *TOTAL:* $${formatMoney(cartTotal)}\n`;
 
       const cleanNum = (storeInfo.whatsapp || "+5491172570867").replace(/[^\d]/g, "");
       const wspUrl = `https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`;
@@ -779,7 +799,7 @@ export default function CustomerCatalogPage() {
       // Redirect customer out of page into WhatsApp directly
       window.location.href = wspUrl;
     } catch (e: any) {
-      console.error("Cash order registration error:", e);
+      console.error("Order registration error:", e);
       alert("Error de conexión al procesar el pedido.");
     } finally {
       setIsSubmittingOrder(false);
@@ -1779,16 +1799,58 @@ export default function CustomerCatalogPage() {
                   </div>
                 ) : (
                   /* Pickup in Store card */
-                  <div className="b1-pickup-box" style={{ marginTop: 10 }}>
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                      <i className="fas fa-map-marker-alt" style={{ color: "#3B82F6", fontSize: 18, marginTop: 2 }}></i>
+                  <div>
+                    <div className="b1-pickup-box" style={{ marginTop: 10 }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                        <i className="fas fa-map-marker-alt" style={{ color: "#3B82F6", fontSize: 18, marginTop: 2 }}></i>
+                        <div>
+                          <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)", display: "block" }}>
+                            Punto de retiro: {storeInfo.address || "Paderewski 3666, Valentín Alsina"}
+                          </strong>
+                          <span style={{ fontSize: 12, color: "var(--b1-color-text-muted)" }}>
+                            🕒 Listo para retirar en <strong>{estimatedPickupTime} aprox.</strong>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 4-digit Security Code Banner */}
+                    <div
+                      style={{
+                        marginTop: 10,
+                        background: "linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)",
+                        border: "1.5px dashed #059669",
+                        borderRadius: 14,
+                        padding: "12px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 10,
+                        flexWrap: "wrap",
+                      }}
+                    >
                       <div>
-                        <strong style={{ fontSize: 13, color: "var(--b1-color-text-main)", display: "block" }}>
-                          Punto de retiro: {storeInfo.address || "Paderewski 3666, Valentín Alsina"}
-                        </strong>
-                        <span style={{ fontSize: 12, color: "var(--b1-color-text-muted)" }}>
-                          🕒 Listo para retirar en <strong>{estimatedPickupTime} aprox.</strong>
+                        <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", color: "#047857", letterSpacing: "0.5px", display: "block" }}>
+                          🔑 Código de Retiro (4 dígitos)
                         </span>
+                        <span style={{ fontSize: 12, color: "#065F46" }}>
+                          Presentá este código al retirar en el local:
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          background: "#059669",
+                          color: "#fff",
+                          fontWeight: 900,
+                          fontSize: 18,
+                          letterSpacing: 3,
+                          padding: "5px 14px",
+                          borderRadius: 10,
+                          fontFamily: "monospace",
+                          boxShadow: "0 2px 6px rgba(5,150,105,0.25)",
+                        }}
+                      >
+                        #{pickupCode || "1234"}
                       </div>
                     </div>
                   </div>
@@ -1980,163 +2042,165 @@ export default function CustomerCatalogPage() {
                 </div>
               )}
 
-              {/* 4. MEDIO DE PAGO */}
-              <div className="b1-form-group">
-                <div className="b1-checkout-section-title">
-                  <i className="fas fa-credit-card"></i> {deliveryType === "envio" ? "4. Medio de pago" : "3. Medio de pago"}
-                </div>
-                <div className="b1-payment-chips">
-                  <div
-                    className={`b1-payment-chip ${paymentMethod === "mercadopago" ? "active" : ""}`}
-                    onClick={() => setPaymentMethod("mercadopago")}
-                  >
-                    💳 Mercado Pago
+              {/* 4. MEDIO DE PAGO (Solo para Envíos a Domicilio) */}
+              {deliveryType === "envio" && (
+                <div className="b1-form-group">
+                  <div className="b1-checkout-section-title">
+                    <i className="fas fa-credit-card"></i> 4. Medio de pago
                   </div>
-                  <div
-                    className={`b1-payment-chip ${paymentMethod === "efectivo" ? "active" : ""}`}
-                    onClick={() => setPaymentMethod("efectivo")}
-                  >
-                    💵 Efectivo
-                  </div>
-                </div>
-
-                {paymentMethod === "mercadopago" && (
-                  <div
-                    style={{
-                      background: "linear-gradient(135deg, rgba(0, 158, 227, 0.08) 0%, rgba(0, 158, 227, 0.02) 100%)",
-                      border: "1.5px solid rgba(0, 158, 227, 0.3)",
-                      borderRadius: "var(--b1-radius-md)",
-                      padding: "12px 14px",
-                      marginTop: 10,
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 10,
-                    }}
-                  >
+                  <div className="b1-payment-chips">
                     <div
-                      style={{
-                        background: "#009EE3",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        width: 28,
-                        height: 28,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 13,
-                        flexShrink: 0,
-                        marginTop: 1,
-                      }}
+                      className={`b1-payment-chip ${paymentMethod === "mercadopago" ? "active" : ""}`}
+                      onClick={() => setPaymentMethod("mercadopago")}
                     >
-                      <i className="fas fa-bolt"></i>
+                      💳 Mercado Pago
                     </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: "#007BB0", marginBottom: 2 }}>
-                        Pago instantáneo y 100% seguro
-                      </div>
-                      <div style={{ fontSize: 12, color: "var(--b1-color-text-main)", lineHeight: 1.4 }}>
-                        Acepta <strong>Débito, Crédito, Dinero en cuenta</strong> o <strong>Transferencia bancaria / CVU</strong> desde cualquier billetera virtual.
-                      </div>
+                    <div
+                      className={`b1-payment-chip ${paymentMethod === "efectivo" ? "active" : ""}`}
+                      onClick={() => setPaymentMethod("efectivo")}
+                    >
+                      💵 Efectivo
                     </div>
                   </div>
-                )}
 
-                {paymentMethod === "efectivo" && (
-                  <div style={{ marginTop: 10 }}>
+                  {paymentMethod === "mercadopago" && (
                     <div
                       style={{
-                        background: "rgba(16, 185, 129, 0.08)",
-                        border: "1.5px dashed rgba(16, 185, 129, 0.4)",
+                        background: "linear-gradient(135deg, rgba(0, 158, 227, 0.08) 0%, rgba(0, 158, 227, 0.02) 100%)",
+                        border: "1.5px solid rgba(0, 158, 227, 0.3)",
                         borderRadius: "var(--b1-radius-md)",
-                        padding: "10px 14px",
-                        fontSize: 12,
-                        color: "#065F46",
+                        padding: "12px 14px",
+                        marginTop: 10,
                         display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        marginBottom: 10,
+                        alignItems: "flex-start",
+                        gap: 10,
                       }}
                     >
-                      <i className="fas fa-hand-holding-usd" style={{ fontSize: 15 }}></i>
-                      <span>Abonás en efectivo cuando recibís el pedido o al retirar en el local.</span>
-                    </div>
-
-                    {/* Vuelto / Change Calculator */}
-                    <div className="b1-checkout-card" style={{ padding: "12px 14px", margin: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8, color: "var(--b1-color-text-main)" }}>
-                        ¿Necesitás vuelto?
+                      <div
+                        style={{
+                          background: "#009EE3",
+                          color: "#fff",
+                          borderRadius: "50%",
+                          width: 28,
+                          height: 28,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 13,
+                          flexShrink: 0,
+                          marginTop: 1,
+                        }}
+                      >
+                        <i className="fas fa-bolt"></i>
                       </div>
-                      <div style={{ display: "flex", gap: 8, marginBottom: cashChangeOption === "change" ? 10 : 0 }}>
-                        <button
-                          type="button"
-                          className={`b1-vuelto-btn ${cashChangeOption === "exact" ? "active" : ""}`}
-                          onClick={() => {
-                            setCashChangeOption("exact");
-                            if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
-                          }}
-                        >
-                          Pago Justo (Sin vuelto)
-                        </button>
-                        <button
-                          type="button"
-                          className={`b1-vuelto-btn ${cashChangeOption === "change" ? "active" : ""}`}
-                          onClick={() => setCashChangeOption("change")}
-                        >
-                          ¿Con cuánto vas a pagar?
-                        </button>
-                      </div>
-
-                      {cashChangeOption === "change" && (
-                        <div>
-                          <div style={{ position: "relative" }}>
-                            <span style={{ position: "absolute", left: 12, top: 11, fontWeight: 800, color: "var(--b1-color-text-muted)" }}>$</span>
-                            <input
-                              ref={cashAmountInputRef}
-                              type="number"
-                              inputMode="numeric"
-                              className={`b1-input ${formErrors.cashAmount ? "b1-input-error" : ""}`}
-                              placeholder={`Monto (ej: ${formatMoney(Math.ceil(cartTotal / 1000) * 1000 + 2000)})`}
-                              style={{ paddingLeft: 26, background: "var(--b1-color-surface)" }}
-                              value={cashAmountGiven}
-                              onChange={(e) => {
-                                setCashAmountGiven(e.target.value);
-                                if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
-                              }}
-                            />
-                          </div>
-
-                          {formErrors.cashAmount && (
-                            <span className="b1-field-error-msg">
-                              <i className="fas fa-exclamation-circle"></i> {formErrors.cashAmount}
-                            </span>
-                          )}
-
-                          {parseFloat(cashAmountGiven) >= cartTotal && (
-                            <div
-                              style={{
-                                marginTop: 8,
-                                background: "#ECFDF5",
-                                border: "1px solid #10B981",
-                                color: "#065F46",
-                                padding: "8px 12px",
-                                borderRadius: 10,
-                                fontSize: 12,
-                                fontWeight: 800,
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
-                              <i className="fas fa-money-bill-wave"></i>
-                              <span>Tu vuelto será: ${formatMoney(parseFloat(cashAmountGiven) - cartTotal)}</span>
-                            </div>
-                          )}
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: "#007BB0", marginBottom: 2 }}>
+                          Pago instantáneo y 100% seguro
                         </div>
-                      )}
+                        <div style={{ fontSize: 12, color: "var(--b1-color-text-main)", lineHeight: 1.4 }}>
+                          Acepta <strong>Débito, Crédito, Dinero en cuenta</strong> o <strong>Transferencia bancaria / CVU</strong> desde cualquier billetera virtual.
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+
+                  {paymentMethod === "efectivo" && (
+                    <div style={{ marginTop: 10 }}>
+                      <div
+                        style={{
+                          background: "rgba(16, 185, 129, 0.08)",
+                          border: "1.5px dashed rgba(16, 185, 129, 0.4)",
+                          borderRadius: "var(--b1-radius-md)",
+                          padding: "10px 14px",
+                          fontSize: 12,
+                          color: "#065F46",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          marginBottom: 10,
+                        }}
+                      >
+                        <i className="fas fa-hand-holding-usd" style={{ fontSize: 15 }}></i>
+                        <span>Abonás en efectivo cuando recibís el pedido en tu domicilio.</span>
+                      </div>
+
+                      {/* Vuelto / Change Calculator */}
+                      <div className="b1-checkout-card" style={{ padding: "12px 14px", margin: 0 }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8, color: "var(--b1-color-text-main)" }}>
+                          ¿Necesitás vuelto?
+                        </div>
+                        <div style={{ display: "flex", gap: 8, marginBottom: cashChangeOption === "change" ? 10 : 0 }}>
+                          <button
+                            type="button"
+                            className={`b1-vuelto-btn ${cashChangeOption === "exact" ? "active" : ""}`}
+                            onClick={() => {
+                              setCashChangeOption("exact");
+                              if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
+                            }}
+                          >
+                            Pago Justo (Sin vuelto)
+                          </button>
+                          <button
+                            type="button"
+                            className={`b1-vuelto-btn ${cashChangeOption === "change" ? "active" : ""}`}
+                            onClick={() => setCashChangeOption("change")}
+                          >
+                            ¿Con cuánto vas a pagar?
+                          </button>
+                        </div>
+
+                        {cashChangeOption === "change" && (
+                          <div>
+                            <div style={{ position: "relative" }}>
+                              <span style={{ position: "absolute", left: 12, top: 11, fontWeight: 800, color: "var(--b1-color-text-muted)" }}>$</span>
+                              <input
+                                ref={cashAmountInputRef}
+                                type="number"
+                                inputMode="numeric"
+                                className={`b1-input ${formErrors.cashAmount ? "b1-input-error" : ""}`}
+                                placeholder={`Monto (ej: ${formatMoney(Math.ceil(cartTotal / 1000) * 1000 + 2000)})`}
+                                style={{ paddingLeft: 26, background: "var(--b1-color-surface)" }}
+                                value={cashAmountGiven}
+                                onChange={(e) => {
+                                  setCashAmountGiven(e.target.value);
+                                  if (formErrors.cashAmount) setFormErrors((prev) => ({ ...prev, cashAmount: undefined }));
+                                }}
+                              />
+                            </div>
+
+                            {formErrors.cashAmount && (
+                              <span className="b1-field-error-msg">
+                                <i className="fas fa-exclamation-circle"></i> {formErrors.cashAmount}
+                              </span>
+                            )}
+
+                            {parseFloat(cashAmountGiven) >= cartTotal && (
+                              <div
+                                style={{
+                                  marginTop: 8,
+                                  background: "#ECFDF5",
+                                  border: "1px solid #10B981",
+                                  color: "#065F46",
+                                  padding: "8px 12px",
+                                  borderRadius: 10,
+                                  fontSize: 12,
+                                  fontWeight: 800,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                }}
+                              >
+                                <i className="fas fa-money-bill-wave"></i>
+                                <span>Tu vuelto será: ${formatMoney(parseFloat(cashAmountGiven) - cartTotal)}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* 5. TU PEDIDO (Itemized Summary) */}
               <div className="b1-checkout-card" style={{ marginBottom: 14 }}>
@@ -2197,7 +2261,12 @@ export default function CustomerCatalogPage() {
                 style={{ padding: "14px 18px", fontSize: 15 }}
               >
                 <span>
-                  {paymentMethod === "mercadopago" ? (
+                  {deliveryType === "retiro" ? (
+                    <>
+                      <i className="fab fa-whatsapp" style={{ fontSize: 18, marginRight: 6 }}></i>
+                      {isSubmittingOrder ? "Confirmando pedido..." : "Confirmar Pedido para Retirar"}
+                    </>
+                  ) : paymentMethod === "mercadopago" ? (
                     <>
                       <i className="fas fa-lock" style={{ fontSize: 16, marginRight: 6 }}></i>
                       {isProcessingMP ? "Generando pago..." : "Pagar con Mercado Pago"}

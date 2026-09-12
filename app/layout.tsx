@@ -104,7 +104,9 @@ export default function RootLayout({
           <link rel="stylesheet" href="/assets/css/modern-app.css" />
 
           {/* Instant Theme Pre-loader */}
-          <script
+          <Script
+            id="theme-preloader"
+            strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
               __html: `
                 (function() {
@@ -121,8 +123,10 @@ export default function RootLayout({
           />
 
           {/* Schema.org Structured Data (JSON-LD) for Local Business & Menu */}
-          <script
+          <Script
+            id="schema-org-data"
             type="application/ld+json"
+            strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",

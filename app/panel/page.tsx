@@ -952,24 +952,32 @@ export default function AdminStockAndFinancePage() {
                           #{shortId}
                         </span>
 
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                            isCash
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
-                              : "bg-sky-50 text-sky-700 border-sky-200/60"
-                          }`}
-                        >
-                          {isCash ? "Efectivo" : "Mercado Pago"}
-                        </span>
+                        {/* Payment badge: only show for delivery orders */}
+                        {!isPickup ? (
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                              isCash
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
+                                : "bg-sky-50 text-sky-700 border-sky-200/60"
+                            }`}
+                          >
+                            {isCash ? "Efectivo" : "Mercado Pago"}
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-50 text-amber-800 border-amber-200/60 flex items-center gap-1">
+                            <Store className="w-3 h-3 text-amber-600" />
+                            <span>Retiro en local</span>
+                          </span>
+                        )}
 
                         {isPending && (
                           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/60">
-                            Pendiente de cobro
+                            {isPickup ? "Pendiente de retiro" : "Pendiente de cobro"}
                           </span>
                         )}
                         {isApproved && (
                           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/60">
-                            {isMP ? "Pago Acreditado" : "Cobrado & Entregado"}
+                            {isPickup ? "Entregado en local" : isMP ? "Pago Acreditado" : "Cobrado & Entregado"}
                           </span>
                         )}
                         {isRejected && (
@@ -1011,9 +1019,14 @@ export default function AdminStockAndFinancePage() {
 
                       <div className="flex items-center gap-1.5 text-gray-700">
                         {isPickup ? (
-                          <div className="flex items-center gap-1 text-gray-800 font-medium">
+                          <div className="flex items-center gap-1.5 text-gray-800 font-medium flex-wrap">
                             <Store className="w-3.5 h-3.5 text-orange-500" />
                             <span>Modalidad: <strong>Retiro en el local</strong></span>
+                            {order.transferRef && (
+                              <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold text-xs">
+                                Código: #{order.transferRef}
+                              </span>
+                            )}
                           </div>
                         ) : (
                           <div className="flex items-center gap-1 text-gray-800 font-medium">
@@ -1122,7 +1135,7 @@ export default function AdminStockAndFinancePage() {
                             className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                           >
                             <Check className="w-4 h-4 stroke-[2.5]" />
-                            <span>{updatingOrderId === order.id ? "Guardando..." : "Confirmar Cobro y Entrega"}</span>
+                            <span>{updatingOrderId === order.id ? "Guardando..." : isPickup ? "Confirmar Entrega" : "Confirmar Cobro y Entrega"}</span>
                           </button>
                         </div>
                       )}
