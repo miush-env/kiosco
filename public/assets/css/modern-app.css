@@ -545,10 +545,12 @@ body {
 }
 
 .b1-row-price {
-  font-size: 18px;
-  font-weight: 900;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--b1-color-primary);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
+  display: inline-flex;
+  align-items: baseline;
 }
 
 .b1-row-rating {

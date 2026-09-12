@@ -1,6 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { UserButton, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { Eye } from "lucide-react";
 import { getRole } from "@/lib/roles";
 import ClaimRoleButton from "./ClaimRoleButton";
 import PanelNavTabs from "./PanelNavTabs";
@@ -183,7 +184,7 @@ export default async function PanelLayout({
             className="b1-icon-btn"
             title="Ver carta de clientes"
           >
-            <i className="fas fa-eye"></i>
+            <Eye style={{ width: 18, height: 18 }} />
           </Link>
 
           {/* User Profile */}

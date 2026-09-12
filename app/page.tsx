@@ -3,6 +3,27 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
+import {
+  Flame,
+  Pizza,
+  Sandwich,
+  CupSoda,
+  UtensilsCrossed,
+  Sparkles,
+  ShoppingBag,
+  Search,
+} from "lucide-react";
+
+function getCategoryLucideIcon(catId: string, name?: string) {
+  const lower = (catId + " " + (name || "")).toLowerCase();
+  if (lower.includes("all") || lower.includes("todo")) return Flame;
+  if (lower.includes("pizza")) return Pizza;
+  if (lower.includes("burger") || lower.includes("hamburguesa") || lower.includes("lomo") || lower.includes("sandwich")) return Sandwich;
+  if (lower.includes("empanada") || lower.includes("minuta")) return UtensilsCrossed;
+  if (lower.includes("bebida") || lower.includes("gaseosa") || lower.includes("trago") || lower.includes("agua")) return CupSoda;
+  if (lower.includes("especial") || lower.includes("promo")) return Sparkles;
+  return UtensilsCrossed;
+}
 
 interface Category {
   id: string;
@@ -832,8 +853,22 @@ export default function CustomerCatalogPage() {
 
       {/* ── 2. GREETING & HERO BANNER ────────────────────────────────────────── */}
       <section className="b1-greeting-section">
-        <div style={{ display: "inline-block", background: "var(--b1-color-primary-light)", color: "var(--b1-color-primary)", padding: "4px 10px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, marginBottom: "6px" }}>
-          ¡Hola! 👋 Pedí Online
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            background: "var(--b1-color-primary-light)",
+            color: "var(--b1-color-primary)",
+            padding: "4px 10px",
+            borderRadius: "12px",
+            fontSize: "13px",
+            fontWeight: 700,
+            marginBottom: "6px",
+          }}
+        >
+          <Sparkles style={{ width: 14, height: 14, color: "var(--b1-color-primary)" }} />
+          <span>Pedí Online</span>
         </div>
         <h1 className="b1-greeting-title" style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 6px", color: "var(--b1-color-text-main)", lineHeight: 1.25 }}>
           Alakary — Menú Digital, Pizzas y Delivery Online
@@ -872,7 +907,7 @@ export default function CustomerCatalogPage() {
       {/* ── 3. SEARCH BAR ───────────────────────────────────────────────────── */}
       <section className="b1-search-container">
         <div className="b1-search-box">
-          <i className="fas fa-search b1-search-icon"></i>
+          <Search className="b1-search-icon" style={{ width: 16, height: 16 }} />
           <input
             type="text"
             id="appSearchInput"
@@ -906,20 +941,32 @@ export default function CustomerCatalogPage() {
       {visibleCategories.length > 0 && (
         <section className="b1-categories-wrapper">
           <div className="b1-categories-scroll">
-            {visibleCategories.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`b1-category-pill ${selectedCategory === cat.id ? "active" : ""}`}
-                onClick={() => {
-                  setSelectedCategory(cat.id);
-                  setCurrentPage(1);
-                }}
-              >
-                <span className="b1-category-icon">{cat.icon || "🍽️"}</span>
-                <span>{cat.name}</span>
-              </button>
-            ))}
+            {visibleCategories.map((cat) => {
+              const CatIcon = getCategoryLucideIcon(cat.id, cat.name);
+              const isSelected = selectedCategory === cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`b1-category-pill ${isSelected ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedCategory(cat.id);
+                    setCurrentPage(1);
+                  }}
+                >
+                  <CatIcon
+                    style={{
+                      width: 15,
+                      height: 15,
+                      color: isSelected ? "#ffffff" : "var(--b1-color-primary, #EA580C)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span>{cat.name}</span>
+                </button>
+              );
+            })}
           </div>
         </section>
       )}
@@ -965,7 +1012,10 @@ export default function CustomerCatalogPage() {
                 <div className="b1-sugg-body">
                   <h3 className="b1-sugg-title">{p.name}</h3>
                   <div className="b1-sugg-footer">
-                    <span className="b1-sugg-price">${formatMoney(p.price)}</span>
+                    <span className="b1-sugg-price">
+                      <span style={{ fontSize: "12px", color: "var(--b1-color-primary)", fontWeight: 700, marginRight: "1px" }}>$</span>
+                      <span style={{ fontSize: "15px", fontWeight: 700, color: "var(--b1-color-text-main)" }}>{formatMoney(p.price)}</span>
+                    </span>
                     <div className="b1-sugg-rating">
                       <i className="fas fa-star"></i>
                       <span>{p.rating || "4.8"}</span>
@@ -1064,7 +1114,10 @@ export default function CustomerCatalogPage() {
                   <h3 className="b1-row-title">{p.name}</h3>
                   {p.description && <p className="b1-row-desc">{p.description}</p>}
                   <div className="b1-row-price-row">
-                    <span className="b1-row-price">${formatMoney(p.price)}</span>
+                    <span className="b1-row-price">
+                      <span style={{ fontSize: "12px", color: "var(--b1-color-primary)", fontWeight: 700, marginRight: "1px" }}>$</span>
+                      <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--b1-color-text-main)" }}>{formatMoney(p.price)}</span>
+                    </span>
                     {p.rating && (
                       <span className="b1-row-rating">
                         <i className="fas fa-star"></i> {p.rating}

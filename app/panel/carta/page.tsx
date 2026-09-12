@@ -3,6 +3,29 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
+import {
+  Plus,
+  Search,
+  Flame,
+  Pizza,
+  Sandwich,
+  CupSoda,
+  UtensilsCrossed,
+  Sparkles,
+  Edit2,
+  Trash2,
+} from "lucide-react";
+
+function getCategoryLucideIcon(catId: string, name?: string) {
+  const lower = (catId + " " + (name || "")).toLowerCase();
+  if (lower.includes("all") || lower.includes("todo")) return Flame;
+  if (lower.includes("pizza")) return Pizza;
+  if (lower.includes("burger") || lower.includes("hamburguesa") || lower.includes("lomo") || lower.includes("sandwich")) return Sandwich;
+  if (lower.includes("empanada") || lower.includes("minuta")) return UtensilsCrossed;
+  if (lower.includes("bebida") || lower.includes("gaseosa") || lower.includes("trago") || lower.includes("agua")) return CupSoda;
+  if (lower.includes("especial") || lower.includes("promo")) return Sparkles;
+  return UtensilsCrossed;
+}
 
 interface Category {
   id: string;
@@ -488,10 +511,10 @@ export default function OwnerMenuManagementPage() {
         <button
           type="button"
           className="b1-btn-primary"
-          style={{ width: "auto", padding: "10px 18px", fontSize: 13 }}
+          style={{ width: "auto", padding: "10px 18px", fontSize: 13, display: "inline-flex", alignItems: "center", gap: 6 }}
           onClick={openNewProductModal}
         >
-          <i className="fas fa-plus"></i>
+          <Plus style={{ width: 16, height: 16 }} />
           <span>Nuevo Plato</span>
         </button>
       </section>
@@ -499,7 +522,7 @@ export default function OwnerMenuManagementPage() {
       {/* ── 2. SEARCH BAR ──────────────────────────────────────────────────── */}
       <section className="b1-search-container">
         <div className="b1-search-box">
-          <i className="fas fa-search b1-search-icon"></i>
+          <Search className="b1-search-icon" style={{ width: 16, height: 16 }} />
           <input
             type="text"
             className="b1-search-input"
@@ -537,20 +560,23 @@ export default function OwnerMenuManagementPage() {
             className={`b1-category-pill ${selectedCategory === "all" ? "active" : ""}`}
             onClick={() => setSelectedCategory("all")}
           >
-            <span className="b1-category-icon">🔥</span>
+            <Flame style={{ width: 15, height: 15, color: selectedCategory === "all" ? "#fff" : "#EA580C" }} />
             <span>Todos ({products.length})</span>
           </button>
 
           {realCategories.map((cat) => {
             const count = products.filter((p) => p.categoryId === cat.id).length;
+            const CatIcon = getCategoryLucideIcon(cat.id, cat.name);
+            const isSelected = selectedCategory === cat.id;
+
             return (
               <button
                 key={cat.id}
                 type="button"
-                className={`b1-category-pill ${selectedCategory === cat.id ? "active" : ""}`}
+                className={`b1-category-pill ${isSelected ? "active" : ""}`}
                 onClick={() => setSelectedCategory(cat.id)}
               >
-                <span className="b1-category-icon">{cat.icon || "🍽️"}</span>
+                <CatIcon style={{ width: 15, height: 15, color: isSelected ? "#fff" : "#EA580C" }} />
                 <span>{cat.name} ({count})</span>
               </button>
             );

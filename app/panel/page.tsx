@@ -1,6 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  Bell,
+  Volume2,
+  VolumeX,
+  RefreshCw,
+  Trash2,
+  Plus,
+  Share2,
+  Copy,
+  Check,
+  Package,
+  BarChart3,
+  Search,
+  ExternalLink,
+} from "lucide-react";
 
 interface Lot {
   id: string;
@@ -100,7 +116,16 @@ function playNewOrderSound() {
 }
 
 export default function AdminStockAndFinancePage() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get("tab");
+
   const [activeTab, setActiveTab] = useState<"orders" | "stock" | "finance">("orders");
+
+  useEffect(() => {
+    if (tabParam === "stock" || tabParam === "finance" || tabParam === "orders") {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderFilter, setOrderFilter] = useState<"all" | "pendiente" | "aprobado" | "rechazado">("all");
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
@@ -683,11 +708,11 @@ export default function AdminStockAndFinancePage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 20,
+              color: "#ffffff",
               flexShrink: 0,
             }}
           >
-            🔔
+            <Bell style={{ width: 20, height: 20 }} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 800, fontSize: 13, color: "#34D399", display: "flex", alignItems: "center", gap: 6 }}>
@@ -737,54 +762,31 @@ export default function AdminStockAndFinancePage() {
         </div>
       )}
 
-      {/* ── TOP TABS & ACTIONS ───────────────────────────────────────────── */}
-      <section className="adm-tabs-row">
-        <div className="adm-tab-switch">
-          <button
-            type="button"
-            className={`adm-tab-btn ${activeTab === "orders" ? "active" : ""}`}
-            onClick={() => setActiveTab("orders")}
-            style={{ position: "relative" }}
-          >
-            <i className="fas fa-bell"></i>
-            <span>Pedidos</span>
-            {pendingOrdersCount > 0 && (
-              <span
-                style={{
-                  background: "#EF4444",
-                  color: "#fff",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  padding: "1px 6px",
-                  borderRadius: "10px",
-                  marginLeft: 4,
-                }}
-              >
-                {pendingOrdersCount}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            className={`adm-tab-btn ${activeTab === "stock" ? "active" : ""}`}
-            onClick={() => setActiveTab("stock")}
-          >
-            <i className="fas fa-boxes-stacked"></i>
-            <span>Stock</span>
-          </button>
-          <button
-            type="button"
-            className={`adm-tab-btn ${activeTab === "finance" ? "active" : ""}`}
-            onClick={() => setActiveTab("finance")}
-          >
-            <i className="fas fa-chart-line"></i>
-            <span>Finanzas</span>
-          </button>
+      {/* ── ACTIONS TOOLBAR ───────────────────────────────────────────── */}
+      <section
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10,
+          marginBottom: 16,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <h2 style={{ fontSize: 17, fontWeight: 800, color: "var(--b1-color-text-main)", margin: 0, letterSpacing: "-0.2px" }}>
+            {activeTab === "orders" ? "Gestión de Pedidos" : activeTab === "stock" ? "Control de Stock" : "Balance y Finanzas"}
+          </h2>
+          {activeTab === "orders" && pendingOrdersCount > 0 && (
+            <span style={{ fontSize: 11, fontWeight: 800, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 12 }}>
+              {pendingOrdersCount} {pendingOrdersCount === 1 ? "pendiente" : "pendientes"}
+            </span>
+          )}
         </div>
 
-        <div className="adm-actions-row">
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
           {activeTab === "orders" && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+            <>
               {/* Sound & Alert notification button */}
               <button
                 type="button"
@@ -800,13 +802,21 @@ export default function AdminStockAndFinancePage() {
                 }}
                 title={soundEnabled ? "Notificaciones de sonido activadas (Click para probar / desactivar)" : "Notificaciones de sonido desactivadas"}
                 style={{
-                  background: soundEnabled ? "#ECFDF5" : "#F1F5F9",
-                  color: soundEnabled ? "#059669" : "#64748B",
-                  border: "1px solid " + (soundEnabled ? "#6EE7B7" : "#CBD5E1"),
+                  background: soundEnabled ? "#ECFDF5" : "var(--b1-color-surface-subtle, #F1F5F9)",
+                  color: soundEnabled ? "#059669" : "var(--b1-color-text-muted, #64748B)",
+                  border: "1px solid " + (soundEnabled ? "#6EE7B7" : "var(--b1-color-border, #CBD5E1)"),
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  cursor: "pointer",
                 }}
               >
-                <i className={soundEnabled ? "fas fa-volume-up" : "fas fa-volume-mute"}></i>
-                <span>{soundEnabled ? "Sonido: ON" : "Sonido: OFF"}</span>
+                {soundEnabled ? (
+                  <Volume2 style={{ width: 14, height: 14, color: "#059669" }} />
+                ) : (
+                  <VolumeX style={{ width: 14, height: 14 }} />
+                )}
+                <span>{soundEnabled ? "Sonido ON" : "Sonido OFF"}</span>
               </button>
 
               <button
@@ -814,10 +824,12 @@ export default function AdminStockAndFinancePage() {
                 className="adm-btn-sm-primary"
                 onClick={fetchOrders}
                 title="Recargar pedidos"
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
               >
-                <i className="fas fa-sync-alt"></i>
+                <RefreshCw style={{ width: 14, height: 14 }} />
                 <span>Actualizar</span>
               </button>
+
               <button
                 type="button"
                 className="adm-btn-sm-danger"
@@ -836,12 +848,12 @@ export default function AdminStockAndFinancePage() {
                   }
                 }}
                 title="Limpiar pedidos"
-                style={{ background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5" }}
+                style={{ background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
               >
-                <i className="fas fa-trash-alt"></i>
+                <Trash2 style={{ width: 14, height: 14 }} />
                 <span>Limpiar</span>
               </button>
-            </div>
+            </>
           )}
 
           {activeTab === "stock" && (
@@ -849,9 +861,10 @@ export default function AdminStockAndFinancePage() {
               type="button"
               className="adm-btn-sm-primary"
               onClick={() => setIsCreateItemOpen(true)}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
             >
-              <i className="fas fa-plus"></i>
-              <span>Insumo</span>
+              <Plus style={{ width: 14, height: 14 }} />
+              <span>Nuevo Insumo</span>
             </button>
           )}
         </div>
