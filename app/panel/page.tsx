@@ -22,6 +22,12 @@ import {
   MapPin,
   Store,
   CheckCheck,
+  CheckCircle2,
+  Wallet,
+  TrendingUp,
+  TrendingDown,
+  PlusCircle,
+  MinusCircle,
 } from "lucide-react";
 
 interface Lot {
@@ -769,112 +775,114 @@ export default function AdminStockAndFinancePage() {
       )}
 
       {/* ── ACTIONS TOOLBAR ───────────────────────────────────────────── */}
-      <section
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 10,
-          marginBottom: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 800, color: "var(--b1-color-text-main)", margin: 0, letterSpacing: "-0.2px" }}>
-            {activeTab === "orders" ? "Gestión de Pedidos" : activeTab === "stock" ? "Control de Stock" : "Balance y Finanzas"}
-          </h2>
-          {activeTab === "orders" && pendingOrdersCount > 0 && (
-            <span style={{ fontSize: 11, fontWeight: 800, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 12 }}>
-              {pendingOrdersCount} {pendingOrdersCount === 1 ? "pendiente" : "pendientes"}
-            </span>
-          )}
-        </div>
+      {activeTab !== "finance" && (
+        <section
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 10,
+            marginBottom: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <h2 style={{ fontSize: 17, fontWeight: 800, color: "var(--b1-color-text-main)", margin: 0, letterSpacing: "-0.2px" }}>
+              {activeTab === "orders" ? "Gestión de Pedidos" : "Control de Stock"}
+            </h2>
+            {activeTab === "orders" && pendingOrdersCount > 0 && (
+              <span style={{ fontSize: 11, fontWeight: 800, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 12 }}>
+                {pendingOrdersCount} {pendingOrdersCount === 1 ? "pendiente" : "pendientes"}
+              </span>
+            )}
+          </div>
 
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-          {activeTab === "orders" && (
-            <>
-              {/* Sound & Alert notification button */}
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+            {activeTab === "orders" && (
+              <>
+                {/* Sound & Alert notification button */}
+                <button
+                  type="button"
+                  className="adm-btn-sm-primary"
+                  onClick={() => {
+                    if (!soundEnabled) {
+                      playNewOrderSound();
+                    }
+                    if (typeof window !== "undefined" && "Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                      Notification.requestPermission();
+                    }
+                    setSoundEnabled(!soundEnabled);
+                  }}
+                  title={soundEnabled ? "Notificaciones de sonido activadas (Click para probar / desactivar)" : "Notificaciones de sonido desactivadas"}
+                  style={{
+                    background: soundEnabled ? "#ECFDF5" : "var(--b1-color-surface-subtle, #F1F5F9)",
+                    color: soundEnabled ? "#059669" : "var(--b1-color-text-muted, #64748B)",
+                    border: "1px solid " + (soundEnabled ? "#6EE7B7" : "var(--b1-color-border, #CBD5E1)"),
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    cursor: "pointer",
+                  }}
+                >
+                  {soundEnabled ? (
+                    <Volume2 style={{ width: 14, height: 14, color: "#059669" }} />
+                  ) : (
+                    <VolumeX style={{ width: 14, height: 14 }} />
+                  )}
+                  <span>{soundEnabled ? "Sonido ON" : "Sonido OFF"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="adm-btn-sm-primary"
+                  onClick={fetchOrders}
+                  title="Recargar pedidos"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
+                >
+                  <RefreshCw style={{ width: 14, height: 14 }} />
+                  <span>Actualizar</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="adm-btn-sm-danger"
+                  onClick={async () => {
+                    if (confirm("¿Estás seguro de que deseas limpiar todo el historial de pedidos?")) {
+                      try {
+                        const res = await fetch("/api/orders", { method: "DELETE" });
+                        const data = await res.json();
+                        if (data.success) {
+                          setOrders([]);
+                          alert("Historial de pedidos limpiado.");
+                        }
+                      } catch (e: any) {
+                        alert("Error al limpiar pedidos: " + e.message);
+                      }
+                    }
+                  }}
+                  title="Limpiar pedidos"
+                  style={{ background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
+                >
+                  <Trash2 style={{ width: 14, height: 14 }} />
+                  <span>Limpiar</span>
+                </button>
+              </>
+            )}
+
+            {activeTab === "stock" && (
               <button
                 type="button"
                 className="adm-btn-sm-primary"
-                onClick={() => {
-                  if (!soundEnabled) {
-                    playNewOrderSound();
-                  }
-                  if (typeof window !== "undefined" && "Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-                    Notification.requestPermission();
-                  }
-                  setSoundEnabled(!soundEnabled);
-                }}
-                title={soundEnabled ? "Notificaciones de sonido activadas (Click para probar / desactivar)" : "Notificaciones de sonido desactivadas"}
-                style={{
-                  background: soundEnabled ? "#ECFDF5" : "var(--b1-color-surface-subtle, #F1F5F9)",
-                  color: soundEnabled ? "#059669" : "var(--b1-color-text-muted, #64748B)",
-                  border: "1px solid " + (soundEnabled ? "#6EE7B7" : "var(--b1-color-border, #CBD5E1)"),
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  cursor: "pointer",
-                }}
-              >
-                {soundEnabled ? (
-                  <Volume2 style={{ width: 14, height: 14, color: "#059669" }} />
-                ) : (
-                  <VolumeX style={{ width: 14, height: 14 }} />
-                )}
-                <span>{soundEnabled ? "Sonido ON" : "Sonido OFF"}</span>
-              </button>
-
-              <button
-                type="button"
-                className="adm-btn-sm-primary"
-                onClick={fetchOrders}
-                title="Recargar pedidos"
+                onClick={() => setIsCreateItemOpen(true)}
                 style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
               >
-                <RefreshCw style={{ width: 14, height: 14 }} />
-                <span>Actualizar</span>
+                <Plus style={{ width: 14, height: 14 }} />
+                <span>Nuevo Insumo</span>
               </button>
-
-              <button
-                type="button"
-                className="adm-btn-sm-danger"
-                onClick={async () => {
-                  if (confirm("¿Estás seguro de que deseas limpiar todo el historial de pedidos?")) {
-                    try {
-                      const res = await fetch("/api/orders", { method: "DELETE" });
-                      const data = await res.json();
-                      if (data.success) {
-                        setOrders([]);
-                        alert("Historial de pedidos limpiado.");
-                      }
-                    } catch (e: any) {
-                      alert("Error al limpiar pedidos: " + e.message);
-                    }
-                  }
-                }}
-                title="Limpiar pedidos"
-                style={{ background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
-              >
-                <Trash2 style={{ width: 14, height: 14 }} />
-                <span>Limpiar</span>
-              </button>
-            </>
-          )}
-
-          {activeTab === "stock" && (
-            <button
-              type="button"
-              className="adm-btn-sm-primary"
-              onClick={() => setIsCreateItemOpen(true)}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}
-            >
-              <Plus style={{ width: 14, height: 14 }} />
-              <span>Nuevo Insumo</span>
-            </button>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ══════════════════════════════════════════════════════════════════
            TAB: CONTROL DE PEDIDOS & COBROS
@@ -943,85 +951,87 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden transition-all"
+                    className={`rounded-2xl border transition-all overflow-hidden ${
+                      isApproved
+                        ? "bg-white border-gray-200/90 shadow-2xs opacity-95"
+                        : isRejected
+                        ? "bg-white border-rose-200/80 shadow-2xs opacity-80"
+                        : "bg-white border-orange-200/90 shadow-sm"
+                    }`}
                   >
-                    {/* 1. Header de la Orden */}
+                    {/* 1. Header con badges de alto contraste y precio destacado */}
                     <div className="p-4 pb-3 border-b border-gray-100 flex items-center justify-between">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono font-bold text-gray-900 text-sm tracking-wide">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-sm font-black text-gray-900 tracking-wide font-mono mr-1">
                           #{shortId}
                         </span>
 
-                        {/* Payment badge: only show for delivery orders */}
+                        {/* Badge Medio de Pago / Modalidad */}
                         {!isPickup ? (
-                          <span
-                            className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                              isCash
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
-                                : "bg-sky-50 text-sky-700 border-sky-200/60"
-                            }`}
-                          >
-                            {isCash ? "Efectivo" : "Mercado Pago"}
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-gray-100 text-gray-700 border border-gray-200/60">
+                            {isCash ? "💵 Efectivo" : "💳 Mercado Pago"}
                           </span>
                         ) : (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-50 text-amber-800 border-amber-200/60 flex items-center gap-1">
-                            <Store className="w-3 h-3 text-amber-600" />
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200/70 inline-flex items-center gap-1">
+                            <Store className="w-3 h-3 text-amber-700" />
                             <span>Retiro en local</span>
                           </span>
                         )}
 
-                        {isPending && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/60">
-                            {isPickup ? "Pendiente de retiro" : "Pendiente de cobro"}
-                          </span>
-                        )}
-                        {isApproved && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+                        {/* Badge Estado */}
+                        {isApproved ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                             {isPickup ? "Entregado en local" : isMP ? "Pago Acreditado" : "Cobrado & Entregado"}
                           </span>
-                        )}
-                        {isRejected && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200/60">
+                        ) : isPending ? (
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200/70">
+                            {isPickup ? "Pendiente de retiro" : "Pendiente de cobro"}
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200/70">
                             Cancelado
                           </span>
                         )}
                       </div>
 
-                      <div className="text-right">
-                        <span className="text-lg font-bold text-gray-900">
+                      {/* Precio y Hora */}
+                      <div className="text-right shrink-0">
+                        <span className="text-lg font-black text-gray-900 leading-none">
                           ${formatMoney(order.total)}
                         </span>
-                        <span className="block text-[11px] text-gray-400 font-medium">
+                        <span className="block text-[11px] text-gray-400 font-semibold mt-0.5">
                           {order.date} {timeString ? `• ${timeString}` : ""}
                         </span>
                       </div>
                     </div>
 
-                    {/* 2. Información de Cliente y Modalidad */}
-                    <div className="p-4 py-3 bg-gray-50/50 space-y-2 text-xs">
-                      <div className="flex items-center justify-between text-gray-700">
-                        <div className="flex items-center gap-1.5 font-medium">
-                          <span className="text-gray-400">Cliente:</span>
-                          <span className="font-bold text-gray-900">{order.customerName}</span>
+                    {/* 2. Caja de información del cliente */}
+                    <div className="p-4 py-3 bg-gray-50/70 space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-gray-600">
+                          Cliente: <strong className="text-gray-900 font-bold">{order.customerName}</strong>
                         </div>
+
+                        {/* WhatsApp Directo y Limpio */}
                         {order.customerPhone && (
                           <a
                             href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
                             target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-emerald-600 font-semibold hover:underline flex items-center gap-1 cursor-pointer no-underline"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer"
                           >
-                            <Phone className="w-3 h-3" />
+                            <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                             <span>{order.customerPhone}</span>
                           </a>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-gray-700">
+                      <div className="flex items-center justify-between text-gray-700 pt-0.5 flex-wrap gap-1">
                         {isPickup ? (
-                          <div className="flex items-center gap-1.5 text-gray-800 font-medium flex-wrap">
+                          <div className="flex items-center gap-1.5 text-gray-800 font-semibold">
                             <Store className="w-3.5 h-3.5 text-orange-500" />
-                            <span>Modalidad: <strong>Retiro en el local</strong></span>
+                            <span>Modalidad: Retiro en el local</span>
                             {order.transferRef && (
                               <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold text-xs">
                                 Código: #{order.transferRef}
@@ -1029,32 +1039,50 @@ export default function AdminStockAndFinancePage() {
                             )}
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1 text-gray-800 font-medium">
+                          <div className="flex items-center gap-1.5 text-gray-800 font-semibold">
                             <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                            <span>Envío a: <strong>{order.customerAddress || "Sin dirección"}</strong></span>
+                            <span>Dirección: {order.customerAddress || "Sin dirección"}</span>
                           </div>
+                        )}
+
+                        {!isPickup && !isApproved && (
+                          <button
+                            type="button"
+                            onClick={() => handleCopyOrder(order)}
+                            className="text-[11px] font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1 cursor-pointer"
+                          >
+                            {copiedOrderId === order.id ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-600" />
+                                <span className="text-emerald-700 font-bold">¡Copiado!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>Copiar datos</span>
+                              </>
+                            )}
+                          </button>
                         )}
                       </div>
                     </div>
 
-                    {/* 3. Lista de Productos */}
+                    {/* 3. Lista de Productos estructurada */}
                     <div className="p-4 py-3 border-t border-gray-100">
-                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
                         Productos del pedido
-                      </span>
-                      <div className="space-y-1 text-xs text-gray-800">
-                        {itemsList.map((item: any, idx: number) => {
+                      </div>
+                      <div className="space-y-1 text-xs">
+                        {itemsList.map((item: any, i: number) => {
                           const qty = item.quantity || item.qty || 1;
                           const name = item.name || item.title || "Producto";
                           const price = item.price ? Number(item.price) * Number(qty) : 0;
                           return (
-                            <div key={idx} className="flex justify-between items-center py-0.5">
+                            <div key={i} className="flex justify-between items-center text-gray-800">
                               <span>
-                                <strong className="font-bold text-gray-900">{qty}x</strong> {name}
+                                <strong className="text-gray-900 font-bold">{qty}x</strong> {name}
                                 {item.comment && (
-                                  <span className="text-gray-400 italic ml-1">
-                                    ({item.comment})
-                                  </span>
+                                  <span className="text-gray-400 italic ml-1">({item.comment})</span>
                                 )}
                               </span>
                               <span className="font-semibold text-gray-700">
@@ -1066,54 +1094,27 @@ export default function AdminStockAndFinancePage() {
                       </div>
                     </div>
 
-                    {/* 4. Botonera de Acciones con Jerarquía Clara */}
-                    <div className="p-3 bg-gray-50/70 border-t border-gray-100 space-y-2">
-                      {/* Acciones Secundarias */}
-                      <div className="grid grid-cols-2 gap-2">
-                        {!isPickup ? (
-                          <button
-                            type="button"
-                            onClick={() => handleCopyOrder(order)}
-                            className="py-2 px-3 bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-                          >
-                            {copiedOrderId === order.id ? (
-                              <>
-                                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                <span className="text-emerald-700 font-bold">¡Copiado!</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3.5 h-3.5 text-gray-500" />
-                                <span>Copiar Delivery</span>
-                              </>
-                            )}
-                          </button>
-                        ) : (
-                          <div className="hidden" />
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (order.customerPhone) {
-                              const cleanPhone = order.customerPhone.replace(/\D/g, "");
-                              window.open(`https://wa.me/549${cleanPhone}`, "_blank");
-                            } else {
-                              handleShareWhatsApp(order);
-                            }
-                          }}
-                          className={`${
-                            isPickup ? "col-span-2" : "col-span-1"
-                          } py-2 px-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 text-emerald-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer`}
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>Chat WhatsApp</span>
-                        </button>
-                      </div>
-
-                      {/* Acciones Primarias */}
-                      {isPending && (
-                        <div className="flex items-center gap-2 pt-1">
+                    {/* 4. Footer: Condicional según Estado Activo vs Completado */}
+                    <div className="p-3 bg-gray-50/80 border-t border-gray-100">
+                      {isApproved ? (
+                        /* Estado Completado: Banner limpio de confirmación */
+                        <div className="flex items-center justify-between py-1 px-1 text-xs">
+                          <span className="inline-flex items-center gap-1.5 font-bold text-emerald-800">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span>Venta confirmada y registrada en Finanzas</span>
+                          </span>
+                          <span className="text-[11px] font-semibold text-gray-400">
+                            Archivado
+                          </span>
+                        </div>
+                      ) : isRejected ? (
+                        <div className="flex items-center gap-1.5 text-rose-600 text-xs font-semibold py-1 px-1">
+                          <X className="w-4 h-4 text-rose-500 shrink-0" />
+                          <span>Pedido cancelado (Insumos reestablecidos)</span>
+                        </div>
+                      ) : (
+                        /* Estado Activo: Botones de Acción Inmediata */
+                        <div className="flex items-center gap-2">
                           <button
                             type="button"
                             disabled={updatingOrderId === order.id}
@@ -1122,35 +1123,25 @@ export default function AdminStockAndFinancePage() {
                                 handleUpdateOrderStatus(order.id, "rechazado");
                               }
                             }}
-                            className="py-2.5 px-4 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-xl transition-colors border border-rose-200/50 flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+                            className="py-2.5 px-3.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200/80 text-xs font-bold rounded-xl transition-all shadow-2xs cursor-pointer disabled:opacity-50"
                           >
-                            <X className="w-3.5 h-3.5" />
-                            <span>Cancelar</span>
+                            Cancelar
                           </button>
-
                           <button
                             type="button"
                             disabled={updatingOrderId === order.id}
                             onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
                             className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                           >
-                            <Check className="w-4 h-4 stroke-[2.5]" />
-                            <span>{updatingOrderId === order.id ? "Guardando..." : isPickup ? "Confirmar Entrega" : "Confirmar Cobro y Entrega"}</span>
+                            <CheckCircle2 className="w-4 h-4 stroke-[2.2]" />
+                            <span>
+                              {updatingOrderId === order.id
+                                ? "Guardando..."
+                                : isPickup
+                                ? "Confirmar Entrega"
+                                : "Confirmar Cobro y Entrega"}
+                            </span>
                           </button>
-                        </div>
-                      )}
-
-                      {isApproved && (
-                        <div className="flex items-center gap-1.5 text-emerald-700 text-xs font-semibold pt-1">
-                          <CheckCheck className="w-4 h-4 text-emerald-600" />
-                          <span>Venta confirmada y registrada en Finanzas</span>
-                        </div>
-                      )}
-
-                      {isRejected && (
-                        <div className="flex items-center gap-1.5 text-rose-600 text-xs font-semibold pt-1">
-                          <X className="w-4 h-4 text-rose-500" />
-                          <span>Pedido cancelado (Insumos reestablecidos)</span>
                         </div>
                       )}
                     </div>
@@ -1399,72 +1390,161 @@ export default function AdminStockAndFinancePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-           TAB 2: FINANZAS & CAJA
+           TAB 2: FINANZAS & CAJA (FASE 5 REDESIGN)
            ══════════════════════════════════════════════════════════════════ */}
       {activeTab === "finance" && (
-        <div>
-          {/* Period switch + quick entry */}
-          <section style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "14px 0 0", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", gap: 6 }}>
-              {(["today", "week", "month", "all"] as const).map((p) => (
+        <div className="space-y-4 pt-1">
+          {/* 1. Encabezado de Sección y Filtros de Tiempo */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center">
+                <Wallet className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-gray-900 leading-tight">
+                  Balance y Finanzas
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Resumen económico del local
+                </p>
+              </div>
+            </div>
+
+            {/* Filtros Segmentados */}
+            <div className="flex bg-gray-100/80 p-1 rounded-xl gap-1 border border-gray-200/50 self-start sm:self-auto">
+              {(
+                [
+                  { id: "today", label: "Hoy" },
+                  { id: "week", label: "Esta Semana" },
+                  { id: "month", label: "Este Mes" },
+                  { id: "all", label: "Todo" },
+                ] as const
+              ).map(({ id, label }) => (
                 <button
+                  key={id}
                   type="button"
-                  key={p}
-                  className={`adm-fin-pill ${financePeriod === p ? "active" : ""}`}
-                  onClick={() => setFinancePeriod(p)}
+                  onClick={() => setFinancePeriod(id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    financePeriod === id
+                      ? "bg-orange-500 text-white shadow-xs"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/60"
+                  }`}
                 >
-                  {p === "today" ? "Hoy" : p === "week" ? "Esta Semana" : p === "month" ? "Este Mes" : "Todo"}
+                  {label}
                 </button>
               ))}
             </div>
+          </div>
 
-            <div className="adm-actions-row" style={{ display: "flex", gap: 8 }}>
-              <button
-                type="button"
-                className="adm-btn-sm-primary"
-                onClick={() => setIsManualSaleOpen(true)}
-                style={{ fontSize: 12, display: "inline-flex", alignItems: "center", gap: 5 }}
+          {/* 2. Tarjeta Principal (Hero Card): Balance Neto */}
+          <div className="bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white p-5 sm:p-6 rounded-3xl shadow-md relative overflow-hidden border border-gray-800">
+            <div className="flex justify-between items-start mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Balance Neto (
+                {financePeriod === "today"
+                  ? "Hoy"
+                  : financePeriod === "week"
+                  ? "Esta Semana"
+                  : financePeriod === "month"
+                  ? "Este Mes"
+                  : "Todo"}
+                )
+              </span>
+
+              <span
+                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+                  netBalance >= 0
+                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+                    : "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                }`}
               >
-                <Plus style={{ width: 13, height: 13 }} />
-                <span>Venta</span>
-              </button>
-              <button
-                type="button"
-                className="adm-btn-sm-primary"
-                onClick={() => setIsManualExpenseOpen(true)}
-                style={{ fontSize: 12, background: "var(--adm-surface-subtle, #F1F5F9)", color: "var(--adm-danger, #EF4444)", border: "1px solid var(--b1-color-border, #E2E8F0)", display: "inline-flex", alignItems: "center", gap: 5 }}
-              >
-                <span>− Gasto</span>
-              </button>
-            </div>
-          </section>
-
-          {/* Metrics Overview 3-grid */}
-          <section className="adm-metrics-grid" style={{ marginTop: 12 }}>
-            <div className="adm-metric-card normal">
-              <div className="adm-metric-label" style={{ marginBottom: 4 }}>Ingresos</div>
-              <div className="adm-metric-val" style={{ color: "var(--adm-success)", fontSize: 15 }}>
-                ${formatMoney(totalIncome)}
-              </div>
-              <div className="adm-metric-label" style={{ marginTop: 2 }}>{filteredSales.length} v.</div>
+                {netBalance >= 0 ? (
+                  <>
+                    <TrendingUp className="w-3 h-3" />
+                    <span>Positivo</span>
+                  </>
+                ) : (
+                  <>
+                    <TrendingDown className="w-3 h-3" />
+                    <span>Déficit</span>
+                  </>
+                )}
+              </span>
             </div>
 
-            <div className="adm-metric-card out">
-              <div className="adm-metric-label" style={{ marginBottom: 4 }}>Gastos</div>
-              <div className="adm-metric-val" style={{ color: "var(--adm-danger)", fontSize: 15 }}>
-                ${formatMoney(totalExpense)}
-              </div>
-              <div className="adm-metric-label" style={{ marginTop: 2 }}>{filteredExpenses.length} e.</div>
+            <div className="flex items-baseline gap-1 my-2">
+              <span className="text-2xl font-light text-gray-400">$</span>
+              <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-mono">
+                {formatMoney(netBalance)}
+              </span>
             </div>
 
-            <div className="adm-metric-card">
-              <div className="adm-metric-label" style={{ marginBottom: 4 }}>Balance</div>
-              <div className="adm-metric-val" style={{ color: netBalance >= 0 ? "var(--adm-text-main)" : "var(--adm-danger)", fontSize: 15 }}>
-                ${formatMoney(netBalance)}
+            <p className="text-xs text-gray-400 mt-1">
+              Ganancia neta real tras deducir compras y gastos de cocina.
+            </p>
+          </div>
+
+          {/* 3. Desglose en 2 Cards Secundarias de Alto Impacto */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Card Ingresos */}
+            <div className="p-4 bg-emerald-50/60 border border-emerald-200/60 rounded-2xl flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 block mb-1">
+                  Ingresos Totales
+                </span>
+                <div className="text-xl font-extrabold text-gray-900 font-mono">
+                  +${formatMoney(totalIncome)}
+                </div>
+                <span className="text-xs font-medium text-emerald-700 mt-0.5 block">
+                  {filteredSales.length} {filteredSales.length === 1 ? "venta registrada" : "ventas registradas"}
+                </span>
               </div>
-              <div className="adm-metric-label" style={{ marginTop: 2 }}>Neto</div>
+
+              <div className="w-10 h-10 rounded-2xl bg-emerald-100 flex items-center justify-center shrink-0">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
+              </div>
             </div>
-          </section>
+
+            {/* Card Gastos */}
+            <div className="p-4 bg-rose-50/60 border border-rose-200/60 rounded-2xl flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-rose-800 block mb-1">
+                  Gastos y Compras
+                </span>
+                <div className="text-xl font-extrabold text-gray-900 font-mono">
+                  -${formatMoney(totalExpense)}
+                </div>
+                <span className="text-xs font-medium text-rose-700 mt-0.5 block">
+                  {filteredExpenses.length} {filteredExpenses.length === 1 ? "egreso registrado" : "egresos registrados"}
+                </span>
+              </div>
+
+              <div className="w-10 h-10 rounded-2xl bg-rose-100 flex items-center justify-center shrink-0">
+                <TrendingDown className="w-5 h-5 text-rose-600" />
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Botonera de Acciones Explícitas para el Operador */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <button
+              type="button"
+              onClick={() => setIsManualSaleOpen(true)}
+              className="py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs sm:text-sm font-bold rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4 stroke-[2.2]" />
+              <span>Registrar Venta</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsManualExpenseOpen(true)}
+              className="py-3 px-4 bg-white hover:bg-rose-50/50 border border-rose-200 text-rose-700 text-xs sm:text-sm font-bold rounded-2xl shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <MinusCircle className="w-4 h-4 text-rose-500 stroke-[2.2]" />
+              <span>Registrar Gasto</span>
+            </button>
+          </div>
 
           {/* Sales & Expenses Lists */}
           <section style={{ padding: "16px 0 24px", display: "flex", flexDirection: "column", gap: 18 }}>
