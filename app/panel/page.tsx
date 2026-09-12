@@ -222,13 +222,13 @@ export default function AdminStockAndFinancePage() {
       try {
         const parsed = JSON.parse(rawItems);
         if (Array.isArray(parsed)) return parsed;
-      } catch {}
+      } catch { }
     }
     if (rawItems && typeof rawItems === "object") {
       try {
         const vals = Object.values(rawItems);
         if (Array.isArray(vals)) return vals;
-      } catch {}
+      } catch { }
     }
     return [];
   };
@@ -315,7 +315,7 @@ export default function AdminStockAndFinancePage() {
                   body: `${latest.customerName} • $${formatMoney(latest.total)} (${latest.paymentMethod === "mercadopago" ? "Mercado Pago" : "Efectivo"})`,
                   icon: "/assets/images/logo.png",
                 });
-              } catch (err) {}
+              } catch (err) { }
             }
 
             // Update known orders set
@@ -912,17 +912,15 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("all")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
-                orderFilter === "all"
-                  ? "bg-slate-100/90 border-slate-300 shadow-2xs text-slate-900 ring-2 ring-slate-400/20"
-                  : "bg-slate-50/50 hover:bg-slate-100/70 border-slate-200/60 text-slate-700"
-              }`}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${orderFilter === "all"
+                ? "bg-slate-100/90 border-slate-300 shadow-2xs text-slate-900 ring-2 ring-slate-400/20"
+                : "bg-slate-50/50 hover:bg-slate-100/70 border-slate-200/60 text-slate-700"
+                }`}
             >
-              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                orderFilter === "all"
-                  ? "bg-slate-800 text-white shadow-2xs"
-                  : "bg-slate-200/80 text-slate-600"
-              }`}>
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${orderFilter === "all"
+                ? "bg-slate-800 text-white shadow-2xs"
+                : "bg-slate-200/80 text-slate-600"
+                }`}>
                 <ClipboardList className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.3]" />
               </div>
               <div className="min-w-0 flex-1">
@@ -937,17 +935,15 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("pendiente")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
-                orderFilter === "pendiente"
-                  ? "bg-amber-50 border-amber-300 shadow-2xs text-amber-950 ring-2 ring-amber-400/25"
-                  : "bg-amber-50/30 hover:bg-amber-50/70 border-amber-200/60 text-slate-700"
-              }`}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${orderFilter === "pendiente"
+                ? "bg-amber-50 border-amber-300 shadow-2xs text-amber-950 ring-2 ring-amber-400/25"
+                : "bg-amber-50/30 hover:bg-amber-50/70 border-amber-200/60 text-slate-700"
+                }`}
             >
-              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                orderFilter === "pendiente"
-                  ? "bg-amber-500 text-white shadow-2xs"
-                  : "bg-amber-100 text-amber-700"
-              }`}>
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${orderFilter === "pendiente"
+                ? "bg-amber-500 text-white shadow-2xs"
+                : "bg-amber-100 text-amber-700"
+                }`}>
                 <Clock className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
               <div className="min-w-0 flex-1">
@@ -962,17 +958,15 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("aprobado")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
-                orderFilter === "aprobado"
-                  ? "bg-emerald-50 border-emerald-300 shadow-2xs text-emerald-950 ring-2 ring-emerald-400/25"
-                  : "bg-emerald-50/30 hover:bg-emerald-50/70 border-emerald-200/60 text-slate-700"
-              }`}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${orderFilter === "aprobado"
+                ? "bg-emerald-50 border-emerald-300 shadow-2xs text-emerald-950 ring-2 ring-emerald-400/25"
+                : "bg-emerald-50/30 hover:bg-emerald-50/70 border-emerald-200/60 text-slate-700"
+                }`}
             >
-              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                orderFilter === "aprobado"
-                  ? "bg-emerald-600 text-white shadow-2xs"
-                  : "bg-emerald-100 text-emerald-700"
-              }`}>
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${orderFilter === "aprobado"
+                ? "bg-emerald-600 text-white shadow-2xs"
+                : "bg-emerald-100 text-emerald-700"
+                }`}>
                 <CheckCircle2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
               <div className="min-w-0 flex-1">
@@ -987,17 +981,15 @@ export default function AdminStockAndFinancePage() {
             <button
               type="button"
               onClick={() => setOrderFilter("rechazado")}
-              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${
-                orderFilter === "rechazado"
-                  ? "bg-rose-50 border-rose-300 shadow-2xs text-rose-950 ring-2 ring-rose-400/25"
-                  : "bg-rose-50/30 hover:bg-rose-50/70 border-rose-200/60 text-slate-700"
-              }`}
+              className={`p-2.5 sm:p-3 rounded-xl flex items-center gap-2.5 sm:gap-3 transition-all cursor-pointer border text-left ${orderFilter === "rechazado"
+                ? "bg-rose-50 border-rose-300 shadow-2xs text-rose-950 ring-2 ring-rose-400/25"
+                : "bg-rose-50/30 hover:bg-rose-50/70 border-rose-200/60 text-slate-700"
+                }`}
             >
-              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                orderFilter === "rechazado"
-                  ? "bg-rose-600 text-white shadow-2xs"
-                  : "bg-rose-100 text-rose-700"
-              }`}>
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${orderFilter === "rechazado"
+                ? "bg-rose-600 text-white shadow-2xs"
+                : "bg-rose-100 text-rose-700"
+                }`}>
                 <Ban className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.4]" />
               </div>
               <div className="min-w-0 flex-1">
@@ -1019,19 +1011,19 @@ export default function AdminStockAndFinancePage() {
                 {orderFilter === "pendiente"
                   ? "No hay pedidos pendientes de cobro"
                   : orderFilter === "aprobado"
-                  ? "No hay pedidos cobrados aún"
-                  : orderFilter === "rechazado"
-                  ? "No hay pedidos cancelados"
-                  : "No hay pedidos en esta sección"}
+                    ? "No hay pedidos cobrados aún"
+                    : orderFilter === "rechazado"
+                      ? "No hay pedidos cancelados"
+                      : "No hay pedidos en esta sección"}
               </div>
               <div style={{ color: "var(--b1-color-text-muted)", fontSize: 13, marginTop: 4 }}>
                 {orderFilter === "pendiente"
                   ? "Todos los pedidos en efectivo se encuentran al día."
                   : orderFilter === "aprobado"
-                  ? "Los pedidos cobrados y entregados aparecerán listados acá."
-                  : orderFilter === "rechazado"
-                  ? "Los pedidos que sean cancelados aparecerán acá."
-                  : "Los nuevos pedidos en efectivo y por Mercado Pago aparecerán acá en tiempo real."}
+                    ? "Los pedidos cobrados y entregados aparecerán listados acá."
+                    : orderFilter === "rechazado"
+                      ? "Los pedidos que sean cancelados aparecerán acá."
+                      : "Los nuevos pedidos en efectivo y por Mercado Pago aparecerán acá en tiempo real."}
               </div>
             </div>
           ) : (
@@ -1052,31 +1044,29 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className={`bg-white border rounded-2xl p-3.5 shadow-2xs space-y-2.5 transition-all ${
-                      isRejected
-                        ? "border-rose-200/80 bg-rose-50/15 opacity-85"
-                        : isPending
+                    className={`bg-white border rounded-2xl p-4 shadow-xs space-y-3 transition-all ${isRejected
+                      ? "border-rose-200/80 bg-rose-50/15 opacity-85"
+                      : isPending
                         ? "border-slate-200/90 hover:border-amber-300"
                         : "border-slate-200/90 hover:border-emerald-200"
-                    }`}
+                      }`}
                   >
                     {/* 1. Header: Avatar + Cliente e ID + Precio */}
-                    <div className="flex items-start justify-between gap-2.5">
-                      <div className="flex items-center gap-2.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
                         {/* Cloche Avatar Badge */}
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-2xs ${
-                          isRejected
-                            ? "bg-rose-100 text-rose-600"
-                            : "bg-[#064e3b] text-emerald-300"
-                        }`}>
-                          <Utensils className="w-4.5 h-4.5" />
+                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ${isRejected
+                          ? "bg-rose-100 text-rose-600"
+                          : "bg-[#064e3b] text-emerald-300"
+                          }`}>
+                          <Utensils className="w-5.5 h-5.5" />
                         </div>
 
                         <div>
-                          <h3 className="text-base font-extrabold text-slate-900 tracking-tight leading-tight">
+                          <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight">
                             {order.customerName}
                           </h3>
-                          <span className="font-mono text-[11px] font-medium text-slate-400 mt-0.5 block">
+                          <span className="font-mono text-xs font-medium text-slate-400 mt-0.5 block">
                             #{shortId}
                           </span>
                         </div>
@@ -1084,60 +1074,60 @@ export default function AdminStockAndFinancePage() {
 
                       {/* Precio Total */}
                       <div className="text-right shrink-0">
-                        <div className="text-xl font-black text-slate-900 leading-none">
+                        <div className="text-2xl font-black text-slate-900 leading-none">
                           ${formatMoney(order.total)}
                         </div>
                       </div>
                     </div>
 
                     {/* 2. Badges: Estado / Pago + Código de Retiro */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {isCash ? (
                         isPending ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#fffbeb] text-amber-800 border border-amber-300">
-                            <Clock className="w-3 h-3 text-amber-600 stroke-[2.5]" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#fffbeb] text-amber-800 border border-amber-300">
+                            <Clock className="w-3.5 h-3.5 text-amber-600 stroke-[2.5]" />
                             <span>Efectivo Pendiente</span>
                           </span>
                         ) : isApproved ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
                             <span>Efectivo Cobrado</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-300">
-                            <Ban className="w-3 h-3 text-rose-600" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300">
+                            <Ban className="w-3.5 h-3.5 text-rose-600" />
                             <span>Cancelado</span>
                           </span>
                         )
                       ) : isMP ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-300">
-                          <CreditCard className="w-3 h-3 text-sky-600" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-800 border border-sky-300">
+                          <CreditCard className="w-3.5 h-3.5 text-sky-600" />
                           <span>Mercado Pago</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-50 text-slate-700 border border-slate-300">
-                          <CreditCard className="w-3 h-3 text-slate-600" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-300">
+                          <CreditCard className="w-3.5 h-3.5 text-slate-600" />
                           <span>{String(order.paymentMethod || "Pedido").toUpperCase()}</span>
                         </span>
                       )}
 
                       {isPickup && order.transferRef && (
-                        <span className="inline-flex items-center text-[11px] font-mono font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
+                        <span className="inline-flex items-center text-xs font-mono font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-md">
                           #{order.transferRef}
                         </span>
                       )}
                     </div>
 
                     {/* 3. Modalidad & Fecha */}
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium flex-wrap">
+                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium flex-wrap">
                       {isPickup ? (
                         <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
-                          <Store className="w-3 h-3 text-slate-400" />
+                          <Store className="w-3.5 h-3.5 text-slate-400" />
                           <span>Retiro en local</span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-slate-700 font-semibold">
-                          <MapPin className="w-3 h-3 text-slate-400" />
+                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
                           <span>{order.customerAddress || "Sin dirección"}</span>
                         </span>
                       )}
@@ -1145,13 +1135,13 @@ export default function AdminStockAndFinancePage() {
                       <span className="text-slate-300 font-light">•</span>
 
                       <div className="flex items-center gap-1 text-slate-400">
-                        <Calendar className="w-3 h-3 text-slate-400" />
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
                         <span>{order.date || "Hoy"} · {timeString || "14:15"}</span>
                       </div>
                     </div>
 
                     {/* 4. Productos List (sin cajas pesadas, con thumbnail suave) */}
-                    <div className="border-t border-slate-100 pt-2.5 space-y-2">
+                    <div className="border-t border-slate-100 pt-3 space-y-2.5">
                       {itemsList.map((item: any, idx: number) => {
                         const qty = item.quantity || item.qty || 1;
                         const name = item.name || item.title || "Producto";
@@ -1160,32 +1150,32 @@ export default function AdminStockAndFinancePage() {
                         const image = item.image || item.imageUrl || null;
 
                         return (
-                          <div key={idx} className="flex items-center justify-between gap-2.5">
-                            <div className="flex items-center gap-2.5 min-w-0">
+                          <div key={idx} className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
                               {image ? (
                                 <img
                                   src={image}
                                   alt={name}
-                                  className="w-9 h-9 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-white"
+                                  className="w-11 h-11 rounded-2xl object-cover border border-slate-200/80 shrink-0 bg-white"
                                 />
                               ) : (
-                                <div className="w-9 h-9 rounded-xl bg-[#fff7ed] border border-orange-100/80 text-orange-500 flex items-center justify-center shrink-0">
-                                  <Pizza className="w-4.5 h-4.5 text-orange-400" />
+                                <div className="w-11 h-11 rounded-2xl bg-[#fff7ed] border border-orange-100/80 text-orange-500 flex items-center justify-center shrink-0">
+                                  <Pizza className="w-5.5 h-5.5 text-orange-400" />
                                 </div>
                               )}
                               <div className="min-w-0">
-                                <h4 className="text-xs font-bold text-slate-900 leading-snug truncate">
+                                <h4 className="text-sm font-black text-slate-900 leading-snug truncate">
                                   {qty}x {name}
                                 </h4>
                                 {desc && (
-                                  <p className="text-[11px] text-slate-400 font-medium truncate">
+                                  <p className="text-xs text-slate-400 font-medium truncate mt-0.5">
                                     {desc}
                                   </p>
                                 )}
                               </div>
                             </div>
 
-                            <div className="text-xs font-bold text-slate-900 shrink-0">
+                            <div className="text-sm font-black text-slate-900 shrink-0">
                               ${formatMoney(price)}
                             </div>
                           </div>
@@ -1195,20 +1185,20 @@ export default function AdminStockAndFinancePage() {
 
                     {/* 5. WhatsApp Cliente Row */}
                     {order.customerPhone && (
-                      <div className="bg-slate-50/70 border border-slate-100 rounded-xl p-2 px-2.5 flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-[#00c950] text-white flex items-center justify-center shrink-0 shadow-2xs">
-                            <MessageCircle className="w-3.5 h-3.5 fill-white text-white" />
+                      <div className="my-2 bg-slate-50/70 border border-slate-100 rounded-2xl p-2.5 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-[#00c950] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                            <img src="/assets/images/wsp_icon.png" alt="wsp icon" className="w-5 h-5 object-contain" />
                           </div>
                           <div>
-                            <div className="text-[10px] font-medium text-slate-400 leading-none">
+                            <div className="text-[11px] font-medium text-slate-400 leading-none">
                               WhatsApp
                             </div>
                             <a
                               href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-xs font-bold text-slate-900 hover:text-emerald-700 transition-colors block mt-0.5 leading-none"
+                              className="text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors block mt-0.5 leading-none"
                             >
                               {order.customerPhone}
                             </a>
@@ -1225,12 +1215,13 @@ export default function AdminStockAndFinancePage() {
                             }
                           }}
                           title="Copiar número"
-                          className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer"
+                          className="p-2 border border-blue-400 bg-white hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer"
+                          style={{ borderRadius: '1.0rem' }}
                         >
                           {copiedOrderId === order.id ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <Check className="w-4 h-4 text-emerald-600" />
                           ) : (
-                            <Copy className="w-3.5 h-3.5" />
+                            <Copy className="w-4 h-4" />
                           )}
                         </button>
                       </div>
@@ -1238,20 +1229,20 @@ export default function AdminStockAndFinancePage() {
 
                     {/* 6. Botonera de Acciones (Confirmar Entrega y Cancelar) */}
                     {!isApproved && !isRejected ? (
-                      <div className="space-y-1.5 pt-0.5">
+                      <div className="space-y-2 pt-1">
                         <button
                           type="button"
                           disabled={updatingOrderId === order.id}
                           onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
-                          className="w-full py-2.5 px-4 text-xs font-bold text-white bg-[#007a4d] hover:bg-[#006640] active:scale-[0.99] rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          className="w-full py-3 px-5 text-sm font-black text-white bg-[#007a4d] hover:bg-[#006640] active:scale-[0.99] rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                         >
-                          <Check className="w-4 h-4 stroke-[2.5]" />
+                          <Check className="w-4.5 h-4.5 stroke-[3]" />
                           <span>
                             {updatingOrderId === order.id
                               ? "Guardando..."
                               : isPickup
-                              ? "Confirmar Entrega"
-                              : "Confirmar Entrega"}
+                                ? "Confirmar Entrega"
+                                : "Confirmar Entrega"}
                           </span>
                         </button>
 
@@ -1263,18 +1254,18 @@ export default function AdminStockAndFinancePage() {
                               handleUpdateOrderStatus(order.id, "rechazado");
                             }
                           }}
-                          className="w-full text-center py-1 text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center justify-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                          className="w-full text-center py-1.5 text-xs font-bold text-red-600 hover:text-red-700 flex items-center justify-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
                         >
-                          <Trash2 className="w-3 h-3 text-red-600" />
+                          <Trash2 className="w-3.5 h-3.5 text-red-600" />
                           <span>Cancelar</span>
                         </button>
                       </div>
                     ) : isApproved ? (
-                      <div className="w-full text-center py-2 text-xs font-bold text-emerald-700 bg-emerald-50 rounded-xl border border-emerald-200/60">
+                      <div className="w-full text-center py-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 rounded-2xl border border-emerald-200/60">
                         Pedido Entregado y Registrado
                       </div>
                     ) : (
-                      <div className="w-full text-center py-2 text-xs font-bold text-rose-600 bg-rose-50 rounded-xl border border-rose-200/60">
+                      <div className="w-full text-center py-2.5 text-xs font-bold text-rose-600 bg-rose-50 rounded-2xl border border-rose-200/60">
                         Pedido Cancelado (Insumos reestablecidos)
                       </div>
                     )}
@@ -1557,11 +1548,10 @@ export default function AdminStockAndFinancePage() {
                   key={id}
                   type="button"
                   onClick={() => setFinancePeriod(id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    financePeriod === id
-                      ? "bg-orange-500 text-white shadow-xs"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-white/60"
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${financePeriod === id
+                    ? "bg-orange-500 text-white shadow-xs"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/60"
+                    }`}
                 >
                   {label}
                 </button>
@@ -1577,19 +1567,18 @@ export default function AdminStockAndFinancePage() {
                 {financePeriod === "today"
                   ? "Hoy"
                   : financePeriod === "week"
-                  ? "Esta Semana"
-                  : financePeriod === "month"
-                  ? "Este Mes"
-                  : "Todo"}
+                    ? "Esta Semana"
+                    : financePeriod === "month"
+                      ? "Este Mes"
+                      : "Todo"}
                 )
               </span>
 
               <span
-                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
-                  netBalance >= 0
-                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
-                    : "bg-rose-500/15 text-rose-400 border-rose-500/30"
-                }`}
+                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${netBalance >= 0
+                  ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+                  : "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                  }`}
               >
                 {netBalance >= 0 ? (
                   <>
@@ -1789,8 +1778,8 @@ export default function AdminStockAndFinancePage() {
                               {s.paymentMethod === "mercadopago"
                                 ? "Mercado Pago"
                                 : s.paymentMethod === "efectivo"
-                                ? "Efectivo"
-                                : s.paymentMethod || "Mostrador"}
+                                  ? "Efectivo"
+                                  : s.paymentMethod || "Mostrador"}
                             </span>
                             <span>•</span>
                             <span>{s.date}</span>
