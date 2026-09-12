@@ -889,7 +889,7 @@ export default function AdminStockAndFinancePage() {
            ══════════════════════════════════════════════════════════════════ */}
       {activeTab === "orders" && (
         <div style={{ paddingTop: 14 }}>
-          {/* Order Filters */}
+          {/* Order Filters (Sin emojis) */}
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 12 }}>
             <button
               type="button"
@@ -904,7 +904,7 @@ export default function AdminStockAndFinancePage() {
               onClick={() => setOrderFilter("pendiente")}
               style={orderFilter === "pendiente" ? { background: "#FEF3C7", borderColor: "#F59E0B", color: "#92400E" } : undefined}
             >
-              💵 Efectivo Pendiente ({orders.filter((o) => o.paymentMethod === "efectivo" && o.status === "pendiente").length})
+              Efectivo Pendiente ({orders.filter((o) => o.paymentMethod === "efectivo" && o.status === "pendiente").length})
             </button>
             <button
               type="button"
@@ -912,7 +912,7 @@ export default function AdminStockAndFinancePage() {
               onClick={() => setOrderFilter("aprobado")}
               style={orderFilter === "aprobado" ? { background: "#D1FAE5", borderColor: "#10B981", color: "#065F46" } : undefined}
             >
-              🟢 Cobrados / Pagados ({orders.filter((o) => o.status === "aprobado").length})
+              Cobrados / Pagados ({orders.filter((o) => o.status === "aprobado").length})
             </button>
             <button
               type="button"
@@ -920,7 +920,7 @@ export default function AdminStockAndFinancePage() {
               onClick={() => setOrderFilter("rechazado")}
               style={orderFilter === "rechazado" ? { background: "#FEE2E2", borderColor: "#EF4444", color: "#991B1B" } : undefined}
             >
-              🔴 Cancelados ({orders.filter((o) => o.status === "rechazado").length})
+              Cancelados ({orders.filter((o) => o.status === "rechazado").length})
             </button>
           </div>
 
@@ -951,170 +951,106 @@ export default function AdminStockAndFinancePage() {
                 return (
                   <div
                     key={order.id}
-                    className={`rounded-2xl border transition-all overflow-hidden ${
-                      isApproved
-                        ? "bg-white border-gray-200/90 shadow-2xs opacity-95"
-                        : isRejected
-                        ? "bg-white border-rose-200/80 shadow-2xs opacity-80"
-                        : "bg-white border-orange-200/90 shadow-sm"
-                    }`}
+                    className="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden transition-all"
                   >
-                    {/* 1. Header con badges de alto contraste y precio destacado */}
-                    <div className="p-4 pb-3 border-b border-gray-100 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-sm font-black text-gray-900 tracking-wide font-mono mr-1">
-                          #{shortId}
-                        </span>
+                    {/* 1. Header: Cliente y Precio como protagonistas */}
+                    <div className="p-3.5 bg-slate-50/80 border-b border-slate-100 flex items-start justify-between gap-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-base font-extrabold text-slate-900 leading-tight">
+                            {order.customerName}
+                          </h3>
+                          <span className="font-mono text-xs font-semibold text-slate-500 bg-slate-200/70 px-1.5 py-0.5 rounded-md">
+                            #{shortId}
+                          </span>
+                          {isPickup && order.transferRef && (
+                            <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded-md">
+                              Retiro: #{order.transferRef}
+                            </span>
+                          )}
+                        </div>
 
-                        {/* Badge Medio de Pago / Modalidad */}
-                        {!isPickup ? (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-gray-100 text-gray-700 border border-gray-200/60">
-                            {isCash ? "💵 Efectivo" : "💳 Mercado Pago"}
+                        {/* Modalidad y Hora */}
+                        <div className="flex items-center gap-2 text-xs text-slate-600 flex-wrap">
+                          {isPickup ? (
+                            <span className="inline-flex items-center gap-1 font-semibold text-amber-800 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-full text-[11px]">
+                              <Store className="w-3 h-3 text-amber-600" />
+                              Retiro en local
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 font-semibold text-sky-800 bg-sky-50 border border-sky-200/60 px-2 py-0.5 rounded-full text-[11px]">
+                              <MapPin className="w-3 h-3 text-sky-600" />
+                              {order.customerAddress || "Sin dirección"}
+                            </span>
+                          )}
+                          <span>•</span>
+                          <span className="text-slate-400 font-medium">
+                            {order.date} {timeString ? `• ${timeString}` : ""}
                           </span>
-                        ) : (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200/70 inline-flex items-center gap-1">
-                            <Store className="w-3 h-3 text-amber-700" />
-                            <span>Retiro en local</span>
-                          </span>
-                        )}
-
-                        {/* Badge Estado */}
-                        {isApproved ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                            {isPickup ? "Entregado en local" : isMP ? "Pago Acreditado" : "Cobrado & Entregado"}
-                          </span>
-                        ) : isPending ? (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200/70">
-                            {isPickup ? "Pendiente de retiro" : "Pendiente de cobro"}
-                          </span>
-                        ) : (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200/70">
-                            Cancelado
-                          </span>
-                        )}
+                        </div>
                       </div>
 
-                      {/* Precio y Hora */}
+                      {/* Precio Total y Método */}
                       <div className="text-right shrink-0">
-                        <span className="text-lg font-black text-gray-900 leading-none">
+                        <span className="text-lg font-black text-slate-900 leading-none">
                           ${formatMoney(order.total)}
                         </span>
-                        <span className="block text-[11px] text-gray-400 font-semibold mt-0.5">
-                          {order.date} {timeString ? `• ${timeString}` : ""}
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 mt-1">
+                          {isCash ? "Efectivo" : "Mercado Pago"}
                         </span>
                       </div>
                     </div>
 
-                    {/* 2. Caja de información del cliente */}
-                    <div className="p-4 py-3 bg-gray-50/70 space-y-1.5 text-xs">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="text-gray-600">
-                          Cliente: <strong className="text-gray-900 font-bold">{order.customerName}</strong>
-                        </div>
-
-                        {/* WhatsApp Directo y Limpio */}
-                        {order.customerPhone && (
+                    {/* 2. Cuerpo: CTA de WhatsApp directo + Lista de Productos compacta */}
+                    <div className="p-3.5 space-y-3">
+                      {/* Botón CTA de WhatsApp Real */}
+                      {order.customerPhone && (
+                        <div className="flex items-center justify-between bg-slate-50/70 p-2 px-2.5 rounded-xl border border-slate-100">
+                          <span className="text-xs text-slate-500 font-medium">WhatsApp Cliente:</span>
                           <a
                             href={`https://wa.me/549${order.customerPhone.replace(/\D/g, "")}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold rounded-lg transition-colors shadow-2xs cursor-pointer"
                           >
-                            <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                            <MessageCircle className="w-3.5 h-3.5 fill-white" />
                             <span>{order.customerPhone}</span>
                           </a>
-                        )}
-                      </div>
+                        </div>
+                      )}
 
-                      <div className="flex items-center justify-between text-gray-700 pt-0.5 flex-wrap gap-1">
-                        {isPickup ? (
-                          <div className="flex items-center gap-1.5 text-gray-800 font-semibold">
-                            <Store className="w-3.5 h-3.5 text-orange-500" />
-                            <span>Modalidad: Retiro en el local</span>
-                            {order.transferRef && (
-                              <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold text-xs">
-                                Código: #{order.transferRef}
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1.5 text-gray-800 font-semibold">
-                            <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                            <span>Dirección: {order.customerAddress || "Sin dirección"}</span>
-                          </div>
-                        )}
-
-                        {!isPickup && !isApproved && (
-                          <button
-                            type="button"
-                            onClick={() => handleCopyOrder(order)}
-                            className="text-[11px] font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1 cursor-pointer"
-                          >
-                            {copiedOrderId === order.id ? (
-                              <>
-                                <Check className="w-3 h-3 text-emerald-600" />
-                                <span className="text-emerald-700 font-bold">¡Copiado!</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3 h-3" />
-                                <span>Copiar datos</span>
-                              </>
-                            )}
-                          </button>
-                        )}
+                      {/* Lista de Productos sin espacios vacíos exagerados */}
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                          Productos
+                        </span>
+                        <div className="space-y-1 text-xs text-slate-700">
+                          {itemsList.map((item: any, idx: number) => {
+                            const qty = item.quantity || item.qty || 1;
+                            const name = item.name || item.title || "Producto";
+                            const price = item.price ? Number(item.price) * Number(qty) : 0;
+                            return (
+                              <div key={idx} className="flex justify-between items-center py-0.5">
+                                <span>
+                                  <strong className="font-bold text-slate-900">{qty}x</strong> {name}
+                                  {item.comment && (
+                                    <span className="text-slate-400 italic ml-1">({item.comment})</span>
+                                  )}
+                                </span>
+                                <span className="font-semibold text-slate-600">
+                                  ${formatMoney(price)}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
 
-                    {/* 3. Lista de Productos estructurada */}
-                    <div className="p-4 py-3 border-t border-gray-100">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
-                        Productos del pedido
-                      </div>
-                      <div className="space-y-1 text-xs">
-                        {itemsList.map((item: any, i: number) => {
-                          const qty = item.quantity || item.qty || 1;
-                          const name = item.name || item.title || "Producto";
-                          const price = item.price ? Number(item.price) * Number(qty) : 0;
-                          return (
-                            <div key={i} className="flex justify-between items-center text-gray-800">
-                              <span>
-                                <strong className="text-gray-900 font-bold">{qty}x</strong> {name}
-                                {item.comment && (
-                                  <span className="text-gray-400 italic ml-1">({item.comment})</span>
-                                )}
-                              </span>
-                              <span className="font-semibold text-gray-700">
-                                ${formatMoney(price)}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* 4. Footer: Condicional según Estado Activo vs Completado */}
-                    <div className="p-3 bg-gray-50/80 border-t border-gray-100">
-                      {isApproved ? (
-                        /* Estado Completado: Banner limpio de confirmación */
-                        <div className="flex items-center justify-between py-1 px-1 text-xs">
-                          <span className="inline-flex items-center gap-1.5 font-bold text-emerald-800">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                            <span>Venta confirmada y registrada en Finanzas</span>
-                          </span>
-                          <span className="text-[11px] font-semibold text-gray-400">
-                            Archivado
-                          </span>
-                        </div>
-                      ) : isRejected ? (
-                        <div className="flex items-center gap-1.5 text-rose-600 text-xs font-semibold py-1 px-1">
-                          <X className="w-4 h-4 text-rose-500 shrink-0" />
-                          <span>Pedido cancelado (Insumos reestablecidos)</span>
-                        </div>
-                      ) : (
-                        /* Estado Activo: Botones de Acción Inmediata */
-                        <div className="flex items-center gap-2">
+                    {/* 3. Footer: Botones Redondeados (rounded-xl) con Jerarquía Real */}
+                    <div className="p-3 bg-slate-50/50 border-t border-slate-100 flex items-center gap-2">
+                      {!isApproved && !isRejected ? (
+                        <>
                           <button
                             type="button"
                             disabled={updatingOrderId === order.id}
@@ -1123,17 +1059,18 @@ export default function AdminStockAndFinancePage() {
                                 handleUpdateOrderStatus(order.id, "rechazado");
                               }
                             }}
-                            className="py-2.5 px-3.5 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200/80 text-xs font-bold rounded-xl transition-all shadow-2xs cursor-pointer disabled:opacity-50"
+                            className="py-2.5 px-3.5 text-xs font-bold text-rose-600 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl transition-all shadow-2xs cursor-pointer disabled:opacity-50"
                           >
                             Cancelar
                           </button>
+
                           <button
                             type="button"
                             disabled={updatingOrderId === order.id}
                             onClick={() => handleUpdateOrderStatus(order.id, "aprobado")}
-                            className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            className="flex-1 py-2.5 px-4 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                           >
-                            <CheckCircle2 className="w-4 h-4 stroke-[2.2]" />
+                            <Check className="w-4 h-4 stroke-[2.5]" />
                             <span>
                               {updatingOrderId === order.id
                                 ? "Guardando..."
@@ -1142,6 +1079,14 @@ export default function AdminStockAndFinancePage() {
                                 : "Confirmar Cobro y Entrega"}
                             </span>
                           </button>
+                        </>
+                      ) : isApproved ? (
+                        <div className="w-full text-center py-1 text-xs font-bold text-emerald-700">
+                          Pedido Entregado y Registrado
+                        </div>
+                      ) : (
+                        <div className="w-full text-center py-1 text-xs font-bold text-rose-600">
+                          Pedido Cancelado (Insumos reestablecidos)
                         </div>
                       )}
                     </div>
