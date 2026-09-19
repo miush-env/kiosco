@@ -181,7 +181,7 @@ export async function initNeonDatabase(): Promise<boolean> {
           'Paderewski 3666',
           '+5491172570867',
           '$',
-          0,
+          1800,
           false
         ) ON CONFLICT (id) DO NOTHING;
       `;

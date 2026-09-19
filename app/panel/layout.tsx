@@ -1,10 +1,10 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { UserButton, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { Eye } from "lucide-react";
 import { getRole } from "@/lib/roles";
 import ClaimRoleButton from "./ClaimRoleButton";
 import PanelNavTabs from "./PanelNavTabs";
+import PanelHeaderWithDrawer from "./PanelHeaderWithDrawer";
 
 export default async function PanelLayout({
   children,
@@ -156,41 +156,12 @@ export default async function PanelLayout({
     );
   }
 
-  // 3. Authorized (Owner or Admin) — 100% Mobile Optimized Topbar matching public app
+  // 3. Authorized (Owner or Admin) — 100% Mobile Optimized Topbar with Drawer and Back Button
   return (
     <div className="b1-app-wrapper">
       <link rel="stylesheet" href="/assets/css/admin-panel.css" />
-      {/* ── TOPBAR IDENTICAL TO HOME ────────────────────────────────────────── */}
-      <header className="b1-topbar">
-        <Link href="/" className="b1-topbar-brand">
-          <img
-            src="/assets/images/logo.png"
-            alt="Alakary Logo"
-            className="b1-topbar-logo"
-          />
-          <div className="b1-topbar-info">
-            <h1>Alakary</h1>
-            <div className="b1-status-pill">
-              <span className="b1-status-dot"></span>
-              <span>{role === "owner" ? "Panel Dueño" : "Panel Admin"}</span>
-            </div>
-          </div>
-        </Link>
-
-        <div className="b1-topbar-actions">
-          {/* Quick link to view public menu */}
-          <Link
-            href="/"
-            className="b1-icon-btn"
-            title="Ver carta de clientes"
-          >
-            <Eye style={{ width: 18, height: 18 }} />
-          </Link>
-
-          {/* User Profile */}
-          <UserButton />
-        </div>
-      </header>
+      {/* ── TOPBAR WITH HAMBURGER DRAWER & FLOATING BACK BUTTON ───────────── */}
+      <PanelHeaderWithDrawer role={role} />
 
       {/* ── SEGMENTED TOP NAVIGATION PILLS (MATCHING HOME PILLS) ───────────── */}
       <div style={{ padding: "12px 18px 0", background: "var(--b1-color-surface)", borderBottom: "1px solid var(--b1-color-border-light)" }}>

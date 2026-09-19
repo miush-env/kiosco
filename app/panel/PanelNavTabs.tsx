@@ -118,10 +118,10 @@ export default function PanelNavTabs({ isOwner = true }: PanelNavTabsProps) {
               justifyContent: "center",
               gap: "6px",
               textDecoration: "none",
-              color: isActive ? "var(--b1-color-primary, #EA580C)" : "var(--b1-color-text-muted, #64748B)",
+              color: isActive ? "var(--b1-color-primary, #E11D48)" : "var(--b1-color-text-muted, #64748B)",
               background: isActive ? "var(--b1-color-surface, #FFFFFF)" : "transparent",
-              boxShadow: isActive ? "0 2px 6px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0,0,0,0.04)" : "none",
-              border: isActive ? "1px solid var(--b1-color-border-light, rgba(0,0,0,0.05))" : "1px solid transparent",
+              boxShadow: isActive ? "0 2px 8px rgba(225, 29, 72, 0.12), 0 1px 3px rgba(0,0,0,0.04)" : "none",
+              border: isActive ? "1px solid var(--b1-color-honey-border, rgba(245, 158, 11, 0.2))" : "1px solid transparent",
               transition: "all 0.16s ease",
               cursor: "pointer",
             }}
@@ -130,7 +130,7 @@ export default function PanelNavTabs({ isOwner = true }: PanelNavTabsProps) {
               style={{
                 width: 16,
                 height: 16,
-                color: isActive ? "var(--b1-color-primary, #EA580C)" : "currentColor",
+                color: isActive ? "var(--b1-color-primary, #E11D48)" : "currentColor",
                 flexShrink: 0,
               }}
             />

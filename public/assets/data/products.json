@@ -5,15 +5,10 @@
     "address": "Virgilio 3508",
     "whatsapp": "+5491171449431",
     "currencySymbol": "$",
-    "deliveryPrice": 0,
-    "deliveryFree": true
+    "deliveryPrice": 1000,
+    "deliveryFree": false
   },
   "categories": [
-    {
-      "id": "all",
-      "name": "Todos",
-      "icon": "🔥"
-    },
     {
       "id": "burgers",
       "name": "Burgers",
@@ -31,7 +26,7 @@
     },
     {
       "id": "pizzas-especiales",
-      "name": "Especiales",
+      "name": "Pancho Pizza",
       "icon": "✨"
     },
     {
@@ -645,7 +640,7 @@
       "badge": "Mega Ahorro",
       "rating": "4.9",
       "prepTime": "30 min",
-      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&auto=format&fit=crop&q=80"
+      "image": "/assets/images/products/pizza-muzzarella.jpg"
     },
     {
       "id": 20589044,
@@ -676,7 +671,7 @@
       "badge": "Más Elegido",
       "rating": "4.9",
       "prepTime": "30 min",
-      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80"
+      "image": "/assets/images/products/pizza-muzzarella.jpg"
     },
     {
       "id": 20589042,

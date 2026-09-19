@@ -81,7 +81,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#FF6B00",
+  themeColor: "#DF381A",
 };
 
 export default function RootLayout({
@@ -90,7 +90,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider localization={esES}>
+    <ClerkProvider
+      localization={esES}
+      appearance={{
+        elements: {
+          organizationSwitcherTrigger: { display: "none" },
+          organizationList: { display: "none" },
+          organizationProfile: { display: "none" },
+          userButtonPopoverActionButton__organization: { display: "none" },
+        },
+      }}
+    >
       <html
         lang="es"
         className={`${geistSans.variable} ${geistMono.variable}`}
@@ -108,6 +118,7 @@ export default function RootLayout({
           <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
           <link rel="stylesheet" href="/assets/css/theme-variables.css" />
           <link rel="stylesheet" href="/assets/css/modern-app.css" />
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
           {/* Instant Theme Pre-loader */}
           <Script
@@ -120,8 +131,14 @@ export default function RootLayout({
                     var saved = localStorage.getItem('kiosco_theme');
                     var theme = (saved === 'dark' || saved === 'light') ? saved : 'light';
                     document.documentElement.setAttribute('data-theme', theme);
+                    if (theme === 'dark') {
+                      document.documentElement.classList.add('dark');
+                    } else {
+                      document.documentElement.classList.remove('dark');
+                    }
                   } catch (e) {
                     document.documentElement.setAttribute('data-theme', 'light');
+                    document.documentElement.classList.remove('dark');
                   }
                 })();
               `,

@@ -291,9 +291,20 @@ function renderCategories() {
 
   STORE_DATA.categories.forEach(function (cat) {
     var isActive = cat.id === ACTIVE_CATEGORY ? "active" : "";
+    var lower = ((cat.id || '') + ' ' + (cat.name || '')).toLowerCase();
+    var customImg = null;
+    if (lower.indexOf('pancho') !== -1 || lower.indexOf('especial') !== -1) customImg = '/assets/images/pancho.png';
+    else if (lower.indexOf('empanada') !== -1) customImg = '/assets/images/empanada.png';
+    else if (lower.indexOf('sandwich') !== -1 || lower.indexOf('sanguche') !== -1 || lower.indexOf('burger') !== -1 || lower.indexOf('hamburguesa') !== -1) customImg = '/assets/images/sandwich.png';
+    else if (lower.indexOf('pizza') !== -1 || lower.indexOf('calzone') !== -1) customImg = '/assets/images/porcion-de-pizza.png';
+
+    var iconHtml = customImg
+      ? '<img src="' + customImg + '" alt="' + cat.name + '" width="24" height="24" style="width:24px;height:24px;object-fit:contain;image-rendering:pixelated;display:inline-block;vertical-align:middle;flex-shrink:0;" />'
+      : '<span class="b1-category-icon">' + (cat.icon || "🍽️") + '</span>';
+
     var html =
       '<button class="b1-category-pill ' + isActive + '" data-category="' + cat.id + '">' +
-        '<span class="b1-category-icon">' + (cat.icon || "🍽️") + '</span>' +
+        iconHtml +
         '<span>' + cat.name + '</span>' +
       '</button>';
     $container.append(html);

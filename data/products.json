@@ -5,15 +5,10 @@
     "address": "Paderewski 3666",
     "whatsapp": "+5491172570867",
     "currencySymbol": "$",
-    "deliveryPrice": 0,
-    "deliveryFree": true
+    "deliveryPrice": 1000,
+    "deliveryFree": false
   },
   "categories": [
-    {
-      "id": "all",
-      "name": "Todos",
-      "icon": "🔥"
-    },
     {
       "id": "pizzas",
       "name": "Pizzas",
@@ -30,5 +25,28 @@
       "icon": "🥤"
     }
   ],
-  "products": []
+  "products": [
+    {
+      "id": 1789840402000,
+      "categoryId": "empanadas",
+      "name": "Empanadas de cerdo",
+      "description": "Empanadas caseras de carne de cerdo al horno con masa artesanal. Venta por media docena (6u) o docena (12u) en promo.",
+      "ingredients": [
+        "Papas",
+        "Condimientos",
+        "Tapa de empanada",
+        "Carne de cerdo",
+        "Huevo",
+        "Cebolla de verdeo",
+        "Cebolla",
+        "Aceite",
+        "Sal"
+      ],
+      "price": 10000,
+      "badge": "Promo Docena",
+      "rating": "5.0",
+      "prepTime": "20-25 min",
+      "image": "/assets/images/products/empanadas-de-cerdo.jpg"
+    }
+  ]
 }

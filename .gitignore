@@ -37,3 +37,5 @@ yarn-error.log*
 .vercel
 deploy-to-vercel.mjs
 init-db.js
+*.tsbuildinfo
+scratch*

@@ -47,10 +47,18 @@ export async function POST(req: Request) {
     }
 
     const orderId = generateId("ord");
-    const cartTotal = (order.items || []).reduce(
+    const isEnvio = order.deliveryType !== "retiro";
+    const shippingFee = isEnvio
+      ? typeof order.deliveryCost === "number"
+        ? order.deliveryCost
+        : 1800
+      : 0;
+
+    const itemsTotal = (order.items || []).reduce(
       (sum: number, i: any) => sum + parseFloat(i.price || 0) * parseInt(i.quantity || 1, 10),
       0
     );
+    const finalTotal = itemsTotal + shippingFee;
 
     // Format items for Mercado Pago with product picture URL
     const mpItems = (order.items || []).map((item: any) => {
@@ -74,17 +82,21 @@ export async function POST(req: Request) {
       };
     });
 
-    const preferencePayload = {
+    // If delivery to address, add shipping fee line item
+    if (shippingFee > 0) {
+      mpItems.push({
+        id: "envio-domicilio",
+        title: "Envío a Domicilio",
+        description: "Servicio de entrega a domicilio",
+        picture_url: `${baseUrl}/assets/images/delivery.png`,
+        quantity: 1,
+        unit_price: shippingFee,
+        currency_id: "ARS",
+      });
+    }
+
+    const preferencePayload: any = {
       items: mpItems,
-      payer: {
-        name: (order.customerName || "Cliente").slice(0, 30),
-        phone: {
-          number: String(order.customerPhone || "").replace(/[^\d]/g, "").slice(0, 15) || "1172570867",
-        },
-        address: {
-          street_name: (order.customerAddress || "Paderewski 3666").slice(0, 80),
-        },
-      },
       back_urls: {
         success: `${baseUrl}/?payment=success&orderId=${orderId}`,
         pending: `${baseUrl}/?payment=pending&orderId=${orderId}`,
@@ -96,6 +108,22 @@ export async function POST(req: Request) {
       external_reference: orderId,
     };
 
+    if (order.customerName && String(order.customerName).trim()) {
+      preferencePayload.payer = {
+        name: String(order.customerName).trim().slice(0, 30),
+      };
+      if (order.customerPhone && String(order.customerPhone).trim()) {
+        preferencePayload.payer.phone = {
+          number: String(order.customerPhone).replace(/[^\d]/g, "").slice(0, 15),
+        };
+      }
+      if (order.customerAddress && String(order.customerAddress).trim()) {
+        preferencePayload.payer.address = {
+          street_name: String(order.customerAddress).trim().slice(0, 80),
+        };
+      }
+    }
+
     const mpResponse = await createMercadoPagoPreference(preferencePayload, cleanToken);
 
     // 1. Record order in orders table as 'iniciado' (pending payment confirmation)
@@ -106,7 +134,7 @@ export async function POST(req: Request) {
       customerName: String(order.customerName || "Cliente Online").trim(),
       customerPhone: String(order.customerPhone || "").trim(),
       customerAddress: order.customerAddress ? String(order.customerAddress).trim() : undefined,
-      deliveryType: order.deliveryType === "retiro" ? "retiro" : "envio",
+      deliveryType: isEnvio ? "envio" : "retiro",
       items: (order.items || []).map((i: any) => ({
         id: i.id,
         name: i.name,
@@ -115,7 +143,7 @@ export async function POST(req: Request) {
         comment: i.comment || undefined,
         linkedInventoryId: i.linkedInventoryId || undefined,
       })),
-      total: cartTotal,
+      total: finalTotal,
       paymentMethod: "mercadopago",
       status: "iniciado",
       createdAt: new Date().toISOString(),

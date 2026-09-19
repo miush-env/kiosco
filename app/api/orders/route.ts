@@ -50,7 +50,6 @@ export async function POST(req: Request) {
     }
 
     const orderId = generateId("ord");
-    const isApproved = paymentMethod === "mercadopago";
     const newOrder = {
       id: orderId,
       date: todayISO(),
@@ -69,27 +68,11 @@ export async function POST(req: Request) {
       total: Number(total || 0),
       paymentMethod: paymentMethod || "efectivo",
       transferRef: transferRef ? String(transferRef).trim() : undefined,
-      status: (isApproved ? "aprobado" : "pendiente") as "pendiente" | "aprobado",
+      status: "pendiente" as const,
     };
 
     await createOrderAsync(newOrder);
     await deductIngredientsForOrder(items);
-
-    if (isApproved && newOrder.total > 0) {
-      await createSaleAsync({
-        id: generateId("sale"),
-        date: todayISO(),
-        items: newOrder.items.map((i: any) => ({
-          name: i.name,
-          quantity: i.quantity,
-          price: i.price,
-        })),
-        total: newOrder.total,
-        paymentMethod: newOrder.paymentMethod,
-        description: `Pedido #${newOrder.id.slice(-6).toUpperCase()} - ${newOrder.customerName} (Mercado Pago)`,
-        source: "pedido_online",
-      });
-    }
 
     return NextResponse.json({ success: true, orderId, order: newOrder });
   } catch (err: any) {

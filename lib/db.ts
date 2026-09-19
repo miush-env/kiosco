@@ -1640,6 +1640,36 @@ export async function updateOrderStatusAsync(
   if (sql) {
     try {
       await initNeonDatabase();
+
+      // Comprobar estado actual para evitar ejecuciones duplicadas
+      const existing = await sql`SELECT * FROM orders WHERE id = ${orderId} LIMIT 1;`;
+      if (existing.length === 0) {
+        return { success: false, message: "Pedido no encontrado" };
+      }
+
+      const prevOrder = existing[0];
+      const prevStatus = prevOrder.status;
+
+      // Si el estado ya es el mismo, retornar la orden sin volver a registrar venta ni descontar insumos
+      if (prevStatus === newStatus) {
+        const order: Order = {
+          id: prevOrder.id,
+          date: prevOrder.date,
+          customerName: prevOrder.customer_name,
+          customerPhone: prevOrder.customer_phone,
+          customerAddress: prevOrder.customer_address || undefined,
+          deliveryType: prevOrder.delivery_type || "envio",
+          items: parseArrayField(prevOrder.items),
+          total: Number(prevOrder.total),
+          paymentMethod: prevOrder.payment_method,
+          transferRef: prevOrder.transfer_ref || undefined,
+          receiptImage: prevOrder.receipt_image || undefined,
+          status: prevOrder.status,
+          createdAt: prevOrder.created_at ? new Date(prevOrder.created_at).toISOString() : undefined,
+        };
+        return { success: true, order };
+      }
+
       const updated = await sql`
         UPDATE orders
         SET status = ${newStatus}
@@ -1664,23 +1694,33 @@ export async function updateOrderStatusAsync(
           createdAt: r.created_at ? new Date(r.created_at).toISOString() : undefined,
         };
 
-        // If newly approved, register in sales
+        // Si fue aprobado, registrar en ventas ÚNICAMENTE si no existe una venta previa para esta orden
         if (newStatus === "aprobado") {
-          await createSaleAsync({
-            id: generateId("sale"),
-            date: todayISO(),
-            items: order.items.map((i: any) => ({
-              name: i.name,
-              quantity: i.quantity,
-              price: i.price,
-            })),
-            total: order.total,
-            paymentMethod: order.paymentMethod,
-            description: `Pedido ${order.id} - ${order.customerName} (${order.transferRef ? "Ref: " + order.transferRef : "Aprobado"})`,
-            source: "pedido_online",
-          });
+          const existingSale = await sql`
+            SELECT id FROM sales
+            WHERE description LIKE ${`%${order.id}%`}
+            LIMIT 1;
+          `;
+          if (existingSale.length === 0) {
+            await createSaleAsync({
+              id: generateId("sale"),
+              date: todayISO(),
+              items: order.items.map((i: any) => ({
+                name: i.name,
+                quantity: i.quantity,
+                price: i.price,
+              })),
+              total: order.total,
+              paymentMethod: order.paymentMethod,
+              description: `Pedido ${order.id} - ${order.customerName} (${order.transferRef ? "Ref: " + order.transferRef : "Aprobado"})`,
+              source: "pedido_online",
+            });
+            console.log(`[Sales Registered] Venta creada para pedido ${order.id}`);
+          } else {
+            console.log(`[Sales Deduplication] Venta para pedido ${order.id} ya existía (${existingSale[0].id}). Omitiendo duplicado.`);
+          }
         } else if (newStatus === "rechazado") {
-          // If rejected/canceled, restore stock back to inventory
+          // Si fue cancelado/rechazado, reestablecer stock
           await restoreIngredientsForOrder(order.items);
         }
 
@@ -1695,22 +1735,29 @@ export async function updateOrderStatusAsync(
   const orders = loadOrders();
   const idx = orders.findIndex((o) => o.id === orderId);
   if (idx !== -1) {
+    if (orders[idx].status === newStatus) {
+      return { success: true, order: orders[idx] };
+    }
     orders[idx].status = newStatus;
     saveOrders(orders);
     if (newStatus === "aprobado") {
-      await createSaleAsync({
-        id: generateId("sale"),
-        date: todayISO(),
-        items: orders[idx].items.map((i: any) => ({
-          name: i.name,
-          quantity: i.quantity,
-          price: i.price,
-        })),
-        total: orders[idx].total,
-        paymentMethod: orders[idx].paymentMethod,
-        description: `Pedido ${orders[idx].id} - ${orders[idx].customerName}`,
-        source: "pedido_online",
-      });
+      const sales = loadSales();
+      const hasSale = sales.some((s) => s.description && s.description.includes(orderId));
+      if (!hasSale) {
+        await createSaleAsync({
+          id: generateId("sale"),
+          date: todayISO(),
+          items: orders[idx].items.map((i: any) => ({
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+          total: orders[idx].total,
+          paymentMethod: orders[idx].paymentMethod,
+          description: `Pedido ${orders[idx].id} - ${orders[idx].customerName}`,
+          source: "pedido_online",
+        });
+      }
     } else if (newStatus === "rechazado") {
       await restoreIngredientsForOrder(orders[idx].items);
     }

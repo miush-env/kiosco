@@ -9,31 +9,32 @@
  */
 
 :root {
-  /* ── 1. BRAND COLORS (VIBRANT ORANGE PALETTE) ────────────────────────────── */
-  --b1-color-primary: #FF6B00;             /* Main brand orange */
-  --b1-color-primary-hover: #E55F00;       /* Darker orange on tap/hover */
-  --b1-color-primary-dark: #C94E00;        /* Deep shade for active borders */
-  --b1-color-primary-light: #FFF3EB;      /* Ultra-light orange for active badge/pill backgrounds */
-  --b1-color-primary-glow: rgba(255, 107, 0, 0.28); /* Focus & button glow shadow */
-  --b1-color-primary-gradient: linear-gradient(135deg, #FF7E1D 0%, #FF5500 100%);
-  --b1-color-hero-gradient: linear-gradient(135deg, #FF7E1D 0%, #FF3D00 100%);
-  --b1-color-accent: #FFA928;              /* Warm accent gold / star rating */
+  /* ── 1. BRAND COLORS (ELECTRIC CORAL & GASTRONOMIC APPETITE PALETTE) ──── */
+  --b1-color-primary: #FF5030;             /* Vibrant Electric Coral */
+  --b1-color-primary-hover: #E03A1B;       /* Deep Electric Coral on tap */
+  --b1-color-primary-dark: #C83014;        /* Dark Coral for active borders */
+  --b1-color-primary-light: #FFF0ED;       /* Soft Coral blush for chips */
+  --b1-color-primary-glow: rgba(255, 80, 48, 0.28); /* Button glow shadow */
+  --b1-color-primary-gradient: linear-gradient(135deg, #FF5030 0%, #FF7A5C 100%);
+  --b1-color-hero-gradient: linear-gradient(135deg, #FF5030 0%, #FF6E52 100%);
+  --b1-color-accent: #F59E0B;              /* Golden Honey / Urgency Amber */
+  --b1-color-accent-emerald: #10B981;      /* Fresh Mint / Success Emerald */
 
   /* ── 2. NEUTRAL & SURFACE COLORS ─────────────────────────────────────────── */
-  --b1-color-bg: #F8F9FA;                  /* Main screen background (light gray/clean) */
-  --b1-color-surface: #FFFFFF;             /* White background for cards, modals, sheets */
-  --b1-color-surface-subtle: #F3F4F6;      /* Subtle background for inputs & inactive chips */
-  --b1-color-border: #E5E7EB;              /* Thin clean border lines */
-  --b1-color-border-light: #F0F1F3;        /* Soft separator lines */
-  --b1-color-overlay: rgba(15, 17, 23, 0.6); /* Backdrop for modals & bottom sheets */
+  --b1-color-bg: #FAF8F5;                  /* Warm table linen / Cozy cream background */
+  --b1-color-surface: #FFFFFF;             /* Crisp clean surface for cards & modals */
+  --b1-color-surface-subtle: #F5F3EF;      /* Subtle warm background for inputs */
+  --b1-color-border: #E8E4DD;              /* Soft warm border */
+  --b1-color-border-light: #F0EDE6;        /* Soft separator lines */
+  --b1-color-overlay: rgba(15, 23, 42, 0.6); /* Backdrop for modals & bottom sheets */
 
   /* ── 3. TEXT & TYPOGRAPHY COLORS ─────────────────────────────────────────── */
-  --b1-color-text-main: #18191F;           /* High emphasis titles & price */
-  --b1-color-text-body: #4B5563;           /* Standard readable description text */
-  --b1-color-text-muted: #8E8E93;          /* Low emphasis / small captions */
-  --b1-color-text-inverse: #FFFFFF;        /* White text for orange buttons & headers */
-  --b1-color-text-price: #FF6B00;          /* Highlighted item price */
-  --b1-color-success: #10B981;             /* Success green for free shipping / badges */
+  --b1-color-text-main: #1E1B18;           /* High emphasis warm espresso titles & price */
+  --b1-color-text-body: #4A453E;           /* Standard readable description text */
+  --b1-color-text-muted: #78716C;          /* Medium-high emphasis warm caption */
+  --b1-color-text-inverse: #FFFFFF;        /* White text for action buttons */
+  --b1-color-text-price: #FF5030;          /* Appetizing highlight item price */
+  --b1-color-success: #10B981;             /* Success emerald for free shipping & add-to-cart */
   --b1-color-danger: #EF4444;              /* Trash & alert red */
 
   /* ── 4. TYPOGRAPHY SIZES & WEIGHTS ───────────────────────────────────────── */
@@ -59,13 +60,13 @@
   --b1-radius-pill: 9999px;                /* Fully rounded badges, buttons, chips */
 
   /* ── 6. SHADOWS & ELEVATION ──────────────────────────────────────────────── */
-  --b1-shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --b1-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-  --b1-shadow-card: 0 8px 24px rgba(24, 25, 31, 0.06);
-  --b1-shadow-card-hover: 0 12px 30px rgba(255, 107, 0, 0.15);
-  --b1-shadow-button: 0 6px 18px rgba(255, 107, 0, 0.35);
-  --b1-shadow-bottom-bar: 0 -8px 28px rgba(0, 0, 0, 0.09);
-  --b1-shadow-sheet: 0 -12px 36px rgba(0, 0, 0, 0.18);
+  --b1-shadow-xs: 0 1px 3px rgba(30, 27, 24, 0.04);
+  --b1-shadow-sm: 0 4px 12px rgba(30, 27, 24, 0.05);
+  --b1-shadow-card: 0 8px 24px rgba(30, 27, 24, 0.06);
+  --b1-shadow-card-hover: 0 12px 30px rgba(255, 80, 48, 0.16);
+  --b1-shadow-button: 0 6px 18px rgba(255, 80, 48, 0.35);
+  --b1-shadow-bottom-bar: 0 -8px 28px rgba(30, 27, 24, 0.08);
+  --b1-shadow-sheet: 0 -12px 36px rgba(15, 23, 42, 0.18);
 
   /* ── 7. SPACING & SIZING ─────────────────────────────────────────────────── */
   --b1-space-2: 0.5rem;                    /* 8px */
@@ -83,38 +84,44 @@
   --b1-transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── DARK MODE TOKENS (HIGH COMFORT & HIGH CONTRAST) ───────────────────────── */
+/* ── DARK MODE TOKENS (GASTRO DARK CHARCOAL & AMBER EMBER) ────────────────── */
 [data-theme="dark"] {
-  /* ── 1. BRAND COLORS (WARM GLOWING ORANGE) ────────────────────────────────── */
-  --b1-color-primary: #FF7E1D;
-  --b1-color-primary-hover: #FF6B00;
-  --b1-color-primary-dark: #FF9442;
-  --b1-color-primary-light: rgba(255, 126, 29, 0.18);
-  --b1-color-primary-glow: rgba(255, 126, 29, 0.4);
-  --b1-color-accent: #FBBF24;
+  color-scheme: dark;
 
-  /* ── 2. DARK NEUTRAL & SURFACE COLORS ─────────────────────────────────────── */
-  --b1-color-bg: #0B0F19;                  /* Ultra-dark comfortable background */
-  --b1-color-surface: #172033;             /* Elevated dark slate surface */
-  --b1-color-surface-subtle: #243048;      /* Input & inactive pill background */
-  --b1-color-border: #2C3A56;              /* Subtle dark container borders */
-  --b1-color-border-light: #1E293B;        /* Separator lines */
-  --b1-color-overlay: rgba(0, 0, 0, 0.82); /* Modal backdrop */
+  /* ── 1. BRAND COLORS (ELECTRIC CORAL & WARM AMBER) ───────────────────────── */
+  --b1-color-primary: #FF5E3A;             /* Vibrant Warm Coral Brasa */
+  --b1-color-primary-hover: #E54522;       /* Deep Ember Coral */
+  --b1-color-primary-dark: #FF7555;        /* Lightened Coral for borders/accents */
+  --b1-color-primary-light: rgba(255, 94, 58, 0.16); /* Warm Coral blush */
+  --b1-color-primary-glow: rgba(255, 94, 58, 0.35); /* Button warm glow */
+  --b1-color-primary-gradient: linear-gradient(135deg, #FF5E3A 0%, #FF7E5F 100%);
+  --b1-color-hero-gradient: linear-gradient(135deg, #FF5E3A 0%, #FF704D 100%);
+  --b1-color-accent: #F59E0B;              /* Golden Honey / Warm Amber */
+  --b1-color-accent-emerald: #10B981;      /* Fresh Mint / Success Emerald */
 
-  /* ── 3. TEXT & TYPOGRAPHY COLORS ─────────────────────────────────────────── */
-  --b1-color-text-main: #F8FAFC;           /* Crisp white for titles */
-  --b1-color-text-body: #CBD5E1;           /* Light gray for readable paragraphs */
-  --b1-color-text-muted: #94A3B8;          /* Muted labels */
-  --b1-color-text-inverse: #0B0F19;
-  --b1-color-text-price: #FF9442;
-  --b1-color-success: #34D399;
-  --b1-color-danger: #F87171;
+  /* ── 2. DARK NEUTRAL & SURFACE COLORS (WARM CHARCOAL & GRAPHITE) ─────────── */
+  --b1-color-bg: #121110;                  /* Deep warm charcoal background (horno / calidez gourmet) */
+  --b1-color-surface: #1C1A17;             /* Elevated roasted graphite for cards & modals */
+  --b1-color-surface-subtle: #262320;      /* Subtle smoky stone for inputs & inactive chips */
+  --b1-color-border: #36302A;              /* Soft warm bronze border */
+  --b1-color-border-light: #23201C;        /* Dark warm separators */
+  --b1-color-overlay: rgba(0, 0, 0, 0.82); /* Deep dark overlay */
+
+  /* ── 3. DARK TEXT COLORS (WARM IVORY & SOFT WHEAT) ────────────────────────── */
+  --b1-color-text-main: #FDFBF7;           /* Warm ivory cream - high contrast without eye glare */
+  --b1-color-text-body: #D6CEC5;           /* Soft wheat toast for descriptions */
+  --b1-color-text-muted: #9E948A;          /* Warm latte for secondary captions */
+  --b1-color-text-inverse: #121110;        /* Deep charcoal for inverse text */
+  --b1-color-text-price: #FF6A48;          /* Appetizing warm coral price */
+  --b1-color-success: #10B981;             /* Fresh emerald */
+  --b1-color-danger: #EF4444;              /* Alert warm red */
 
   /* ── 4. SHADOWS & ELEVATION IN DARK MODE ─────────────────────────────────── */
-  --b1-shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --b1-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
-  --b1-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --b1-shadow-card-hover: 0 12px 30px rgba(255, 126, 29, 0.25);
-  --b1-shadow-bottom-bar: 0 -8px 28px rgba(0, 0, 0, 0.7);
-  --b1-shadow-sheet: 0 -12px 36px rgba(0, 0, 0, 0.85);
+  --b1-shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --b1-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.6);
+  --b1-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.65);
+  --b1-shadow-card-hover: 0 12px 30px rgba(255, 94, 58, 0.22);
+  --b1-shadow-button: 0 6px 20px rgba(255, 94, 58, 0.4);
+  --b1-shadow-bottom-bar: 0 -8px 28px rgba(0, 0, 0, 0.75);
+  --b1-shadow-sheet: 0 -12px 36px rgba(0, 0, 0, 0.88);
 }

@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
+import { MapPin, Crosshair, Search, X, Check, Loader2 } from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 export interface SelectedLocation {
   street: string;
@@ -32,6 +35,7 @@ export default function LocationMapPicker({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
+  const accuracyCircleRef = useRef<any>(null);
 
   const [currentCoords, setCurrentCoords] = useState<{ lat: number; lng: number }>({
     lat: initialLat,
@@ -112,7 +116,7 @@ export default function LocationMapPicker({
             display: flex;
             flex-direction: column;
             align-items: center;
-            cursor: pointer;
+            cursor: grab;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
           ">
             <div style="
@@ -147,7 +151,6 @@ export default function LocationMapPicker({
         zoomControl: false,
       });
 
-      // Zoom control in top-right
       L.control.zoom({ position: "topright" }).addTo(map);
 
       // OpenStreetMap Tile Layer
@@ -200,33 +203,93 @@ export default function LocationMapPicker({
     };
   }, [isOpen]);
 
-  // Use Current GPS Location
-  const handleUseCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Tu navegador no soporta geolocalización.");
-      return;
+  // Robust multi-tier location resolver with Leaflet view centering & fallback
+  const handleUseCurrentLocation = async () => {
+    setIsLocatingUser(true);
+
+    const updateMapWithCoords = async (lat: number, lng: number, accuracy?: number) => {
+      setCurrentCoords({ lat, lng });
+
+      if (mapInstanceRef.current) {
+        const L = (await import("leaflet")).default;
+        mapInstanceRef.current.setView([lat, lng], 17, { animate: true });
+
+        if (markerRef.current) {
+          markerRef.current.setLatLng([lat, lng]);
+        }
+
+        if (accuracyCircleRef.current) {
+          mapInstanceRef.current.removeLayer(accuracyCircleRef.current);
+        }
+        if (accuracy && accuracy < 5000) {
+          accuracyCircleRef.current = L.circle([lat, lng], {
+            radius: Math.min(accuracy, 100),
+            color: "#FF6B00",
+            fillColor: "#FF6B00",
+            fillOpacity: 0.12,
+            weight: 1.5,
+          }).addTo(mapInstanceRef.current);
+        }
+      }
+
+      await reverseGeocode(lat, lng);
+      setIsLocatingUser(false);
+    };
+
+    // 1. Try browser geolocation (High Accuracy first)
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      const getPos = (options: PositionOptions): Promise<GeolocationPosition> => {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        });
+      };
+
+      try {
+        const pos = await getPos({
+          enableHighAccuracy: true,
+          timeout: 6000,
+          maximumAge: 30000,
+        });
+        await updateMapWithCoords(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
+        return;
+      } catch (errHigh: any) {
+        console.warn("High accuracy geolocation timed out or failed:", errHigh);
+
+        if (errHigh && errHigh.code === 1) {
+          setIsLocatingUser(false);
+          alert("El navegador tiene bloqueado el permiso de ubicación para este sitio. Hacé clic en el ícono del candado en la barra de navegación para permitir la ubicación.");
+          return;
+        }
+
+        // Try standard / low accuracy (works on PC Wi-Fi networks without GPS hardware)
+        try {
+          const posLow = await getPos({
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 120000,
+          });
+          await updateMapWithCoords(posLow.coords.latitude, posLow.coords.longitude, posLow.coords.accuracy);
+          return;
+        } catch (errLow: any) {
+          console.warn("Standard geolocation failed:", errLow);
+        }
+      }
     }
 
-    setIsLocatingUser(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setIsLocatingUser(false);
-        const { latitude, longitude } = pos.coords;
-        setCurrentCoords({ lat: latitude, lng: longitude });
+    // 2. Fallback: Network IP-based location estimation
+    try {
+      const ipRes = await fetch("https://ipapi.co/json/");
+      const ipData = await ipRes.json();
+      if (ipData && ipData.latitude && ipData.longitude) {
+        await updateMapWithCoords(ipData.latitude, ipData.longitude, 1500);
+        return;
+      }
+    } catch (e) {
+      console.warn("IP location fallback failed:", e);
+    }
 
-        if (mapInstanceRef.current && markerRef.current) {
-          mapInstanceRef.current.setView([latitude, longitude], 17, { animate: true });
-          markerRef.current.setLatLng([latitude, longitude]);
-        }
-        reverseGeocode(latitude, longitude);
-      },
-      (err) => {
-        setIsLocatingUser(false);
-        console.warn("Geolocation error:", err);
-        alert("No se pudo obtener tu ubicación. Por favor verificá los permisos de ubicación de tu navegador o señalá en el mapa.");
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
+    setIsLocatingUser(false);
+    alert("No se pudo detectar tu coordenada GPS exacta. Podés buscar tu calle arriba o hacer un toque directo en el mapa para posicionar el pin.");
   };
 
   // Search Address or Place
@@ -314,6 +377,7 @@ export default function LocationMapPicker({
         bottom: 0,
         backgroundColor: "rgba(15, 23, 42, 0.75)",
         backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
         zIndex: 99999,
         display: "flex",
         alignItems: "center",
@@ -362,13 +426,13 @@ export default function LocationMapPicker({
                 fontSize: 18,
               }}
             >
-              <i className="fas fa-map-marker-alt"></i>
+              <MapPin className="w-5 h-5 text-orange-600" />
             </div>
             <div>
-              <h4 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0F172A" }}>
+              <h4 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "var(--b1-color-text-main, #1E1B18)" }}>
                 Elegir Ubicación de Entrega
               </h4>
-              <p style={{ margin: 0, fontSize: 11, color: "#64748B" }}>
+              <p style={{ margin: 0, fontSize: 11, color: "var(--b1-color-text-muted, #78716C)" }}>
                 Tocá el mapa o arrastrá el pin hasta tu puerta
               </p>
             </div>
@@ -382,15 +446,15 @@ export default function LocationMapPicker({
               width: 32,
               height: 32,
               borderRadius: "50%",
-              fontSize: 18,
               color: "#64748B",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
+            aria-label="Cerrar"
           >
-            &times;
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -398,74 +462,49 @@ export default function LocationMapPicker({
         <div style={{ padding: "10px 14px", background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
           <form onSubmit={handleSearch} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
             <div style={{ position: "relative", flex: 1 }}>
-              <i
-                className="fas fa-search"
+              <Search
+                className="w-4 h-4 text-slate-400"
                 style={{
                   position: "absolute",
                   left: 12,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#94A3B8",
-                  fontSize: 13,
                 }}
-              ></i>
-              <input
+              />
+              <Input
                 type="text"
                 placeholder="Buscar calle, barrio o punto de referencia..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px 8px 34px",
-                  borderRadius: "10px",
-                  border: "1px solid #CBD5E1",
-                  fontSize: 13,
-                  outline: "none",
-                }}
+                className="pl-9 py-2 text-xs"
               />
             </div>
-            <button
+            <Button
               type="submit"
+              variant="secondary"
               disabled={isSearching}
-              style={{
-                background: "#0F172A",
-                color: "#fff",
-                border: "none",
-                borderRadius: "10px",
-                padding: "0 14px",
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
+              className="px-3.5 py-2 text-xs font-bold"
             >
-              {isSearching ? "Buscando..." : "Buscar"}
-            </button>
+              {isSearching ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : null}
+              <span>{isSearching ? "Buscando..." : "Buscar"}</span>
+            </Button>
           </form>
 
-          <button
+          {/* Leaflet GPS Trigger with multi-tier fallback */}
+          <Button
             type="button"
+            variant="outline"
             onClick={handleUseCurrentLocation}
             disabled={isLocatingUser}
-            style={{
-              width: "100%",
-              background: "#ffffff",
-              border: "1.5px solid var(--b1-color-primary, #FF6B00)",
-              color: "var(--b1-color-primary, #FF6B00)",
-              borderRadius: "10px",
-              padding: "8px 12px",
-              fontSize: 12,
-              fontWeight: 800,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }}
+            className="w-full py-2.5 text-xs font-extrabold border-orange-500 text-orange-600 hover:bg-orange-50"
           >
-            <i className={`fas ${isLocatingUser ? "fa-spinner fa-spin" : "fa-crosshairs"}`}></i>
-            <span>{isLocatingUser ? "Obteniendo tu GPS..." : "Usar mi ubicación actual por GPS"}</span>
-          </button>
+            {isLocatingUser ? (
+              <Loader2 className="w-4 h-4 animate-spin text-orange-600 mr-2" />
+            ) : (
+              <Crosshair className="w-4 h-4 text-orange-600 mr-2" />
+            )}
+            <span>{isLocatingUser ? "Localizando tu posición..." : "Usar mi ubicación actual (GPS)"}</span>
+          </Button>
         </div>
 
         {/* Map Container */}
@@ -493,7 +532,7 @@ export default function LocationMapPicker({
               gap: 6,
             }}
           >
-            <span>💡 Tocá en el mapa para mover el pin</span>
+            <span>💡 Tocá en el mapa o arrastrá el pin para moverlo</span>
           </div>
         </div>
 
@@ -514,23 +553,24 @@ export default function LocationMapPicker({
               marginBottom: 12,
             }}
           >
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#64748B", textTransform: "uppercase", marginBottom: 2 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "var(--b1-color-text-muted, #78716C)", textTransform: "uppercase", marginBottom: 2 }}>
               Dirección seleccionada:
             </div>
             <div
               style={{
                 fontSize: 13,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--b1-color-text-main, #1E1B18)",
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
               }}
             >
-              <i
-                className={`fas ${isLoadingAddress ? "fa-spinner fa-spin" : "fa-map-pin"}`}
-                style={{ color: "var(--b1-color-primary, #FF6B00)" }}
-              ></i>
+              {isLoadingAddress ? (
+                <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
+              ) : (
+                <MapPin className="w-4 h-4 text-orange-500" />
+              )}
               <span>{isLoadingAddress ? "Detectando calle y altura..." : displayAddress || "Seleccioná un punto en el mapa"}</span>
             </div>
             {detectedStreet && (
@@ -541,46 +581,23 @@ export default function LocationMapPicker({
           </div>
 
           <div style={{ display: "flex", gap: 10 }}>
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={onClose}
-              style={{
-                flex: 1,
-                background: "#F1F5F9",
-                border: "none",
-                borderRadius: "12px",
-                padding: "12px",
-                fontSize: 13,
-                fontWeight: 700,
-                color: "#475569",
-                cursor: "pointer",
-              }}
+              className="flex-1 py-3 text-xs font-bold"
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="default"
               onClick={handleConfirm}
-              style={{
-                flex: 2,
-                background: "var(--b1-color-primary, #FF6B00)",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "12px",
-                padding: "12px 18px",
-                fontSize: 14,
-                fontWeight: 800,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                boxShadow: "0 4px 14px rgba(255, 107, 0, 0.35)",
-              }}
+              className="flex-2 py-3 text-sm font-extrabold"
             >
-              <i className="fas fa-check"></i>
+              <Check className="w-4 h-4 mr-1.5" />
               <span>Confirmar Esta Ubicación</span>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

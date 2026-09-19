@@ -1,13 +1,48 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: var(--b1-color-primary);
+  --color-primary-hover: var(--b1-color-primary-hover);
+  --color-primary-dark: var(--b1-color-primary-dark);
+  --color-primary-light: var(--b1-color-primary-light);
+  --color-primary-glow: var(--b1-color-primary-glow);
+  --color-accent: var(--b1-color-accent);
+  --color-accent-emerald: var(--b1-color-accent-emerald);
+  --color-bg: var(--b1-color-bg);
+  --color-surface: var(--b1-color-surface);
+  --color-surface-subtle: var(--b1-color-surface-subtle);
+  --color-border-main: var(--b1-color-border);
+  --color-border-light: var(--b1-color-border-light);
+  --color-text-main: var(--b1-color-text-main);
+  --color-text-body: var(--b1-color-text-body);
+  --color-text-muted: var(--b1-color-text-muted);
+  --color-text-price: var(--b1-color-text-price);
+  --radius-sm: var(--b1-radius-sm);
+  --radius-md: var(--b1-radius-md);
+  --radius-lg: var(--b1-radius-lg);
+  --radius-xl: var(--b1-radius-xl);
+  --radius-pill: var(--b1-radius-pill);
+  --radius-full: 9999px;
+  --shadow-card: var(--b1-shadow-card);
+  --shadow-card-hover: var(--b1-shadow-card-hover);
+  --shadow-button: var(--b1-shadow-button);
+  --shadow-sheet: var(--b1-shadow-sheet);
+}
+
 /* Preserve pure brand theme without dark-mode overrides */
 :root {
   --background: #f8f9fa;
   --foreground: #18191f;
 }
 
+html, body {
+  overflow-x: clip;
+  max-width: 100vw;
+  width: 100%;
+}
+
 body {
-  background-color: #f8f9fa;
+  background-color: #FAF8F5;
   color: #18191f;
   margin: 0;
   padding: 0;
@@ -26,6 +61,14 @@ body {
   justify-content: center;
   overscroll-behavior: contain;
   touch-action: none;
+}
+
+/* Ensure Clerk modals always display above everything without conflicts */
+.cl-modalBackdrop {
+  z-index: 99999 !important;
+}
+.cl-modalContent {
+  z-index: 100000 !important;
 }
 
 @media (min-width: 576px) {

@@ -5,16 +5,21 @@
  */
 
 :root {
-  --adm-bg: #F8F9FA;
+  --adm-bg: #FAF8F5;
   --adm-surface: #FFFFFF;
-  --adm-surface-subtle: #F3F4F6;
-  --adm-border: #E5E7EB;
-  --adm-border-subtle: #F0F2F5;
+  --adm-surface-subtle: #F8F6F0;
+  --adm-border: #EAE4D9;
+  --adm-border-subtle: #F4EFE6;
   
-  --adm-primary: #FF6B00;
-  --adm-primary-hover: #E05E00;
-  --adm-primary-light: rgba(255, 107, 0, 0.08);
-  --adm-primary-glow: rgba(255, 107, 0, 0.25);
+  --adm-primary: #E11D48;
+  --adm-primary-hover: #BE123C;
+  --adm-primary-light: rgba(225, 29, 72, 0.08);
+  --adm-primary-glow: rgba(225, 29, 72, 0.25);
+  
+  --adm-honey: #F59E0B;
+  --adm-honey-light: #FEF3C7;
+  --adm-honey-border: #FDE68A;
+  --adm-honey-glow: rgba(245, 158, 11, 0.25);
   
   --adm-success: #10B981;
   --adm-success-light: #ECFDF5;
@@ -28,25 +33,48 @@
   --adm-danger-light: #FEF2F2;
   --adm-danger-border: #FECACA;
   
-  --adm-text-main: #111827;
-  --adm-text-muted: #6B7280;
-  --adm-text-subtle: #9CA3AF;
+  --adm-text-main: #1C1917;
+  --adm-text-muted: #78716C;
+  --adm-text-subtle: #A8A29E;
   
   --adm-radius-sm: 8px;
   --adm-radius-md: 14px;
   --adm-radius-lg: 20px;
   --adm-radius-pill: 9999px;
   
+  --adm-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --adm-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
   --adm-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
-  --adm-shadow-btn: 0 4px 12px rgba(255, 107, 0, 0.3);
+  --adm-shadow-btn: 0 4px 14px rgba(225, 29, 72, 0.3);
 }
 
 [data-theme="dark"] {
-  --adm-bg: #0B0F19;
-  --adm-surface: #172033;
-  --adm-surface-subtle: #243048;
-  --adm-border: #2C3A56;
+  --adm-bg: #0F172A;
+  --adm-surface: #1E293B;
+  --adm-surface-subtle: #334155;
+  --adm-border: #334155;
   --adm-border-subtle: #1E293B;
+  
+  --adm-primary: #F43F5E;
+  --adm-primary-hover: #FB7185;
+  --adm-primary-light: rgba(244, 63, 94, 0.15);
+  --adm-primary-glow: rgba(244, 63, 94, 0.35);
+  
+  --adm-honey: #FBBF24;
+  --adm-honey-light: rgba(251, 191, 36, 0.15);
+  --adm-honey-border: #78350F;
+  
+  --adm-success: #34D399;
+  --adm-success-light: rgba(52, 211, 153, 0.15);
+  --adm-success-border: #065F46;
+  
+  --adm-warning: #FBBF24;
+  --adm-warning-light: rgba(251, 191, 36, 0.15);
+  --adm-warning-border: #78350F;
+  
+  --adm-danger: #F87171;
+  --adm-danger-light: rgba(248, 113, 113, 0.15);
+  --adm-danger-border: #7F1D1D;
   
   --adm-text-main: #F8FAFC;
   --adm-text-muted: #94A3B8;
@@ -55,6 +83,7 @@
   --adm-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --adm-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
   --adm-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+  --adm-shadow-btn: 0 4px 14px rgba(244, 63, 94, 0.4);
 }
 
 /* ── BASE & RESET ─────────────────────────────────────────────────────────── */
@@ -114,8 +143,8 @@ body {
   border-radius: 50%;
   object-fit: cover;
   margin: 0 auto 14px;
-  border: 3px solid var(--adm-primary-light);
-  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.15);
+  border: 3px solid var(--adm-honey-border);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
 }
 
 .adm-login-title {
@@ -196,7 +225,7 @@ body {
   font-size: 16px;
   font-weight: 800;
   border-radius: var(--adm-radius-pill);
-  background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+  background: linear-gradient(135deg, var(--adm-primary) 0%, #FB7185 100%);
   color: #FFFFFF;
   border: none;
   cursor: pointer;
@@ -1342,3 +1371,194 @@ body {
 .adm-metrics-grid.cols-3 {
   grid-template-columns: repeat(3, 1fr);
 }
+
+/* ── 13. PANEL CLIP-PATH & MULTI-GEOMETRIC DECORATIONS ───────────────── */
+.b1-panel-bg-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none !important;
+  overflow: hidden;
+  z-index: 0 !important;
+  opacity: 0.55;
+  user-select: none;
+}
+
+.adm-metrics-grid,
+.adm-controls-section,
+.adm-inventory-list,
+.adm-card,
+.b1-greeting-section,
+.b1-section-header,
+.b1-products-list,
+.b1-order-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* 1. Hexagon / Panal de Miel */
+.b1-geom-hexagon {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  width: 90px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(254, 243, 199, 0.4) 100%);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.15));
+  animation: b1FloatSlow 8s ease-in-out infinite alternate;
+}
+
+/* 2. Diamond / Rombo */
+.b1-geom-diamond {
+  position: absolute;
+  top: 190px;
+  left: 12px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.16) 0%, rgba(244, 63, 94, 0.05) 100%);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: b1FloatMid 6s ease-in-out infinite alternate;
+}
+
+/* 3. Star 4-Point / Estrella Destello */
+.b1-geom-star {
+  position: absolute;
+  top: 340px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(225, 29, 72, 0.15) 100%);
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  animation: b1RotateSlow 20s linear infinite;
+}
+
+/* 4. Triangle / Triángulo Delta */
+.b1-geom-triangle {
+  position: absolute;
+  top: 520px;
+  left: 15px;
+  width: 70px;
+  height: 65px;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.04) 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation: b1FloatSlow 9s ease-in-out infinite alternate;
+}
+
+/* 5. Octagon / Octágono */
+.b1-geom-octagon {
+  position: absolute;
+  top: 720px;
+  right: 15px;
+  width: 75px;
+  height: 75px;
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.14) 0%, rgba(245, 158, 11, 0.12) 100%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  animation: b1FloatMid 7s ease-in-out infinite alternate;
+}
+
+/* 6. Parallelogram Ribbon / Cinta Paralelogramo */
+.b1-geom-ribbon {
+  position: absolute;
+  top: 920px;
+  left: -20px;
+  width: 140px;
+  height: 48px;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.16) 0%, rgba(245, 158, 11, 0.08) 100%);
+  clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
+}
+
+/* 7. Circular Ring / Anillo Concéntrico */
+.b1-geom-ring {
+  position: absolute;
+  top: 260px;
+  right: -25px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px dashed rgba(245, 158, 11, 0.25);
+  background: transparent;
+  animation: b1RotateSlow 25s linear infinite;
+}
+
+/* 8. Glowing Ambient Orbs */
+.b1-panel-orb-1 {
+  position: absolute;
+  top: 40px;
+  left: -30px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(254, 243, 199, 0.75) 0%, transparent 70%);
+  filter: blur(40px);
+}
+
+.b1-panel-orb-2 {
+  position: absolute;
+  top: 480px;
+  right: -40px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(209, 250, 229, 0.6) 0%, transparent 70%);
+  filter: blur(45px);
+}
+
+.b1-panel-orb-3 {
+  position: absolute;
+  top: 900px;
+  left: -20px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(254, 226, 226, 0.6) 0%, transparent 70%);
+  filter: blur(40px);
+}
+
+[data-theme="dark"] .b1-geom-hexagon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+[data-theme="dark"] .b1-geom-diamond {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, transparent 100%);
+}
+
+[data-theme="dark"] .b1-geom-triangle {
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.14) 0%, transparent 100%);
+}
+
+[data-theme="dark"] .b1-geom-star {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(244, 63, 94, 0.12) 100%);
+}
+
+[data-theme="dark"] .b1-geom-ring {
+  border-color: rgba(245, 158, 11, 0.15);
+}
+
+[data-theme="dark"] .b1-panel-orb-1 {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .b1-panel-orb-2 {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .b1-panel-orb-3 {
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.1) 0%, transparent 70%);
+}
+
+@keyframes b1FloatSlow {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-12px) rotate(4deg); }
+}
+
+@keyframes b1FloatMid {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(10px) rotate(-5deg); }
+}
+
+@keyframes b1RotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
