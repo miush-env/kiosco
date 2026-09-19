@@ -10,6 +10,7 @@ import {
   Bike,
   Store,
   CreditCard,
+  Banknote,
   Clock,
   Activity,
   Sparkles,
@@ -671,31 +672,31 @@ export default function NotificationsModal({
                     width: 44,
                     height: 44,
                     borderRadius: 14,
-                    background: "rgba(0, 158, 227, 0.12)",
-                    color: "#007BB0",
-                    border: "1.5px solid rgba(0, 158, 227, 0.2)",
+                    background: "rgba(16, 185, 129, 0.12)",
+                    color: "var(--b1-color-success, #059669)",
+                    border: "1.5px solid rgba(16, 185, 129, 0.25)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
-                  <CreditCard style={{ width: 24, height: 24 }} />
+                  <Banknote style={{ width: 24, height: 24 }} />
                 </div>
                 <div>
                   <div
                     style={{
                       fontWeight: 900,
                       fontSize: 16.5,
-                      color: "var(--b1-color-text-main, #0369A1)",
+                      color: "var(--b1-color-text-main)",
                       marginBottom: 4,
                       lineHeight: 1.25,
                     }}
                   >
-                    Pagos por Mercado Pago y Efectivo
+                    Pagos en Efectivo
                   </div>
-                  <div style={{ fontSize: 14, color: "var(--b1-color-text-body, #075985)", lineHeight: 1.5, fontWeight: 500 }}>
-                    Generá tu link de pago oficial con Mercado Pago o aboná en efectivo cuando recibís tu pedido.
+                  <div style={{ fontSize: 14, color: "var(--b1-color-text-body)", lineHeight: 1.5, fontWeight: 500 }}>
+                    Aboná en efectivo al recibir tu pedido en tu domicilio o al retirar en nuestro local. Podés indicar si necesitás vuelto.
                   </div>
                 </div>
               </div>

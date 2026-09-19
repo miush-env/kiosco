@@ -384,24 +384,38 @@ export default function CheckoutModal({
           {deliveryType === "envio" && (
             <div className="b1-form-group">
               <div className="b1-checkout-section-title">
-                <i className="fas fa-credit-card"></i> 4. Medio de pago
+                <i className="fas fa-money-bill-wave"></i> 4. Medio de pago
               </div>
               <div className="b1-payment-chips">
+                {/* Deshabilitado temporalmente: Mercado Pago (código preservado para reactivación futura)
                 <div
                   className={`b1-payment-chip ${paymentMethod === "mercadopago" ? "active" : ""}`}
                   onClick={() => onPaymentMethodChange("mercadopago")}
                 >
                   💳 Mercado Pago
                 </div>
+                */}
                 <div
-                  className={`b1-payment-chip ${paymentMethod === "efectivo" ? "active" : ""}`}
-                  onClick={() => onPaymentMethodChange("efectivo")}
+                  className="b1-payment-chip active"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "11px 16px",
+                    fontSize: "14px",
+                    fontWeight: 800,
+                    cursor: "default",
+                    width: "100%",
+                  }}
                 >
-                  💵 Efectivo
+                  <span style={{ fontSize: "17px" }}>💵</span>
+                  <span>Efectivo (Pago al recibir)</span>
                 </div>
               </div>
 
-              {paymentMethod === "mercadopago" && (
+              {/* Lógica y vistas de Mercado Pago preservadas (ocultas temporalmente) */}
+              {false && paymentMethod === "mercadopago" && (
                 <div
                   style={{
                     background: "linear-gradient(135deg, rgba(0, 158, 227, 0.08) 0%, rgba(0, 158, 227, 0.02) 100%)",
@@ -667,7 +681,7 @@ export default function CheckoutModal({
               </span>
               <span style={{ fontWeight: 900, fontSize: 17 }}>${formatMoney(cartTotal)}</span>
             </button>
-          ) : paymentMethod === "mercadopago" ? (
+          ) : /* Deshabilitado temporalmente: Mercado Pago (código preservado) */ false && paymentMethod === "mercadopago" ? (
             <button
               type="button"
               className="b1-btn-primary"

@@ -24,7 +24,7 @@ export function useOrderSubmission(
   const { isSignedIn, user } = useUser();
 
   const [deliveryType, setDeliveryType] = useState<"envio" | "retiro">("envio");
-  const [paymentMethod, setPaymentMethod] = useState<"efectivo" | "mercadopago">("mercadopago");
+  const [paymentMethod, setPaymentMethod] = useState<"efectivo" | "mercadopago">("efectivo");
   const [cashChangeOption, setCashChangeOption] = useState<"exact" | "change">("exact");
   const [cashAmountGiven, setCashAmountGiven] = useState<string>("");
   const [pickupCode, setPickupCode] = useState<string>(() => Math.floor(1000 + Math.random() * 9000).toString());
