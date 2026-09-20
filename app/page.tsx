@@ -137,7 +137,13 @@ export default function CustomerCatalogPage() {
   const { activeDeliveryAlert, dismissAlert } = useCustomerOrderTracker();
 
   return (
-    <div className="b1-app-wrapper">
+    <div className="b1-app-wrapper relative">
+      {/* Fondo absoluto rojo detrás de la Cabecera Principal para cubrir el área de las esquinas curvas */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 right-0 w-full h-[260px] bg-[#DF381A] pointer-events-none z-0"
+      />
+
       {/* Toast superior cuando se agrega producto al carrito */}
       <TopCartNotificationToast
         notification={cartNotification}
@@ -164,7 +170,7 @@ export default function CustomerCatalogPage() {
         }}
       />
 
-      <main className="b1-main-container">
+      <main className="b1-main-container relative z-10">
         {/* 2. Hero Banner Carousel */}
         <HeroBanner storeName={storeInfo.name} />
 

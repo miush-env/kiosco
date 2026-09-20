@@ -232,10 +232,10 @@ export default function PedidosYaHeader({
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full text-white transition-all duration-300 overflow-hidden ${
+      className={`sticky top-0 z-50 w-full text-white transition-all duration-300 overflow-hidden rounded-b-[20px] sm:rounded-b-[24px] ${
         isScrolled
-          ? "bg-[#C83014] shadow-md rounded-b-[20px] sm:rounded-b-[24px]"
-          : "bg-[#DF381A] rounded-b-none"
+          ? "bg-[#C83014] shadow-md"
+          : "bg-[#DF381A]"
       }`}
     >
       <div className="mx-auto max-w-md md:max-w-xl lg:max-w-2xl px-4 pt-3 pb-1">
